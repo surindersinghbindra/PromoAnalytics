@@ -24,13 +24,11 @@ import java.util.ArrayList;
 
 public class LabAdapters extends BaseAdapter {
     private Context mContext;
-
     private ArrayList<Detail> detailArrayList;
 
     public LabAdapters(Context c, ArrayList<Detail> detailArrayList) {
         mContext = c;
         this.detailArrayList = detailArrayList;
-
     }
 
     @Override
@@ -54,10 +52,8 @@ public class LabAdapters extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
 
-        //trying to reuse a recycled view
         ViewHolder holder = null;
         if (convertView == null) {
-            //The view is not a recycled one: we have to inflate
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.cpnadapter, null);
             holder = new ViewHolder();
 
@@ -73,7 +69,6 @@ public class LabAdapters extends BaseAdapter {
         }
 
         final Detail item = getItem(position);
-
 
         if (item.getIsFav().equals("1")) {
             holder.hrtfilled.setVisibility(View.VISIBLE);
