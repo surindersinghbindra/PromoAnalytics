@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "553341773006",
+    "firebase_url": "https://promoanalytics-93b1a.firebaseio.com",
+    "project_id": "promoanalytics-93b1a",
+    "storage_bucket": "promoanalytics-93b1a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553341773006:android:c855b2dd1ad85d5f",
+        "android_client_info": {
+          "package_name": "com.promoanalytics"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "553341773006-pad9truqdm78r58pfs0lt1dci5snolv5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.promoanalytics",
+            "certificate_hash": "b47d52169ca28c639793c5bc996fceaf8f3ada72"
+          }
+        },
+        {
+          "client_id": "553341773006-5v731d2jqvnillvqp4n6veo65etq9a8r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzz_9nLVczdg8DU57tZcDUGH98NZQ2NXM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "553341773006-5v731d2jqvnillvqp4n6veo65etq9a8r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

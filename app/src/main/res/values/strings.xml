@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">PromoAnalytics</string>
+    <string name="title_activity_maps">Promo Analytics</string>
+    <string name="facebook_app_id">404760849895061</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

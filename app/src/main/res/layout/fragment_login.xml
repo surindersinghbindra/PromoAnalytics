@@ -1,0 +1,119 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <!-- Name Label -->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/femail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_horizontal_margin">
+
+                <EditText
+                    android:id="@+id/input_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/email"
+                    android:drawablePadding="5dp"
+                    android:hint="Email/Mobile no"
+                    android:inputType="textPersonName"
+                    android:text="9989132332" />
+            </android.support.design.widget.TextInputLayout>
+
+
+            <!-- Password Label -->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/fpassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin">
+
+                <EditText
+                    android:id="@+id/input_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/password"
+                    android:drawablePadding="5dp"
+                    android:hint="Password"
+                    android:inputType="textPassword"
+                    android:text="123456" />
+            </android.support.design.widget.TextInputLayout>
+
+            <!-- Password Re-enter Label -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_below="@+id/include"
+                android:layout_gravity="right"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+
+                <CheckBox
+                    style="@style/MyCheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center_vertical"
+                    android:gravity="left|center_vertical"
+                    android:text="Remember me"
+                    android:textColor="@color/appOrange"
+                    app:buttonTint="@color/appOrange" />
+
+
+                <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="3dp"
+                    android:layout_weight="1"
+                    android:gravity="right|center_vertical"
+                    android:text="Forgot Password ?"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="#EE4239" />
+
+            </LinearLayout>
+
+            <!-- Signup Button -->
+            <Button
+
+                android:id="@+id/btnSignIn"
+                android:layout_width="fill_parent"
+                android:layout_height="48dp"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:background="@drawable/rectanglefilled"
+                android:text="Login"
+                android:textColor="#fff" />
+
+            <include
+                android:id="@+id/includeLogin"
+                layout="@layout/social_login" />
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+</layout>
