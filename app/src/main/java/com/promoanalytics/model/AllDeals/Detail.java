@@ -1,4 +1,4 @@
-package com.promoanalytics.model;
+package com.promoanalytics.model.AllDeals;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -7,11 +7,22 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by think360 on 22/03/17.
+ * Created by think360 on 24/03/17.
  */
 
 public class Detail implements Parcelable {
 
+    public static final Parcelable.Creator<Detail> CREATOR = new Parcelable.Creator<Detail>() {
+        @Override
+        public Detail createFromParcel(Parcel source) {
+            return new Detail(source);
+        }
+
+        @Override
+        public Detail[] newArray(int size) {
+            return new Detail[size];
+        }
+    };
     @SerializedName("id")
     @Expose
     private String id;
@@ -39,6 +50,21 @@ public class Detail implements Parcelable {
     @SerializedName("category_pic")
     @Expose
     private String categoryPic;
+
+    public Detail() {
+    }
+
+    protected Detail(Parcel in) {
+        this.id = in.readString();
+        this.name = in.readString();
+        this.logo = in.readString();
+        this.discount = in.readString();
+        this.description = in.readString();
+        this.isFav = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.latitude = in.readString();
+        this.longitude = in.readString();
+        this.categoryPic = in.readString();
+    }
 
     public String getId() {
         return id;
@@ -129,31 +155,5 @@ public class Detail implements Parcelable {
         dest.writeString(this.longitude);
         dest.writeString(this.categoryPic);
     }
-
-    public Detail() {
-    }
-
-    protected Detail(Parcel in) {
-        this.id = in.readString();
-        this.name = in.readString();
-        this.logo = in.readString();
-        this.discount = in.readString();
-        this.description = in.readString();
-        this.isFav = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.latitude = in.readString();
-        this.longitude = in.readString();
-        this.categoryPic = in.readString();
-    }
-
-    public static final Parcelable.Creator<Detail> CREATOR = new Parcelable.Creator<Detail>() {
-        @Override
-        public Detail createFromParcel(Parcel source) {
-            return new Detail(source);
-        }
-
-        @Override
-        public Detail[] newArray(int size) {
-            return new Detail[size];
-        }
-    };
 }
+

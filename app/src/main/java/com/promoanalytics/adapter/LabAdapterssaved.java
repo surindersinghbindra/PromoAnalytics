@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
 import com.promoanalytics.R;
 import com.promoanalytics.modules.ExpandableHeightGridView;
 import com.promoanalytics.post.DealDetail;
@@ -25,7 +24,6 @@ import java.util.ArrayList;
 
 
 public class LabAdapterssaved extends BaseAdapter{
-    private Context mContext;
     ArrayList<String> name1=new ArrayList<>();
     ArrayList<String> color1=new ArrayList<>();
 String  statusvalue;
@@ -35,6 +33,7 @@ String  statusvalue;
     ArrayList<String> discount1=new ArrayList<>();
     ArrayList<String> is_fav1=new ArrayList<>();
     ArrayList<String> description1=new ArrayList<>();
+    private Context mContext;
 
     public LabAdapterssaved(Context c, ArrayList<String> name, ArrayList<String> color, ArrayList<String> id,
                             ArrayList<String> discount, ArrayList<String> description, ArrayList<String> is_fav,
@@ -72,7 +71,7 @@ String  statusvalue;
         View retval = LayoutInflater.from(parent.getContext()).inflate(R.layout.cpnadapter, null);
         TextView textView = (TextView) retval.findViewById( R.id.grid_text);
         TextView textView1 = (TextView) retval.findViewById(R.id.lkjk);
-        ImageView imgs=(ImageView)retval.findViewById(R.id.imgs);
+        ImageView imgs = (ImageView) retval.findViewById(R.id.ivDeal);
         final ImageView hrtunfled=(ImageView)retval.findViewById(R.id.hrtunfled);
         final ImageView hrtfilled=(ImageView)retval.findViewById(R.id.hrtfilled);
         LinearLayout cpndetails=(LinearLayout)retval.findViewById(R.id.cpndetails) ;

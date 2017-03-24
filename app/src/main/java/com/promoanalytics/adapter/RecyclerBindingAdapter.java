@@ -43,6 +43,7 @@ public class RecyclerBindingAdapter<T> extends RecyclerView.Adapter<RecyclerBind
         });*/
         holder.getBinding().setVariable(variableId, item);
 
+
     }
 
     @Override

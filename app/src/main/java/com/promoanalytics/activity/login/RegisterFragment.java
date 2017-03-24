@@ -16,10 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.promoanalytics.R;
-import com.promoanalytics.activity.Home_Cpn;
+import com.promoanalytics.activity.ListDealsFragment;
 import com.promoanalytics.activity.Login_Cpn;
 import com.promoanalytics.databinding.FragmentRegisterBinding;
-import com.promoanalytics.model.AllDeals;
+import com.promoanalytics.model.AllDeals.AllDeals;
 import com.promoanalytics.post.RegisterCPnApi;
 import com.promoanalytics.utils.PromoAnalyticsServices;
 import com.promoanalytics.utils.RootFragment;
@@ -40,19 +40,18 @@ import retrofit2.Response;
  * create an instance of this fragment.
  */
 public class RegisterFragment extends RootFragment implements View.OnFocusChangeListener {
+
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     private OnFragmentInteractionListener mListener;
     private PromoAnalyticsServices promoAnalyticsServices;
     private FragmentRegisterBinding binding;
-
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
     public RegisterFragment() {
         // Required empty public constructor
     }
@@ -154,7 +153,7 @@ public class RegisterFragment extends RootFragment implements View.OnFocusChange
             }
         });
 
-        binding.btnSignup.setOnClickListener(new View.OnClickListener() {
+        binding.btnSignProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (TextUtils.isEmpty(binding.name.getText()) || TextUtils.isEmpty(binding.lname.getText()) || TextUtils.isEmpty(binding.email.getText()) || UtilHelper.isValidEmail(binding.email.getText()) || TextUtils.isEmpty(binding.phone.getText()) || !binding.ivChck.isChecked()) {
@@ -184,14 +183,16 @@ public class RegisterFragment extends RootFragment implements View.OnFocusChange
 
 
                                 if (response.isSuccessful()) {
-                                    Call<AllDeals> getAllDealsCall = promoAnalyticsServices.getAllDeals("", "30.7360306", "76.7328649", "0", response.body().getData().getUserId() + "", "0");
+
+
+                                    Call<AllDeals> getAllDealsCall = promoAnalyticsServices.getAllDeals("", "30.7360306", "76.7328649", "0", response.body().getData().getUserId() + "", "1");
                                     getAllDealsCall.enqueue(new Callback<AllDeals>() {
                                         @Override
                                         public void onResponse(Call<AllDeals> call, Response<AllDeals> response) {
                                             if (response.body().getStatus()) {
                                                 Log.d("RETRO_GETALLDEALS", response.body().getStatus() + "");
                                                 Log.d("RETRO_GETALLDEALS", response.body().getData().getDetail().get(0).getCategoryPic());
-                                                Intent intent = new Intent(getActivity(), Home_Cpn.class);
+                                                Intent intent = new Intent(getActivity(), ListDealsFragment.class);
                                                 intent.putParcelableArrayListExtra("LIST_DEALS", (ArrayList<? extends Parcelable>) response.body().getData().getDetail());
                                                 getActivity().startActivity(intent);
 
@@ -298,7 +299,7 @@ public class RegisterFragment extends RootFragment implements View.OnFocusChange
             }
         });
 
-        binding.btnSignup.setOnClickListener(new View.OnClickListener() {
+        binding.btnSignProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), Login_Cpn.class);

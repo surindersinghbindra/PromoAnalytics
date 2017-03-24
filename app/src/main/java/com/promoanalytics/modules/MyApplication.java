@@ -2,6 +2,7 @@ package com.promoanalytics.modules;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 
@@ -13,20 +14,29 @@ import com.android.volley.toolbox.Volley;
  * Created by think360user on 2/4/2016.
  */
 public class MyApplication extends Application {
-String city,category,member,valueforbecome;
-String usersid;
-    private static Context context;
-    String nextpage="1";
     public static final String TAG = ImgController.class.getSimpleName();
-    RequestQueue queue;
-
+    public static SharedPreferences sharedPreferencesCompat;
+    private static Context context;
     private static MyApplication mInstance;
+    String city, category, member, valueforbecome;
+    String usersid;
+    String nextpage = "1";
+    RequestQueue queue;
+    private String valuetstsngle;
+
+    public static SharedPreferences.Editor getSharedPrefEditor() {
+
+        return sharedPreferencesCompat.edit();
+    }
+    // String checkOrigin = utils.getNextpage();
 
     public static synchronized MyApplication getInstance() {
         return mInstance;
     }
-   // String checkOrigin = utils.getNextpage();
 
+    public static Context getAppContext() {
+        return MyApplication.context;
+    }
 
     public String getCity() {
         return city;
@@ -68,18 +78,16 @@ String usersid;
         this.nextpage = nextpage;
     }
 
-    private  String valuetstsngle;
     @Override
     public void onCreate() {
 
         super.onCreate();
+
+        sharedPreferencesCompat = getSharedPreferences("APP_PREF", MODE_PRIVATE);
         queue = Volley.newRequestQueue(getApplicationContext());
         mInstance = this;
 
 
-    }
-    public static Context getAppContext() {
-        return MyApplication.context;
     }
 
     public RequestQueue getRequestQueue() {
@@ -91,6 +99,7 @@ String usersid;
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
+
     public <T> void addToRequestQueue(Request<T> request, String tag) {
         request.setTag(TextUtils.isEmpty(tag) ? TAG : tag);
         getRequestQueue().add(request);

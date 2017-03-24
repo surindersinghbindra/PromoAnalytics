@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.promoanalytics.R;
-import com.promoanalytics.model.Detail;
+import com.promoanalytics.model.AllDeals.Detail;
 import com.promoanalytics.post.DealDetail;
 import com.promoanalytics.post.Userfav;
 import com.squareup.picasso.Picasso;
@@ -59,7 +59,7 @@ public class LabAdapters extends BaseAdapter {
 
             holder.textView = (TextView) convertView.findViewById(R.id.grid_text);
             holder.textView1 = (TextView) convertView.findViewById(R.id.lkjk);
-            holder.imgs = (ImageView) convertView.findViewById(R.id.imgs);
+            holder.imgs = (ImageView) convertView.findViewById(R.id.ivDeal);
             holder.cpndetails = (LinearLayout) convertView.findViewById(R.id.cpndetails);
             holder.hrtunfled = (ImageView) convertView.findViewById(R.id.hrtunfled);
             holder.hrtfilled = (ImageView) convertView.findViewById(R.id.hrtfilled);

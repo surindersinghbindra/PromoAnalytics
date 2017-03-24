@@ -15,7 +15,7 @@ import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.promoanalytics.activity.Home_Cpn;
+import com.promoanalytics.activity.ListDealsFragment;
 import com.promoanalytics.modules.ExpandableHeightGridView;
 import com.promoanalytics.modules.MyApplication;
 import com.promoanalytics.utils.BaseUrlCPn;
@@ -103,7 +103,7 @@ public class GetAllDealsCpn {
                         }
 
 
-                        Intent intent = new Intent(context, Home_Cpn.class);
+                        Intent intent = new Intent(context, ListDealsFragment.class);
                         intent.putStringArrayListExtra("id1", id1);
                         intent.putStringArrayListExtra("name1", name1);
                         intent.putStringArrayListExtra("color1", color1);

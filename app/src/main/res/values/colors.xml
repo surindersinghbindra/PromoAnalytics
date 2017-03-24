@@ -7,12 +7,16 @@
 
     <color name="appOrange">#ee4239</color>
     <color name="appOrangeDark">#F20000</color>
-
+    <color name="appOrangeLight">#FF766D</color>
 
 
     <color name="appBlueDark">#00448D</color>
-    <color name="appBlue">#2C3A91</color>
+    <color name="appBlue">#18204E</color>
     <color name="appGray">#525354</color>
+
+    <color name="appGrayLight">#CBCBCB</color>
+
     <color name="black">#000</color>
+    <color name="background_material_light">#e6ecf3</color>
 
 </resources>

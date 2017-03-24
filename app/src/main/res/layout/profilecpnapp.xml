@@ -47,7 +47,7 @@
                 android:orientation="vertical">
 
                 <com.promoanalytics.modules.CircleImageview
-                    android:id="@+id/grid_image"
+                    android:id="@+id/ivUser"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_gravity="center"
@@ -167,7 +167,7 @@
 
             <!-- Signup Button -->
             <android.support.v7.widget.AppCompatButton
-                android:id="@+id/btn_signup"
+                android:id="@+id/btnSignProfile"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"

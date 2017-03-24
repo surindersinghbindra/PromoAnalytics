@@ -1,26 +1,30 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/appOrange</item>
         <item name="android:colorForeground">@android:color/black</item>
     </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
 
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="TwoWayView">
         <item name="android:orientation">horizontal</item>
     </style>
+
     <style name="ExpandedAppBar" parent="@android:style/TextAppearance.Medium">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">#fff</item>
         <item name="android:textStyle">bold</item>
     </style>
+
     <style name="CollapsedAppBar" parent="@android:style/TextAppearance.Medium">
         <item name="android:textSize">24sp</item>
         <item name="android:textColor">@color/white</item>
@@ -30,6 +34,44 @@
     <style name="MyCheckBox" parent="Theme.AppCompat.Light">
         <item name="colorControlNormal">@color/appOrange</item>
         <item name="colorControlActivated">@color/appOrange</item>
+    </style>
+
+
+    <style name="App_Theme" parent="@style/AppTheme">
+        <item name="android:editTextStyle">@style/EditTextRoboto</item>
+        <item name="android:colorBackground">@color/background_material_light</item>
+    </style>
+
+
+    <style name="EditTextRoboto" parent="@android:style/Widget.EditText">
+        <item name="android:textSize">16sp</item>
+        <item name="android:background">@null</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+    </style>
+
+    <style name="TextViewHeader" parent="@android:style/Widget.TextView">
+        <item name="android:background">@null</item>
+        <item name="android:padding">3dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginLeft">15dp</item>
+        <item name="android:layout_marginRight">15dp</item>
+    </style>
+
+
+    <style name="BorderLinearLayout" parent="@android:style/Widget.EditText">
+        <item name="android:background">@drawable/border_shape_blue</item>
+        <item name="android:layout_marginLeft">15dp</item>
+        <item name="android:layout_marginRight">15dp</item>
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+    </style>
+
+    <style name="EditTextImage">
+        <item name="android:layout_margin">7.5dp</item>
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
     </style>
 
 </resources>

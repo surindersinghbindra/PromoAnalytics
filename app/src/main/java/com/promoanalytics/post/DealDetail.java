@@ -1,6 +1,5 @@
 package com.promoanalytics.post;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -15,17 +14,13 @@ import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.promoanalytics.activity.Home_Cpn;
 import com.promoanalytics.activity.MainActivity;
-import com.promoanalytics.modules.ExpandableHeightGridView;
 import com.promoanalytics.modules.MyApplication;
 import com.promoanalytics.utils.BaseUrlCPn;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 

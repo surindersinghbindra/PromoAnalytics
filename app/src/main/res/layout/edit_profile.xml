@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -15,33 +17,14 @@
         android:orientation="vertical"
         android:visibility="visible">
 
-        <RelativeLayout
-            android:id="@+id/toolbars"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-
-            android:background="#18204E"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="match_parent"
-
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@drawable/logocpn" />
-
-
-        </RelativeLayout>
-
         <ScrollView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_below="@+id/toolbars"
             android:fitsSystemWindows="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
-
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
@@ -52,14 +35,14 @@
                     android:orientation="vertical">
 
                     <com.promoanalytics.modules.CircleImageview
-                        android:id="@+id/grid_image"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
+                        android:id="@+id/ivUser"
+                        android:layout_width="96dp"
+                        android:layout_height="96dp"
                         android:layout_gravity="center"
                         android:layout_marginTop="@dimen/activity_horizontal_margin"
                         android:src="@drawable/profilepic"
-                        app:civ_border_color="#fff"
-                        app:civ_border_width="2dp"
+                        app:civ_border_color="@color/appOrangeLight"
+                        app:civ_border_width="8dp"
                         app:civ_fill_color="@color/appBlue" />
 
                     <LinearLayout
@@ -67,21 +50,21 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginBottom="@dimen/activity_horizontal_margin"
-
                         android:layout_marginTop="@dimen/activity_horizontal_margin"
                         android:orientation="horizontal">
 
-                        <TextView
-                            android:id="@+id/logins"
+                        <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                            android:id="@+id/tvName"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginLeft="5dp"
                             android:layout_marginRight="5dp"
                             android:gravity="center"
-                            android:text="Login"
+                            android:hint="Surinder Singh"
                             android:textAppearance="?android:textAppearanceMedium"
-
-                            android:textColor="#2C3A91"
+                            android:textColor="@color/white"
+                            android:textColorHint="@color/white"
+                            android:textSize="20sp"
 
                             />
 
@@ -89,99 +72,134 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout
+                <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                    style="@style/TextViewHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <!-- Name Label -->
-                    <android.support.design.widget.TextInputLayout
+                    android:text="@string/userName" />
+
+                <LinearLayout
+                    style="@style/BorderLinearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        style="@style/EditTextImage"
+                        android:src="@drawable/profile" />
+
+                    <com.promoanalytics.utils.Fonts.RobotoNormalEditText
+                        android:id="@+id/editName"
+                        style="@style/EditTextRoboto"
                         android:layout_width="match_parent"
-
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin">
-
-                        <EditText
-                            android:id="@+id/input_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="First name"
-                            android:inputType="textPersonName" />
-                    </android.support.design.widget.TextInputLayout>
+                        android:hint="Surinder Singh"
+                        android:inputType="textPersonName" />
 
                 </LinearLayout>
 
 
-                <!--  Email Label -->
-                <android.support.design.widget.TextInputLayout
+                <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                    style="@style/TextViewHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin">
+                    android:text="@string/email" />
 
-                    <EditText
-                        android:id="@+id/input_email"
+                <LinearLayout
+                    style="@style/BorderLinearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        style="@style/EditTextImage"
+                        android:src="@drawable/email" />
+
+                    <com.promoanalytics.utils.Fonts.RobotoNormalEditText
+                        android:id="@+id/editEmail"
+                        style="@style/EditTextRoboto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:enabled="false"
                         android:hint="Email"
                         android:inputType="textEmailAddress" />
-                </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
 
-
-                <!-- mobile number -->
-                <android.support.design.widget.TextInputLayout
+                <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                    style="@style/TextViewHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin">
+                    android:text="@string/phoneNumber" />
 
-                    <EditText
-                        android:id="@+id/input_mobile"
+                <LinearLayout
+                    style="@style/BorderLinearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        style="@style/EditTextImage"
+                        android:src="@drawable/phone" />
+
+                    <com.promoanalytics.utils.Fonts.RobotoNormalEditText
+                        android:id="@+id/EditMobile"
+                        style="@style/EditTextRoboto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:enabled="false"
                         android:hint="Phone Number"
-                        android:inputType="number" />
-                </android.support.design.widget.TextInputLayout>
+                        android:inputType="phone" />
+                </LinearLayout>
 
-                <!-- Password Label -->
-                <android.support.design.widget.TextInputLayout
+                <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                    style="@style/TextViewHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin">
+                    android:text="@string/password" />
 
-                    <EditText
-                        android:id="@+id/input_password"
+                <LinearLayout
+                    style="@style/BorderLinearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        style="@style/EditTextImage"
+                        android:src="@drawable/password" />
+
+                    <com.promoanalytics.utils.Fonts.RobotoNormalEditText
+                        android:id="@+id/editPassword"
+                        style="@style/EditTextRoboto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Password"
                         android:inputType="textPassword" />
-                </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
 
-                <!-- Password Re-enter Label -->
-                <android.support.design.widget.TextInputLayout
+                <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                    style="@style/TextViewHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:visibility="gone">
+                    android:text="@string/confirmPassword" />
+
+                <LinearLayout
+                    style="@style/BorderLinearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        style="@style/EditTextImage"
+                        android:src="@drawable/password" />
 
                     <EditText
-                        android:id="@+id/input_reEnterPassword"
+                        android:id="@+id/EditReEnterPassword"
+                        style="@style/EditTextRoboto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Re-enter Password"
                         android:inputType="textPassword" />
-                </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
 
                 <!-- Signup Button -->
                 <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/btn_signup"
+                    android:id="@+id/btnSaveProfile"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/activity_horizontal_margin"
@@ -190,116 +208,11 @@
                     android:layout_marginTop="@dimen/activity_horizontal_margin"
                     android:background="@drawable/rectanglefilled"
                     android:text="Save Profile"
-                    android:textColor="#fff" />
+                    android:textColor="@color/white" />
 
 
             </LinearLayout>
         </ScrollView>
 
     </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/sgn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#fff"
-        android:visibility="visible">
-
-        <LinearLayout
-            android:id="@+id/home"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:gravity="center">
-
-
-            <TextView
-                android:id="@+id/texthome"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:drawableTop="@drawable/map"
-                android:gravity="center"
-                android:text="Map"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="#4b4d4e"
-
-                />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/list"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-
-
-            android:gravity="center">
-
-
-            <TextView
-                android:id="@+id/textregular"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:drawableTop="@drawable/list"
-                android:gravity="center"
-                android:text="List"
-                android:textAppearance="?android:textAppearanceSmall"
-
-                android:textColor="#4b4d4e"
-
-                />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/saved"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-
-
-            android:gravity="center">
-
-
-            <TextView
-                android:id="@+id/textused"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:drawableTop="@drawable/saved"
-                android:gravity="center"
-                android:text="Saved"
-                android:textAppearance="?android:textAppearanceSmall"
-
-                android:textColor="#4b4d4e"
-
-                />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/profile"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-
-            android:layout_weight="1"
-
-            android:gravity="center">
-
-
-            <TextView
-                android:id="@+id/textmember"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:drawableTop="@drawable/profileactive"
-                android:gravity="center"
-                android:text="Profile"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="#EE4239"
-
-                />
-        </LinearLayout>
-    </LinearLayout>
 </RelativeLayout>

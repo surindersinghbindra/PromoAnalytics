@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="#E8EBF2"
-    android:focusableInTouchMode="true"
-    android:orientation="vertical">
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ScrollView
         android:id="@+id/listdetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/sgn"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:background="#E8EBF2"
+        android:focusableInTouchMode="true"
         android:visibility="visible">
 
         <LinearLayout
@@ -31,7 +29,6 @@
                 <ImageView
                     android:id="@+id/ivHamburger"
                     android:layout_width="match_parent"
-
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:src="@drawable/logocpn" />
@@ -51,7 +48,6 @@
                 <TextView
                     android:id="@+id/latestoffers"
                     android:layout_width="match_parent"
-
                     android:layout_height="wrap_content"
                     android:gravity="left|center"
                     android:text="City"
@@ -74,8 +70,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-
-                    android:background="#dcdbdb"></View>
+                    android:background="#dcdbdb" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -104,7 +99,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
 
-                    android:background="#dcdbdb"></View>
+                    android:background="#dcdbdb" />
             </LinearLayout>
 
             <LinearLayout
@@ -119,7 +114,6 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-
                     android:layout_weight=".9"
                     android:gravity="left|center"
                     android:text="Featured Coupons In Chandigarh"
@@ -204,8 +198,6 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:gravity="center"
-
-
                 android:isScrollContainer="false"
                 android:numColumns="2"
                 android:stretchMode="columnWidth" />
@@ -213,108 +205,4 @@
     </ScrollView>
 
 
-    <LinearLayout
-        android:id="@+id/sgn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#fff"
-        android:visibility="visible">
-
-        <LinearLayout
-            android:id="@+id/home"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:gravity="center">
-
-
-            <TextView
-                android:id="@+id/texthome"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:drawableTop="@drawable/mapactive"
-                android:gravity="center"
-                android:text="Map"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="#EE4239"
-
-                />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/list"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-
-
-            android:gravity="center">
-
-
-            <TextView
-                android:id="@+id/textregular"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:drawableTop="@drawable/list"
-                android:gravity="center"
-                android:text="List"
-                android:textAppearance="?android:textAppearanceSmall"
-
-                android:textColor="#4b4d4e"
-
-                />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/saved"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-
-
-            android:gravity="center">
-
-
-            <TextView
-                android:id="@+id/textused"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:drawableTop="@drawable/saved"
-                android:gravity="center"
-                android:text="Saved"
-                android:textAppearance="?android:textAppearanceSmall"
-
-                android:textColor="#4b4d4e"
-
-                />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/profile"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-
-            android:layout_weight="1"
-
-            android:gravity="center">
-
-
-            <TextView
-                android:id="@+id/textmember"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:drawableTop="@drawable/profile"
-                android:gravity="center"
-                android:text="Profile"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="#4b4d4e"
-
-                />
-        </LinearLayout>
-    </LinearLayout>
-</RelativeLayout>
+</layout>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        icon="@drawable/map"
+        id="@+id/tab_map"
+        title="Maps" />
+    <tab
+        icon="@drawable/list"
+        id="@+id/tab_list"
+        title="List" />
+    <tab
+        icon="@drawable/saved"
+        id="@+id/tab_saved"
+        title="Coupons" />
+
+    <tab
+        icon="@drawable/user"
+        id="@+id/tab_user"
+        title="Profile" />
+</tabs>

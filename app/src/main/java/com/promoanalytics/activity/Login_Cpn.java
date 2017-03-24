@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.widget.EditText;
@@ -15,19 +14,20 @@ import android.widget.TextView;
 
 import com.promoanalytics.R;
 import com.promoanalytics.activity.login.LoginFragment;
-import com.promoanalytics.activity.login.LoginPagerAdapter;
 import com.promoanalytics.activity.login.RegisterFragment;
+import com.promoanalytics.adapter.LoginPagerAdapter;
 import com.promoanalytics.databinding.LoginCpnappBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
+
 /**
  * Created by think360user on 14/3/17.
  */
 
-public class Login_Cpn extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener {
+public class Login_Cpn extends BaseAppCompatActivity implements LoginFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener {
     TextView registers;
     AppCompatButton btn_signup;
     TextInputLayout femail, fpassword;
@@ -53,6 +53,7 @@ public class Login_Cpn extends AppCompatActivity implements LoginFragment.OnFrag
         super.onCreate(savedInstanceState);
 
         login_cpn = DataBindingUtil.setContentView(Login_Cpn.this, R.layout.login_cpnapp);
+
 
         //ViewPager for login
         //vp_Login = (ViewPager) findViewById(R.id.vp_Login);

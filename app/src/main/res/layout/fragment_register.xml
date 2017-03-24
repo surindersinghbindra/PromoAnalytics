@@ -177,7 +177,7 @@
             </LinearLayout>
             <!-- Signup Button -->
             <android.support.v7.widget.AppCompatButton
-                android:id="@+id/btn_signup"
+                android:id="@+id/btnSignProfile"
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"

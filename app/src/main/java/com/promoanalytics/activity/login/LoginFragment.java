@@ -6,7 +6,6 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -29,18 +28,19 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.promoanalytics.AppConstants;
 import com.promoanalytics.R;
-import com.promoanalytics.activity.Home_Cpn;
+import com.promoanalytics.activity.HomeActivity;
 import com.promoanalytics.databinding.FragmentLoginBinding;
-import com.promoanalytics.model.AllDeals;
+import com.promoanalytics.modules.MyApplication;
 import com.promoanalytics.utils.PromoAnalyticsServices;
 import com.promoanalytics.utils.RootFragment;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
+import im.delight.android.location.SimpleLocation;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -58,19 +58,16 @@ public class LoginFragment extends RootFragment implements GoogleApiClient.OnCon
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
-    private FragmentLoginBinding binding;
-
     //Google Login SDK
     private static final String TAG = "LoginFragment";
     private static final int RC_SIGN_IN = 9001;
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
+    private OnFragmentInteractionListener mListener;
+    private FragmentLoginBinding binding;
     private GoogleApiClient mGoogleApiClient;
-
+    private SimpleLocation location;
     //Facebook Login SDK
     private CallbackManager callbackManager;
 
@@ -119,6 +116,9 @@ public class LoginFragment extends RootFragment implements GoogleApiClient.OnCon
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
+        // construct a new instance of SimpleLocation
+        // location = new SimpleLocation(getActivity());
 
         callbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(callbackManager,
@@ -200,33 +200,29 @@ public class LoginFragment extends RootFragment implements GoogleApiClient.OnCon
                         public void onResponse(Call<User> call, Response<User> response) {
 
                             if (response.isSuccessful()) {
+                                pDialog.hide();
+
+                          /*      // if we can't access the location yet
+                                if (!location.hasLocationEnabled()) {
+                                    // ask the user to enable location access
+                                    SimpleLocation.openSettings(getActivity());
+                                }
+
+                                final double latitude = location.getLatitude();
+                                final double longitude = location.getLongitude();*/
+
 
                                 response.body().toString();
                                 Log.d("RES_RETRO", response.body().getStatus() + "");
+                                Log.d("RES_RETRO", response.body().getData().getUserId() + "");
 
+                                MyApplication.getSharedPrefEditor().putString(AppConstants.USER_ID, response.body().getData().getUserId()).apply();
+                                MyApplication.getSharedPrefEditor().putString(AppConstants.USER_NAME, response.body().getData().getName()).apply();
+                                MyApplication.getSharedPrefEditor().putString(AppConstants.EMAIL, response.body().getData().getEmail()).apply();
+                                MyApplication.getSharedPrefEditor().putString(AppConstants.PHONE_NUMBER, response.body().getData().getPhone()).apply();
 
-                                Call<AllDeals> getAllDealsCall = promoAnalyticsServices.getAllDeals("", "30.7360306", "76.7328649", "0", response.body().getData().getUserId(), "0");
-                                getAllDealsCall.enqueue(new Callback<AllDeals>() {
-                                    @Override
-                                    public void onResponse(Call<AllDeals> call, Response<AllDeals> response) {
+                                getActivity().startActivity(new Intent(getActivity(), HomeActivity.class));
 
-                                        pDialog.hide();
-                                        if (response.body().getStatus()) {
-                                            Log.d("RETRO_GETALLDEALS", response.body().getStatus() + "");
-                                            Log.d("RETRO_GETALLDEALS", response.body().getData().getDetail().get(0).getCategoryPic());
-                                            Intent intent = new Intent(getActivity(), Home_Cpn.class);
-                                            intent.putParcelableArrayListExtra("LIST_DEALS", (ArrayList<? extends Parcelable>) response.body().getData().getDetail());
-                                            getActivity().startActivity(intent);
-                                        } else {
-                                            showDialog(response.body().getMessage());
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<AllDeals> call, Throwable t) {
-
-                                    }
-                                });
 
                             } else {
                                 System.out.print(response.errorBody());
@@ -291,7 +287,7 @@ public class LoginFragment extends RootFragment implements GoogleApiClient.OnCon
     @Override
     public void onStart() {
         super.onStart();
-
+        //   location.beginUpdates();
     }
 
     // [START on_stop_remove_listener]
@@ -300,7 +296,6 @@ public class LoginFragment extends RootFragment implements GoogleApiClient.OnCon
         super.onStop();
 
     }
-    // [END on_stop_remove_listener]
 
     // [START onactivityresult]
     @Override
@@ -347,6 +342,7 @@ public class LoginFragment extends RootFragment implements GoogleApiClient.OnCon
 
     @Override
     public void onDetach() {
+        //  location.endUpdates();
         super.onDetach();
         mListener = null;
     }

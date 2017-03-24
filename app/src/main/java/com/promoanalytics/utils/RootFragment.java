@@ -15,6 +15,7 @@ public class RootFragment extends Fragment {
     protected ProgressDialog pDialog;
     protected AlertDialog.Builder alertDialog;
 
+
     protected void showProgressBar() {
 
         pDialog = new ProgressDialog(getActivity());

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="160dp"
+    android:layout_height="160dp"
+    android:layout_margin="5dp"
+    android:elevation="5dp"
+    android:orientation="vertical"
+    app:cardCornerRadius="5dp">
+
+    <com.promoanalytics.utils.SquareLinearLayout
+
+        android:id="@+id/cpndetails"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:layout_margin="5dp"
+        android:background="#fff"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:id="@+id/hrtunfled"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/hrtunfilled"
+                android:visibility="visible" />
+
+
+            <ImageView
+                android:id="@+id/ivDeal"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_below="@+id/hrtunfled"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="4dp"
+                android:src="@drawable/logocpn" />
+
+
+        </RelativeLayout>
+
+
+        <com.promoanalytics.utils.Fonts.RobotoBoldTextView
+            android:id="@+id/grid_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:hint="30 % off"
+            android:padding="4dp"
+            android:textColor="@color/appBlue"
+            android:textSize="16sp" />
+
+        <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+            android:id="@+id/lkjk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:text="Mc'Donalds"
+            android:textSize="14sp" />
+
+    </com.promoanalytics.utils.SquareLinearLayout>
+
+
+</android.support.v7.widget.CardView>
