@@ -62,13 +62,18 @@ public class PhoneNumberActivity extends BaseAppCompatActivity {
 
                             if (response.isSuccessful()) {
                                 pDialog.hide();
-                                MyApplication.sharedPreferencesCompat.edit().putString(AppConstants.USER_NAME, intent.getStringExtra(AppConstants.USER_NAME)).apply();
-                                MyApplication.sharedPreferencesCompat.edit().putString(AppConstants.EMAIL, intent.getStringExtra(AppConstants.EMAIL)).apply();
-                                MyApplication.sharedPreferencesCompat.edit().putString(AppConstants.USER_ID, response.body().getData().getUserId() + "").apply();
-                                MyApplication.sharedPreferencesCompat.edit().putBoolean(AppConstants.IS_SOCIAL, true).apply();
-                                MyApplication.sharedPreferencesCompat.edit().putString(AppConstants.PHONE_NUMBER, phoneNumberActivityBinding.etMobileNumber.getText().toString().trim()).apply();
+                                if (response.body().getStatus()) {
+                                    MyApplication.sharedPreferencesCompat.edit().putString(AppConstants.USER_NAME, intent.getStringExtra(AppConstants.USER_NAME)).apply();
+                                    MyApplication.sharedPreferencesCompat.edit().putString(AppConstants.EMAIL, intent.getStringExtra(AppConstants.EMAIL)).apply();
+                                    MyApplication.sharedPreferencesCompat.edit().putString(AppConstants.USER_ID, response.body().getData().getUserId() + "").apply();
+                                    MyApplication.sharedPreferencesCompat.edit().putBoolean(AppConstants.IS_SOCIAL, true).apply();
+                                    MyApplication.sharedPreferencesCompat.edit().putString(AppConstants.PHONE_NUMBER, phoneNumberActivityBinding.etMobileNumber.getText().toString().trim()).apply();
+                                    startActivity(new Intent(PhoneNumberActivity.this, HomeActivity.class));
+                                } else {
 
-                                startActivity(new Intent(PhoneNumberActivity.this, HomeActivity.class));
+                                    showMessageInSnackBar(response.body().getMessage());
+
+                                }
 
                             } else {
                                 showDialog(response.body().getMessage());
