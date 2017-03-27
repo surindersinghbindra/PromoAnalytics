@@ -3,7 +3,6 @@ package com.promoanalytics.login;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 
 /**
@@ -56,8 +55,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     }
 
     protected void showMessageInSnackBar(String message) {
-        Snackbar.make(findViewById(android.R.id.content),
-                message, Snackbar.LENGTH_SHORT).show();
+
     }
 
 

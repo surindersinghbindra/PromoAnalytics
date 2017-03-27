@@ -4,8 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.promoanalytics.R;
 import com.promoanalytics.databinding.ActivityPhoneNumberBinding;
@@ -35,39 +38,53 @@ public class PhoneNumberActivity extends BaseAppCompatActivity {
         }
         phoneNumberActivityBinding = DataBindingUtil.setContentView(this, R.layout.activity_phone_number, null);
 
+        phoneNumberActivityBinding.btnSignProfile.setOnClickListener(new View.OnClickListener() {
 
-        if (TextUtils.isEmpty(phoneNumberActivityBinding.etMobileNumber.getText())) {
-            showMessageInSnackBar("Please provide mobile number");
-        } else {
+            @Override
+            public void onClick(View v) {
 
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 
-            PromoAnalyticsServices promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
-            Call<RegisterUser> registerUserCallback = promoAnalyticsServices.registerUserWithSocial(intent.getStringExtra(AppConstants.USER_NAME), intent.getStringExtra(AppConstants.EMAIL), "+" + getCountryISDCode() + phoneNumberActivityBinding.etMobileNumber.getText().toString().trim(), 1);
-            registerUserCallback.enqueue(new Callback<RegisterUser>() {
-                @Override
-                public void onResponse(Call<RegisterUser> call, Response<RegisterUser> response) {
+                if (TextUtils.isEmpty(phoneNumberActivityBinding.etMobileNumber.getText())) {
 
-                    if (response.isSuccessful()) {
+                    Snackbar.make(phoneNumberActivityBinding.coordinatorLayout,
+                            "Please provide mobile number", Snackbar.LENGTH_SHORT).show();
+                    // showMessageInSnackBar("Please provide mobile number");
+                } else {
 
-                        MyApplication.sharedPreferencesCompat.edit().putString(AppConstants.USER_NAME, intent.getStringExtra(AppConstants.USER_NAME)).apply();
-                        MyApplication.sharedPreferencesCompat.edit().putString(AppConstants.EMAIL, intent.getStringExtra(AppConstants.EMAIL)).apply();
-                        MyApplication.sharedPreferencesCompat.edit().putString(AppConstants.USER_ID, response.body().getData().getUserId() + "").apply();
-                        MyApplication.sharedPreferencesCompat.edit().putBoolean(AppConstants.IS_SOCIAL, true).apply();
-                        MyApplication.sharedPreferencesCompat.edit().putString(AppConstants.PHONE_NUMBER, phoneNumberActivityBinding.etMobileNumber.getText().toString().trim()).apply();
+                    showProgressBar();
+                    PromoAnalyticsServices promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
+                    Call<RegisterUser> registerUserCallback = promoAnalyticsServices.registerUserWithSocial(intent.getStringExtra(AppConstants.USER_NAME), intent.getStringExtra(AppConstants.EMAIL), "+" + getCountryISDCode() + phoneNumberActivityBinding.etMobileNumber.getText().toString().trim(), 1);
+                    registerUserCallback.enqueue(new Callback<RegisterUser>() {
+                        @Override
+                        public void onResponse(Call<RegisterUser> call, Response<RegisterUser> response) {
 
-                        startActivity(new Intent(PhoneNumberActivity.this, HomeActivity.class));
+                            if (response.isSuccessful()) {
+                                pDialog.hide();
+                                MyApplication.sharedPreferencesCompat.edit().putString(AppConstants.USER_NAME, intent.getStringExtra(AppConstants.USER_NAME)).apply();
+                                MyApplication.sharedPreferencesCompat.edit().putString(AppConstants.EMAIL, intent.getStringExtra(AppConstants.EMAIL)).apply();
+                                MyApplication.sharedPreferencesCompat.edit().putString(AppConstants.USER_ID, response.body().getData().getUserId() + "").apply();
+                                MyApplication.sharedPreferencesCompat.edit().putBoolean(AppConstants.IS_SOCIAL, true).apply();
+                                MyApplication.sharedPreferencesCompat.edit().putString(AppConstants.PHONE_NUMBER, phoneNumberActivityBinding.etMobileNumber.getText().toString().trim()).apply();
 
-                    } else {
-                        showDialog(response.body().getMessage());
-                    }
+                                startActivity(new Intent(PhoneNumberActivity.this, HomeActivity.class));
+
+                            } else {
+                                showDialog(response.body().getMessage());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<RegisterUser> call, Throwable t) {
+                            showMessageInSnackBar(t.getMessage());
+                        }
+                    });
                 }
+            }
+        });
 
-                @Override
-                public void onFailure(Call<RegisterUser> call, Throwable t) {
-                    showMessageInSnackBar(t.getMessage());
-                }
-            });
-        }
+
     }
 
     String getCountryISDCode() {
