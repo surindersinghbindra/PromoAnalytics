@@ -20,7 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activity.Login_Cpn"
+            android:name=".login.LoginActivity"
             android:label="@string/title_activity_maps"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
@@ -35,33 +35,25 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBeNAHSckNiKt_nfBpTO1IZVr3QdphBv5Q" />
-
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
         <activity
-            android:name=".activity.splash.SplashActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".activity.MainActivity"
+            android:name=".splash.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.EditProfile"
+            android:name=".login.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.SavedActivity"
+            android:name=".login.SavedActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -74,8 +66,11 @@
                 android:resource="@xml/picker_provider_paths" />
         </provider>
 
-        <activity android:name=".activity.HomeActivity" />
-
+        <activity android:name=".login.HomeActivity" />
+        <activity
+            android:name=".login.login.PhoneNumberActivity"
+            android:label="@string/title_activity_phone_number"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

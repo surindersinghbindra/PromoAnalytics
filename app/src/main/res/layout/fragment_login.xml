@@ -17,47 +17,60 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <!-- Name Label -->
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/femail"
+
+
+            <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                style="@style/TextViewHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/activity_horizontal_margin">
+                android:text="Email/Mobile no" />
 
-                <EditText
+            <LinearLayout
+                style="@style/BorderLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    style="@style/EditTextImage"
+                    android:src="@drawable/email" />
+
+                <com.promoanalytics.utils.Fonts.RobotoNormalEditText
                     android:id="@+id/input_name"
+                    style="@style/EditTextRoboto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/email"
-                    android:drawablePadding="5dp"
-                    android:hint="Email/Mobile no"
-                    android:inputType="textPersonName"
-                    android:text="9989132332" />
-            </android.support.design.widget.TextInputLayout>
+                    android:hint="Username"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:nextFocusForward="@+id/input_password" />
+            </LinearLayout>
 
 
-            <!-- Password Label -->
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/fpassword"
+            <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                style="@style/TextViewHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin">
+                android:text="@string/password" />
 
-                <EditText
+            <LinearLayout
+                style="@style/BorderLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    style="@style/EditTextImage"
+                    android:src="@drawable/password" />
+
+                <com.promoanalytics.utils.Fonts.RobotoNormalEditText
                     android:id="@+id/input_password"
+                    style="@style/EditTextRoboto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/password"
-                    android:drawablePadding="5dp"
                     android:hint="Password"
-                    android:inputType="textPassword"
-                    android:text="123456" />
-            </android.support.design.widget.TextInputLayout>
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword" />
+            </LinearLayout>
+
 
             <!-- Password Re-enter Label -->
             <LinearLayout
@@ -72,16 +85,33 @@
                 android:visibility="visible">
 
 
-                <CheckBox
-                    style="@style/MyCheckBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left|center_vertical"
-                    android:gravity="left|center_vertical"
-                    android:text="Remember me"
-                    android:textColor="@color/appOrange"
-                    app:buttonTint="@color/appOrange" />
+                <RelativeLayout
 
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="left|center_vertical"
+                    android:gravity="left|center_vertical">
+
+                    <Switch
+                        android:id="@+id/switch_gprs"
+                        style="@style/CustomSwitchButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:checked="false"
+                        android:gravity="center_vertical"
+                        app:buttonTint="@color/appOrange" />
+
+                    <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_toRightOf="@+id/switch_gprs"
+                        android:checked="false"
+                        android:gravity="center_vertical"
+                        android:text="Remember me"
+                        android:textColor="@color/appOrange"
+                        app:buttonTint="@color/appOrange" />
+
+                </RelativeLayout>
 
                 <com.promoanalytics.utils.Fonts.RobotoNormalTextView
                     android:layout_width="wrap_content"

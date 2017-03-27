@@ -1,218 +1,222 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<layout>
 
-    <RelativeLayout
-        android:id="@+id/profiledetails"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/sgn"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
-        android:focusableInTouchMode="true"
-        android:orientation="vertical"
-        android:visibility="visible">
+        android:orientation="vertical">
 
-        <ScrollView
+        <RelativeLayout
+            android:id="@+id/profiledetails"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/toolbars"
-            android:fitsSystemWindows="true">
+            android:layout_above="@+id/sgn"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical"
+            android:visibility="visible">
 
-            <LinearLayout
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:layout_below="@+id/toolbars"
+                android:fitsSystemWindows="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#EE4239"
                     android:orientation="vertical">
 
-                    <com.promoanalytics.modules.CircleImageview
-                        android:id="@+id/ivUser"
-                        android:layout_width="96dp"
-                        android:layout_height="96dp"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="@dimen/activity_horizontal_margin"
-                        android:src="@drawable/profilepic"
-                        app:civ_border_color="@color/appOrangeLight"
-                        app:civ_border_width="8dp"
-                        app:civ_fill_color="@color/appBlue" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#EE4239"
+                        android:orientation="vertical">
+
+                        <com.promoanalytics.modules.CircleImageview
+                            android:id="@+id/ivUser"
+                            android:layout_width="96dp"
+                            android:layout_height="96dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="@dimen/activity_horizontal_margin"
+                            android:src="@drawable/profilepic"
+                            app:civ_border_color="@color/appOrangeLight"
+                            app:civ_border_width="8dp"
+                            app:civ_fill_color="@color/appBlue" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                            android:layout_marginTop="@dimen/activity_horizontal_margin"
+                            android:orientation="horizontal">
+
+                            <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                                android:id="@+id/tvName"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:gravity="center"
+                                android:hint="Surinder Singh"
+                                android:textAppearance="?android:textAppearanceMedium"
+                                android:textColor="@color/white"
+                                android:textColorHint="@color/white"
+                                android:textSize="20sp"
+
+                                />
+
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                        style="@style/TextViewHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/userName" />
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginBottom="@dimen/activity_horizontal_margin"
-                        android:layout_marginTop="@dimen/activity_horizontal_margin"
-                        android:orientation="horizontal">
+                        style="@style/BorderLinearLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                        <com.promoanalytics.utils.Fonts.RobotoNormalTextView
-                            android:id="@+id/tvName"
+                        <ImageView
+                            style="@style/EditTextImage"
+                            android:src="@drawable/profile" />
+
+                        <com.promoanalytics.utils.Fonts.RobotoNormalEditText
+                            android:id="@+id/editName"
+                            style="@style/EditTextRoboto"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:gravity="center"
+                            android:layout_height="wrap_content"
                             android:hint="Surinder Singh"
-                            android:textAppearance="?android:textAppearanceMedium"
-                            android:textColor="@color/white"
-                            android:textColorHint="@color/white"
-                            android:textSize="20sp"
-
-                            />
-
+                            android:inputType="textPersonName" />
 
                     </LinearLayout>
-                </LinearLayout>
 
-                <com.promoanalytics.utils.Fonts.RobotoNormalTextView
-                    style="@style/TextViewHeader"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/userName" />
 
-                <LinearLayout
-                    style="@style/BorderLinearLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        style="@style/EditTextImage"
-                        android:src="@drawable/profile" />
-
-                    <com.promoanalytics.utils.Fonts.RobotoNormalEditText
-                        android:id="@+id/editName"
-                        style="@style/EditTextRoboto"
+                    <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                        style="@style/TextViewHeader"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Surinder Singh"
-                        android:inputType="textPersonName" />
+                        android:text="@string/email" />
 
-                </LinearLayout>
+                    <LinearLayout
+                        style="@style/BorderLinearLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
+                        <ImageView
+                            style="@style/EditTextImage"
+                            android:src="@drawable/email" />
 
-                <com.promoanalytics.utils.Fonts.RobotoNormalTextView
-                    style="@style/TextViewHeader"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/email" />
+                        <com.promoanalytics.utils.Fonts.RobotoNormalEditText
+                            android:id="@+id/editEmail"
+                            style="@style/EditTextRoboto"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:enabled="false"
+                            android:hint="Email"
+                            android:inputType="textEmailAddress" />
+                    </LinearLayout>
 
-                <LinearLayout
-                    style="@style/BorderLinearLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        style="@style/EditTextImage"
-                        android:src="@drawable/email" />
-
-                    <com.promoanalytics.utils.Fonts.RobotoNormalEditText
-                        android:id="@+id/editEmail"
-                        style="@style/EditTextRoboto"
+                    <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                        style="@style/TextViewHeader"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:enabled="false"
-                        android:hint="Email"
-                        android:inputType="textEmailAddress" />
-                </LinearLayout>
+                        android:text="@string/phoneNumber" />
 
-                <com.promoanalytics.utils.Fonts.RobotoNormalTextView
-                    style="@style/TextViewHeader"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/phoneNumber" />
+                    <LinearLayout
+                        style="@style/BorderLinearLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                <LinearLayout
-                    style="@style/BorderLinearLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                        <ImageView
+                            style="@style/EditTextImage"
+                            android:src="@drawable/phone" />
 
-                    <ImageView
-                        style="@style/EditTextImage"
-                        android:src="@drawable/phone" />
+                        <com.promoanalytics.utils.Fonts.RobotoNormalEditText
+                            android:id="@+id/EditMobile"
+                            style="@style/EditTextRoboto"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:enabled="false"
+                            android:hint="Phone Number"
+                            android:inputType="phone" />
+                    </LinearLayout>
 
-                    <com.promoanalytics.utils.Fonts.RobotoNormalEditText
-                        android:id="@+id/EditMobile"
-                        style="@style/EditTextRoboto"
+                    <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                        style="@style/TextViewHeader"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:enabled="false"
-                        android:hint="Phone Number"
-                        android:inputType="phone" />
-                </LinearLayout>
+                        android:text="@string/password" />
 
-                <com.promoanalytics.utils.Fonts.RobotoNormalTextView
-                    style="@style/TextViewHeader"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/password" />
+                    <LinearLayout
+                        style="@style/BorderLinearLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                <LinearLayout
-                    style="@style/BorderLinearLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                        <ImageView
+                            style="@style/EditTextImage"
+                            android:src="@drawable/password" />
 
-                    <ImageView
-                        style="@style/EditTextImage"
-                        android:src="@drawable/password" />
+                        <com.promoanalytics.utils.Fonts.RobotoNormalEditText
+                            android:id="@+id/editPassword"
+                            style="@style/EditTextRoboto"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Password"
+                            android:inputType="textPassword" />
+                    </LinearLayout>
 
-                    <com.promoanalytics.utils.Fonts.RobotoNormalEditText
-                        android:id="@+id/editPassword"
-                        style="@style/EditTextRoboto"
+                    <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                        style="@style/TextViewHeader"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Password"
-                        android:inputType="textPassword" />
-                </LinearLayout>
+                        android:text="@string/confirmPassword" />
 
-                <com.promoanalytics.utils.Fonts.RobotoNormalTextView
-                    style="@style/TextViewHeader"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/confirmPassword" />
-
-                <LinearLayout
-                    style="@style/BorderLinearLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        style="@style/EditTextImage"
-                        android:src="@drawable/password" />
-
-                    <EditText
-                        android:id="@+id/EditReEnterPassword"
-                        style="@style/EditTextRoboto"
+                    <LinearLayout
+                        style="@style/BorderLinearLayout"
                         android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            style="@style/EditTextImage"
+                            android:src="@drawable/password" />
+
+                        <EditText
+                            android:id="@+id/EditReEnterPassword"
+                            style="@style/EditTextRoboto"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Re-enter Password"
+                            android:inputType="textPassword" />
+                    </LinearLayout>
+
+                    <!-- Signup Button -->
+                    <android.support.v7.widget.AppCompatButton
+                        android:id="@+id/btnSaveProfile"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Re-enter Password"
-                        android:inputType="textPassword" />
+                        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:layout_marginTop="@dimen/activity_horizontal_margin"
+                        android:background="@drawable/rectanglefilled"
+                        android:text="Save Profile"
+                        android:textColor="@color/white" />
+
+
                 </LinearLayout>
+            </ScrollView>
 
-                <!-- Signup Button -->
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/btnSaveProfile"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/activity_horizontal_margin"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:layout_marginTop="@dimen/activity_horizontal_margin"
-                    android:background="@drawable/rectanglefilled"
-                    android:text="Save Profile"
-                    android:textColor="@color/white" />
-
-
-            </LinearLayout>
-        </ScrollView>
-
+        </RelativeLayout>
     </RelativeLayout>
-</RelativeLayout>
+
+</layout>

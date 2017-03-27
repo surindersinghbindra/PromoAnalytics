@@ -1,19 +1,16 @@
-package com.promoanalytics.utils;
+package com.promoanalytics.login;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-
-import com.promoanalytics.BackPressImpl;
-import com.promoanalytics.OnBackPressListener;
+import android.support.v7.app.AppCompatActivity;
 
 /**
- * Created by think360 on 22/03/17.
+ * Created by think360 on 23/03/17.
  */
 
-public class RootFragment extends Fragment implements OnBackPressListener {
+public class BaseAppCompatActivity extends AppCompatActivity {
 
 
     protected ProgressDialog pDialog;
@@ -22,7 +19,7 @@ public class RootFragment extends Fragment implements OnBackPressListener {
 
     protected void showProgressBar() {
 
-        pDialog = new ProgressDialog(getActivity());
+        pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.setCanceledOnTouchOutside(false);
@@ -32,7 +29,7 @@ public class RootFragment extends Fragment implements OnBackPressListener {
 
     protected void showProgressBarWithMessage(String message) {
 
-        pDialog = new ProgressDialog(getActivity());
+        pDialog = new ProgressDialog(this);
         pDialog.setMessage(message);
         pDialog.setCancelable(false);
         pDialog.setCanceledOnTouchOutside(false);
@@ -41,7 +38,7 @@ public class RootFragment extends Fragment implements OnBackPressListener {
     }
 
     protected void showDialog(String message) {
-        alertDialog = new AlertDialog.Builder(getActivity());
+        alertDialog = new AlertDialog.Builder(this);
         alertDialog.setMessage(message);
         alertDialog.setCancelable(true);
 
@@ -59,13 +56,8 @@ public class RootFragment extends Fragment implements OnBackPressListener {
     }
 
     protected void showMessageInSnackBar(String message) {
-        Snackbar.make(getActivity().findViewById(android.R.id.content),
+        Snackbar.make(findViewById(android.R.id.content),
                 message, Snackbar.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public boolean onBackPressed() {
-        return new BackPressImpl(this).onBackPressed();
     }
 
 

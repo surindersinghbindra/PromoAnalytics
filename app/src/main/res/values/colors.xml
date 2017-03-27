@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#007DC9</color>
+    <color name="colorPrimaryDark">#002F4B</color>
     <color name="colorAccent">#FF4081</color>
     <color name="white">#ffffff</color>
 
@@ -10,8 +10,8 @@
     <color name="appOrangeLight">#FF766D</color>
 
 
-    <color name="appBlueDark">#00448D</color>
-    <color name="appBlue">#18204E</color>
+    <color name="appBlueDark">#007DC9</color>
+    <color name="appBlue">#007DC9</color>
     <color name="appGray">#525354</color>
 
     <color name="appGrayLight">#CBCBCB</color>

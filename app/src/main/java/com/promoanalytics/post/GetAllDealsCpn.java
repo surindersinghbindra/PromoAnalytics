@@ -15,7 +15,7 @@ import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.promoanalytics.activity.ListDealsFragment;
+import com.promoanalytics.login.ListDealsFragment;
 import com.promoanalytics.modules.ExpandableHeightGridView;
 import com.promoanalytics.modules.MyApplication;
 import com.promoanalytics.utils.BaseUrlCPn;

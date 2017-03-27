@@ -1,8 +1,8 @@
 package com.promoanalytics.utils;
 
 import com.google.gson.GsonBuilder;
-import com.promoanalytics.activity.login.RegisterUser;
-import com.promoanalytics.activity.login.User;
+import com.promoanalytics.login.login.RegisterUser;
+import com.promoanalytics.login.login.User;
 import com.promoanalytics.model.AllDeals.AllDeals;
 
 import okhttp3.RequestBody;
@@ -39,6 +39,13 @@ public interface PromoAnalyticsServices {
                                     @Field("email") String email,
                                     @Field("mobile") String mobile,
                                     @Field("password") String password,
+                                    @Field("is_social") int isSocial);
+
+    @FormUrlEncoded
+    @POST("register/")
+    Call<RegisterUser> registerUserWithSocial(@Field("name") String name,
+                                              @Field("email") String email,
+                                              @Field("mobile") String mobile,
                                     @Field("is_social") int isSocial);
 
 

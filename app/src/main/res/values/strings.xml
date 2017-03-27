@@ -1,13 +1,12 @@
 <resources>
-    <string name="app_name">PromoAnalytics</string>
+    <string name="app_name">Promo Analytics</string>
     <string name="title_activity_maps">Promo Analytics</string>
     <string name="facebook_app_id">404760849895061</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="userName">Name</string>
     <string name="email">Email</string>
     <string name="phoneNumber">Phone</string>
     <string name="password">Password</string>
     <string name="confirmPassword">Confirm Password</string>
-    <string name="title_activity_maps_fragment">Map</string>
+    <string name="title_activity_phone_number">PhoneNumberActivity</string>
 </resources>

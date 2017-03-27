@@ -14,7 +14,7 @@ import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.promoanalytics.activity.MainActivity;
+import com.promoanalytics.login.MainActivity;
 import com.promoanalytics.modules.MyApplication;
 import com.promoanalytics.utils.BaseUrlCPn;
 

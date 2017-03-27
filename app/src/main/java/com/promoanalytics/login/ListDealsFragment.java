@@ -1,4 +1,4 @@
-package com.promoanalytics.SavedCoupons;
+package com.promoanalytics.login;
 
 import android.content.Intent;
 import android.location.Location;
@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +20,6 @@ import com.google.android.gms.location.LocationListener;
 import com.promoanalytics.R;
 import com.promoanalytics.adapter.LabAdapters;
 import com.promoanalytics.databinding.HomecpnBinding;
-import com.promoanalytics.login.HomeActivity;
 import com.promoanalytics.model.AllDeals.AllDeals;
 import com.promoanalytics.model.AllDeals.Detail;
 import com.promoanalytics.modules.ExpandableHeightGridView;
@@ -44,7 +45,7 @@ import retrofit2.Response;
  * Created by think360user on 15/3/17.
  */
 
-public class SavedDealsFragment extends RootFragment implements LocationListener {
+public class ListDealsFragment extends RootFragment implements LocationListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -74,8 +75,8 @@ public class SavedDealsFragment extends RootFragment implements LocationListener
      * @return A new instance of fragment RegisterFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SavedDealsFragment newInstance(String param1, String param2) {
-        SavedDealsFragment fragment = new SavedDealsFragment();
+    public static ListDealsFragment newInstance(String param1, String param2) {
+        ListDealsFragment fragment = new ListDealsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -96,20 +97,55 @@ public class SavedDealsFragment extends RootFragment implements LocationListener
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.fragment_saved_deals, container, false);
-        mUnFeaturedDealsRecyclerView = (RecyclerView) view.findViewById(R.id.rvSavedCoupons);
+        view = inflater.inflate(R.layout.fragment_home_new, container, false);
+        mFeaturedDealsRecyclerView = (RecyclerView) view.findViewById(R.id.rvFeaturedCoupons);
+        mUnFeaturedDealsRecyclerView = (RecyclerView) view.findViewById(R.id.rvNormalCoupons);
+
+
+        mFeaturedDealsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         mUnFeaturedDealsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
         PromoAnalyticsServices promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
 
         showProgressBar();
-        Call<AllDeals> allDealsCall = promoAnalyticsServices.getSavedCoupons(MyApplication.sharedPreferencesCompat.getString(AppConstants.USER_ID, "0"));
-        allDealsCall.enqueue(new Callback<AllDeals>() {
+        Call<AllDeals> getAllDealsCall = promoAnalyticsServices.getAllDeals("", "30.7360306", "76.7328649", AppConstants.FEATURED_DEALS, MyApplication.sharedPreferencesCompat.getString(AppConstants.USER_ID, "0"), "1");
+        getAllDealsCall.enqueue(new Callback<AllDeals>() {
             @Override
             public void onResponse(Call<AllDeals> call, Response<AllDeals> response) {
 
                 pDialog.hide();
                 if (response.body().getStatus()) {
+
+                    Log.d("RETRO_GETALLDEALS", response.body().getStatus() + "");
+
+                    Log.d("RETRO_GETALLDEALS", String.valueOf(response.body().getData().getDetail()));
+                    Intent intent = new Intent(getActivity(), HomeActivity.class);
+                    intent.putParcelableArrayListExtra("LIST_DEALS", (ArrayList<? extends Parcelable>) response.body().getData().getDetail());
+
+                    mFeaturedDealsRecyclerView.setAdapter(new AllDealsRvAdapter(response.body().getData().getDetail()));
+                } else {
+                    showDialog(response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AllDeals> call, Throwable t) {
+
+            }
+        });
+
+
+        Call<AllDeals> getAllFeaturedDealsCall = promoAnalyticsServices.getAllDeals("", "30.7360306", "76.7328649", AppConstants.UNFEATURED_DEALS, MyApplication.sharedPreferencesCompat.getString(AppConstants.USER_ID, "0"), "1");
+        getAllFeaturedDealsCall.enqueue(new Callback<AllDeals>() {
+            @Override
+            public void onResponse(Call<AllDeals> call, Response<AllDeals> response) {
+
+                pDialog.hide();
+                if (response.body().getStatus()) {
+
+                    Log.d("RETRO_GETALLDEALS", response.body().getStatus() + "");
+
+                    Log.d("RETRO_GETALLDEALS", String.valueOf(response.body().getData().getDetail()));
                     Intent intent = new Intent(getActivity(), HomeActivity.class);
                     intent.putParcelableArrayListExtra("LIST_DEALS", (ArrayList<? extends Parcelable>) response.body().getData().getDetail());
 
@@ -125,7 +161,51 @@ public class SavedDealsFragment extends RootFragment implements LocationListener
             }
         });
 
+
         return view;
+
+        //  homecpnBinding = DataBindingUtil.setContentView(getActivity(), R.layout.fragment_home_new);
+        /*if (getActivity().getIntent() != null) {
+            myList = (ArrayList<Detail>) getActivity().getIntent().getSerializableExtra("LIST_DEALS");
+        }*/
+
+
+        //Log.e("SIZE", myList.get(myList.size() - 1).getCategoryPic());
+
+
+     /*   gps = new GPSTracker(getActivity());
+        if (gps.canGetLocation()) {
+            currentLatitude = gps.getLatitude();
+            currentLongitude = gps.getLongitude();
+
+
+        } else {
+
+            gps.showSettingsAlert();
+        }*/
+/*        gridview = (ExpandableHeightGridView) findViewById(R.id.myId);
+        gridviews = (ExpandableHeightGridView) findViewById(R.id.myIds);
+        list = (LinearLayout) findViewById(R.id.list);
+        lvTest = (TwoWayView) findViewById(R.id.lvItems);
+        saved = (LinearLayout) findViewById(R.id.saved);
+        saveddetails = (LinearLayout) findViewById(R.id.saveddetails);
+        locationtext = (TextView) findViewById(R.id.locationtext);
+        listdetails = (ScrollView) findViewById(R.id.listdetails);
+        profile = (LinearLayout) findViewById(R.id.profile);
+
+        mHlvSimpleList = (HorizontalListView) findViewById(R.id.hlvSimpleList);*/
+     /*   homecpnBinding.locationtext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });*/
+        //  setupSimpleList();
+        //  setupSimpleList1();
+
+
+        //return homecpnBinding.getRoot();
+
 
     }
 
