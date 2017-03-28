@@ -45,8 +45,9 @@ public interface PromoAnalyticsServices {
     @POST("register/")
     Call<RegisterUser> registerUserWithSocial(@Field("name") String name,
                                               @Field("email") String email,
+                                              @Field("ccode") String ccode,
                                               @Field("mobile") String mobile,
-                                    @Field("is_social") int isSocial);
+                                              @Field("is_social") int isSocial);
 
 
     @FormUrlEncoded

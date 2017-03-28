@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -129,9 +128,6 @@ public class RegisterFragment extends RootFragment implements GoogleApiClient.On
         binding.btnSignProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                // Store the Fragment in stack
-                transaction.addToBackStack(null);
 
                 if (TextUtils.isEmpty(binding.etName.getText()) || TextUtils.isEmpty(binding.etEmail.getText()) || !UtilHelper.isValidEmail(binding.etEmail.getText()) || TextUtils.isEmpty(binding.phone.getText()) || TextUtils.isEmpty(binding.etPassword.getText()) || TextUtils.isEmpty(binding.etConfirmPassword.getText()) || !binding.etConfirmPassword.getText().equals(binding.etPassword.getText()) || !binding.cbAcceptTnC.isChecked()) {
                     if (TextUtils.isEmpty(binding.etName.getText())) {
@@ -176,14 +172,25 @@ public class RegisterFragment extends RootFragment implements GoogleApiClient.On
                     } else {
                         showProgressBar();
                         promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
-                        Call<RegisterUser> registerUserCall = promoAnalyticsServices.registerUser(binding.etName.getText().toString().trim() + "", binding.etEmail.getText().toString().trim(), binding.phone.getText().toString().trim(), binding.etPassword.getText().toString().trim(), 1);
+                        Call<RegisterUser> registerUserCall = promoAnalyticsServices.registerUser(binding.etName.getText().toString().trim() + "", binding.etEmail.getText().toString().trim(), binding.phone.getText().toString().trim(), binding.etPassword.getText().toString().trim(), 0);
                         registerUserCall.enqueue(new Callback<RegisterUser>() {
                             @Override
                             public void onResponse(Call<RegisterUser> call, Response<RegisterUser> response) {
 
                                 if (response.isSuccessful()) {
+                                    pDialog.hide();
 
-                                    getActivity().startActivity(new Intent(getActivity(), HomeActivity.class));
+                                    MyApplication.sharedPreferencesCompat.edit().putString(AppConstants.USER_NAME, binding.etName.getText().toString().trim()).apply();
+                                    MyApplication.sharedPreferencesCompat.edit().putString(AppConstants.EMAIL, binding.etEmail.getText().toString().toString()).apply();
+                                    MyApplication.sharedPreferencesCompat.edit().putString(AppConstants.USER_ID, response.body().getData().getUserId() + "").apply();
+                                    MyApplication.sharedPreferencesCompat.edit().putBoolean(AppConstants.IS_SOCIAL, false).apply();
+                                    MyApplication.sharedPreferencesCompat.edit().putString(AppConstants.PHONE_NUMBER, binding.phone.getText().toString().trim()).apply();
+
+
+                                    Intent intent = new Intent(getActivity(), HomeActivity.class);
+                                    getActivity().startActivity(intent);
+                                    getActivity().overridePendingTransition(R.anim.enter, R.anim.exit);
+
 
                                 } else {
                                     showDialog(response.body().getMessage());
@@ -254,15 +261,11 @@ public class RegisterFragment extends RootFragment implements GoogleApiClient.On
                 Intent intent = new Intent(getActivity(), PhoneNumberActivity.class);
                 intent.putExtra(AppConstants.USER_NAME, account.getDisplayName());
                 intent.putExtra(AppConstants.EMAIL, account.getEmail());
-                getActivity().startActivity(new Intent(getActivity(), PhoneNumberActivity.class));
+                getActivity().startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.enter, R.anim.exit);
             } else {
-
                 showMessageInSnackBar(result.getStatus().getStatusMessage());
 
-                // Google Sign In failed, update UI appropriately
-                // [START_EXCLUDE]
-                //  updateUI(null);
-                // [END_EXCLUDE]
             }
         } else {
             callbackManager.onActivityResult(requestCode, resultCode, data);
@@ -282,7 +285,6 @@ public class RegisterFragment extends RootFragment implements GoogleApiClient.On
 
                         Profile profile = Profile.getCurrentProfile();
 
-
                         showProgressBarWithMessage("Getting Data from facebook\nPlease wait...");
 
                         GraphRequest request = GraphRequest.newMeRequest(
@@ -294,8 +296,6 @@ public class RegisterFragment extends RootFragment implements GoogleApiClient.On
                                         // Application code
                                         Log.i("LoginActivity", response.toString());
 
-
-                                        // Get facebook data from login
                                         Bundle bFacebookData = getFacebookData(object);
 
                                         Intent intent = new Intent(getActivity(), PhoneNumberActivity.class);
@@ -304,9 +304,8 @@ public class RegisterFragment extends RootFragment implements GoogleApiClient.On
                                         MyApplication.sharedPreferencesCompat.edit().putString(AppConstants.SOCIAL_NAME, AppConstants.SOCIAL_NAME_FACEBOOK).apply();
                                         MyApplication.sharedPreferencesCompat.edit().putString(AppConstants.SOCIAL_NAME, AppConstants.SOCIAL_NAME_FACEBOOK).apply();
                                         MyApplication.sharedPreferencesCompat.edit().putString(AppConstants.IMAGE_URL, bFacebookData.getString("profile_pic"));
-
-
                                         getActivity().startActivity(intent);
+                                        getActivity().overridePendingTransition(R.anim.enter, R.anim.exit);
 
                                     }
                                 });

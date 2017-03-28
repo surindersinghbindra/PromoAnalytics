@@ -3,7 +3,9 @@ package com.promoanalytics.login;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 /**
  * Created by think360 on 23/03/17.
@@ -54,7 +56,11 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         alert11.show();
     }
 
-    protected void showMessageInSnackBar(String message) {
+    protected void showMessageInSnackBar(View view
+            , String message) {
+
+        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+
 
     }
 

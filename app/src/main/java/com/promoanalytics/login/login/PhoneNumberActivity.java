@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.View;
@@ -47,15 +46,13 @@ public class PhoneNumberActivity extends BaseAppCompatActivity {
                 imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 
                 if (TextUtils.isEmpty(phoneNumberActivityBinding.etMobileNumber.getText())) {
+                    showMessageInSnackBar(phoneNumberActivityBinding.coordinatorLayout, "Please provide mobile number");
 
-                    Snackbar.make(phoneNumberActivityBinding.coordinatorLayout,
-                            "Please provide mobile number", Snackbar.LENGTH_SHORT).show();
-                    // showMessageInSnackBar("Please provide mobile number");
                 } else {
 
                     showProgressBar();
                     PromoAnalyticsServices promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
-                    Call<RegisterUser> registerUserCallback = promoAnalyticsServices.registerUserWithSocial(intent.getStringExtra(AppConstants.USER_NAME), intent.getStringExtra(AppConstants.EMAIL), "+" + getCountryISDCode() + phoneNumberActivityBinding.etMobileNumber.getText().toString().trim(), 1);
+                    Call<RegisterUser> registerUserCallback = promoAnalyticsServices.registerUserWithSocial(intent.getStringExtra(AppConstants.USER_NAME), intent.getStringExtra(AppConstants.EMAIL), "+" + getCountryISDCode(), phoneNumberActivityBinding.etMobileNumber.getText().toString().trim(), 1);
                     registerUserCallback.enqueue(new Callback<RegisterUser>() {
                         @Override
                         public void onResponse(Call<RegisterUser> call, Response<RegisterUser> response) {
@@ -69,9 +66,10 @@ public class PhoneNumberActivity extends BaseAppCompatActivity {
                                     MyApplication.sharedPreferencesCompat.edit().putBoolean(AppConstants.IS_SOCIAL, true).apply();
                                     MyApplication.sharedPreferencesCompat.edit().putString(AppConstants.PHONE_NUMBER, phoneNumberActivityBinding.etMobileNumber.getText().toString().trim()).apply();
                                     startActivity(new Intent(PhoneNumberActivity.this, HomeActivity.class));
+                                    overridePendingTransition(R.anim.enter, R.anim.exit);
                                 } else {
 
-                                    showMessageInSnackBar(response.body().getMessage());
+                                    showMessageInSnackBar(phoneNumberActivityBinding.coordinatorLayout, response.body().getMessage());
 
                                 }
 
@@ -82,7 +80,7 @@ public class PhoneNumberActivity extends BaseAppCompatActivity {
 
                         @Override
                         public void onFailure(Call<RegisterUser> call, Throwable t) {
-                            showMessageInSnackBar(t.getMessage());
+                            showMessageInSnackBar(phoneNumberActivityBinding.coordinatorLayout, t.getMessage());
                         }
                     });
                 }
