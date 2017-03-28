@@ -15,41 +15,51 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 
+import com.promoanalytics.utils.AppController;
+
 /**
  * Created by think360user on 1/29/2016.
  */
 
 
 public class GPSTracker extends Service implements LocationListener {
+    // The minimum distance to change Updates in meters
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
+    // The minimum time between updates in milliseconds
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
+    private final Context mContext;
+    // Declaring a Location Manager
+    protected LocationManager locationManager;
     Thread triggerService;
     LocationManager lm;
-    private final Context mContext;
-
     // flag for GPS status
     boolean isGPSEnabled = false;
-
     // flag for network status
     boolean isNetworkEnabled = false;
-
     // flag for GPS status
     boolean canGetLocation = false;
-
     Location location; // location
     double latitude; // latitude
     double longitude; // longitude
 
-    // The minimum distance to change Updates in meters
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
-
-    // The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
-
-    // Declaring a Location Manager
-    protected LocationManager locationManager;
-
     public GPSTracker(Context context) {
         this.mContext = context;
         getLocation();
+    }
+
+    public static void updateLocation(Location location) {
+        Context appCtx = AppController.getAppContext();
+
+        double latitude, longitude;
+
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+
+        Intent filterRes = new Intent();
+        filterRes.setAction("com.getushere.driver.intent.action.LOCATION");
+        filterRes.putExtra("latitude", latitude);
+        filterRes.putExtra("longitude", longitude);
+        appCtx.sendBroadcast(filterRes);
     }
 
     public Location getLocation() {
@@ -185,12 +195,14 @@ public class GPSTracker extends Service implements LocationListener {
         // Showing Alert Message
         alertDialog.show();
     }
+
     @Override
     public void onStart(Intent intent, int startId) {
 
         super.onStart(intent, startId);
         addLocationListener();
     }
+
     private void addLocationListener()
     {
         triggerService = new Thread(new Runnable() {
@@ -215,6 +227,28 @@ public class GPSTracker extends Service implements LocationListener {
         }, "LocationThread");
         triggerService.start();
     }
+
+    @Override
+    public void onLocationChanged(Location location) {
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+    }
+
+    @Override
+    public IBinder onBind(Intent arg0) {
+        return null;
+    }
+
     class MyLocationListener implements LocationListener
     {
 
@@ -238,43 +272,6 @@ public class GPSTracker extends Service implements LocationListener {
         public void onProviderDisabled(String provider) {
 
         }
-    }
-
-    public static void updateLocation(Location location)
-    {
-        Context appCtx = MyApplication.getAppContext();
-
-        double latitude, longitude;
-
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
-
-        Intent filterRes = new Intent();
-        filterRes.setAction("com.getushere.driver.intent.action.LOCATION");
-        filterRes.putExtra("latitude", latitude);
-        filterRes.putExtra("longitude", longitude);
-        appCtx.sendBroadcast(filterRes);
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-    }
-
-    @Override
-    public IBinder onBind(Intent arg0) {
-        return null;
     }
 
 }

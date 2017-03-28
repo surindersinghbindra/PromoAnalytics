@@ -9,4 +9,6 @@
     <string name="password">Password</string>
     <string name="confirmPassword">Confirm Password</string>
     <string name="title_activity_phone_number">PhoneNumberActivity</string>
+
+    <string name="title_activity_splash">SplashActivity</string>
 </resources>

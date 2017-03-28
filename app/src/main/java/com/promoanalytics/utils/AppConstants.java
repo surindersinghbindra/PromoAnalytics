@@ -17,7 +17,8 @@ public class AppConstants {
     final public static String SOCIAL_NAME = "SOCIAL_NAME";
     final public static String SOCIAL_NAME_GOOGLE = "SOCIAL_NAME_GOOGLE";
     final public static String SOCIAL_NAME_FACEBOOK = "SOCIAL_NAME_FACEBOOK";
-
+    final public static String IS_LOGIN = "IS_LOGIN";
+    final public static String IS_REMEMBER_TAPPED = "IS_REMEMBER_TAPPED";
 
     final public static String FEATURED_DEALS = "1";
     final public static String UNFEATURED_DEALS = "0";

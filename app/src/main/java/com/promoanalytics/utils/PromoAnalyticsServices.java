@@ -1,9 +1,10 @@
 package com.promoanalytics.utils;
 
 import com.google.gson.GsonBuilder;
-import com.promoanalytics.login.login.RegisterUser;
-import com.promoanalytics.login.login.User;
 import com.promoanalytics.model.AllDeals.AllDeals;
+import com.promoanalytics.model.SaveDealModel;
+import com.promoanalytics.ui.login.RegisterUser;
+import com.promoanalytics.ui.login.User;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -66,6 +67,13 @@ public interface PromoAnalyticsServices {
                         @Part("user_id") RequestBody userid,
                         @Part("password") RequestBody password,
                         @Part("image") RequestBody file);
+
+
+    @FormUrlEncoded
+    @POST("user_fav/")
+    Call<SaveDealModel> saveToFavourite(@Field("user_id") String userid,
+                                        @Field("deal_id") String deal_id,
+                                        @Field("status") int status);
 
 
     @FormUrlEncoded

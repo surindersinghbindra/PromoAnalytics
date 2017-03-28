@@ -8,7 +8,7 @@
 
 
     <LinearLayout
-        android:id="@+id/cpndetails"
+        android:id="@+id/couponDetailLayout"
         android:layout_width="170dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -37,7 +37,7 @@
                     android:src="@drawable/logocpn" />
 
                 <ImageView
-                    android:id="@+id/hrtunfled"
+                    android:id="@+id/ivHeart"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_alignParentRight="true"
@@ -55,7 +55,7 @@
 
 
             <TextView
-                android:id="@+id/grid_text"
+                android:id="@+id/tvDiscount"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -65,7 +65,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/lkjk"
+                android:id="@+id/tvDealDetail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

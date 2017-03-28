@@ -4,14 +4,14 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 /**
- * Created by think360 on 22/03/17.
+ * Created by think360 on 23/03/17.
  */
 
-public class RootFragment extends Fragment {
+public class BaseAppCompatActivity extends AppCompatActivity {
 
 
     protected ProgressDialog pDialog;
@@ -20,7 +20,7 @@ public class RootFragment extends Fragment {
 
     protected void showProgressBar() {
 
-        pDialog = new ProgressDialog(getActivity());
+        pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.setCanceledOnTouchOutside(false);
@@ -30,7 +30,7 @@ public class RootFragment extends Fragment {
 
     protected void showProgressBarWithMessage(String message) {
 
-        pDialog = new ProgressDialog(getActivity());
+        pDialog = new ProgressDialog(this);
         pDialog.setMessage(message);
         pDialog.setCancelable(false);
         pDialog.setCanceledOnTouchOutside(false);
@@ -39,7 +39,7 @@ public class RootFragment extends Fragment {
     }
 
     protected void showDialog(String message) {
-        alertDialog = new AlertDialog.Builder(getActivity());
+        alertDialog = new AlertDialog.Builder(this);
         alertDialog.setMessage(message);
         alertDialog.setCancelable(true);
 
@@ -56,9 +56,12 @@ public class RootFragment extends Fragment {
         alert11.show();
     }
 
-    protected void showMessageInSnackBar(String message) {
-        Snackbar.make(getActivity().findViewById(android.R.id.content),
-                message, Snackbar.LENGTH_SHORT).show();
+    protected void showMessageInSnackBar(View view
+            , String message) {
+
+        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+
+
     }
 
 
