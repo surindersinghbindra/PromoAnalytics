@@ -1,13 +1,113 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.promoanalytics.ui.DealsOnMap.DealsOnMapFragment">
+<layout>
 
-    <!-- TODO: Update blank fragment layout -->
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/mvDeals"
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        tools:context="com.promoanalytics.ui.DealsOnMap.DealsOnMapFragment">
 
-</FrameLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <android.support.v7.widget.Toolbar
+
+                android:id="@+id/toolbar_top"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/appBlueDark"
+                android:minHeight="?attr/actionBarSize">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical">
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="20dp"
+                        android:layout_toLeftOf="@+id/filter">
+
+                        <ImageView
+                            android:id="@+id/searchIcon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_search" />
+
+
+                        <com.promoanalytics.utils.Fonts.RobotoNormalEditText
+                            android:id="@+id/et_Projects_Search"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="center"
+                            android:layout_toRightOf="@+id/searchIcon"
+                            android:background="@android:color/transparent"
+                            android:drawableBottom="@color/white"
+                            android:hint="Search"
+                            android:imeOptions="actionSearch"
+                            android:singleLine="true"
+                            android:textColor="@android:color/white"
+                            android:textColorHint="@color/white"
+                            android:textCursorDrawable="@null"
+                            android:textSize="18sp" />
+
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.7dp"
+                            android:layout_below="@+id/et_Projects_Search"
+                            android:layout_marginTop="5dp"
+                            android:background="@android:color/white" />
+
+                    </RelativeLayout>
+
+
+                    <ImageView
+
+                        android:id="@+id/filter"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="10dp"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/ic_map" />
+
+
+                </RelativeLayout>
+
+
+            </android.support.v7.widget.Toolbar>
+
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/toolbar_top">
+
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/mvDealsMap"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <include
+                    android:id="@+id/searchLayout"
+                    layout="@layout/search_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+            </FrameLayout>
+
+
+        </RelativeLayout>
+
+
+    </FrameLayout>
+
+</layout>

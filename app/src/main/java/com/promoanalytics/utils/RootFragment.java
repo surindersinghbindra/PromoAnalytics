@@ -5,13 +5,18 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+
+import com.promoanalytics.R;
+import com.promoanalytics.ui.BackPressImpl;
+import com.promoanalytics.ui.OnBackPressListener;
 
 
 /**
  * Created by think360 on 22/03/17.
  */
 
-public class RootFragment extends Fragment {
+public class RootFragment extends Fragment implements OnBackPressListener {
 
 
     protected ProgressDialog pDialog;
@@ -23,7 +28,7 @@ public class RootFragment extends Fragment {
         pDialog = new ProgressDialog(getActivity());
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
-        pDialog.setCanceledOnTouchOutside(false);
+        pDialog.setCanceledOnTouchOutside(true);
         pDialog.show();
 
     }
@@ -59,6 +64,21 @@ public class RootFragment extends Fragment {
     protected void showMessageInSnackBar(String message) {
         Snackbar.make(getActivity().findViewById(android.R.id.content),
                 message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        return new BackPressImpl(this).onBackPressed();
+    }
+
+
+    protected void trasactFragment(int id, Fragment fragment) {
+
+        FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.left_to_right, R.anim.from_right_to_left);
+        ft.replace(id, fragment);
+        ft.addToBackStack(null);
+        ft.commitAllowingStateLoss();
     }
 
 

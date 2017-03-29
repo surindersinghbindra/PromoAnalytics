@@ -23,7 +23,8 @@ import com.promoanalytics.model.AllDeals.Detail;
 import com.promoanalytics.model.SaveDealModel;
 import com.promoanalytics.modules.ExpandableHeightGridView;
 import com.promoanalytics.modules.GPSTracker;
-import com.promoanalytics.ui.HomeActivity;
+import com.promoanalytics.ui.CouponDetailFragment;
+import com.promoanalytics.ui.HomeFragment;
 import com.promoanalytics.ui.SavedCoupons.SavedDealsFragment;
 import com.promoanalytics.utils.AppConstants;
 import com.promoanalytics.utils.AppController;
@@ -119,7 +120,7 @@ public class ListDealsFragment extends RootFragment implements LocationListener 
                     Log.d("RETRO_GETALLDEALS", response.body().getStatus() + "");
 
                     Log.d("RETRO_GETALLDEALS", String.valueOf(response.body().getData().getDetail()));
-                    Intent intent = new Intent(getActivity(), HomeActivity.class);
+                    Intent intent = new Intent(getActivity(), HomeFragment.class);
                     intent.putParcelableArrayListExtra("LIST_DEALS", (ArrayList<? extends Parcelable>) response.body().getData().getDetail());
 
                     mFeaturedDealsRecyclerView.setAdapter(new AllDealsRvAdapter(response.body().getData().getDetail()));
@@ -146,7 +147,7 @@ public class ListDealsFragment extends RootFragment implements LocationListener 
                     Log.d("RETRO_GETALLDEALS", response.body().getStatus() + "");
 
                     Log.d("RETRO_GETALLDEALS", String.valueOf(response.body().getData().getDetail()));
-                    Intent intent = new Intent(getActivity(), HomeActivity.class);
+                    Intent intent = new Intent(getActivity(), HomeFragment.class);
                     intent.putParcelableArrayListExtra("LIST_DEALS", (ArrayList<? extends Parcelable>) response.body().getData().getDetail());
 
                     mUnFeaturedDealsRecyclerView.setAdapter(new AllDealsRvAdapter(response.body().getData().getDetail()));
@@ -245,6 +246,17 @@ public class ListDealsFragment extends RootFragment implements LocationListener 
             } else {
                 holder.ivHeart.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.hrtunfilled));
             }
+            holder.cvLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                 /*   FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                    // Store the Fragment in stack
+                    transaction.addToBackStack(null);
+                    transaction.replace(R.id.container, CouponDetailFragment.newInstance("", "")).commitAllowingStateLoss();
+*/
+                    trasactFragment(R.id.container, CouponDetailFragment.newInstance("", ""));
+                }
+            });
 
             holder.tvDiscount.setText(singleDeal.getDiscount());
             holder.tvDiscount.setText(singleDeal.getDiscount());

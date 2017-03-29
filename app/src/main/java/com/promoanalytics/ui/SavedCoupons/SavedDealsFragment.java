@@ -104,7 +104,10 @@ public class SavedDealsFragment extends RootFragment implements LocationListener
                 pDialog.hide();
                 if (response.body().getStatus()) {
 
+                    //  allSavedDealsRvAdapter = new AllSavedDealsRvAdapter(response.body().getData().getDetail());
+
                     detailArrayList.addAll(response.body().getData().getDetail());
+                    mUnFeaturedDealsRecyclerView.setAdapter(allSavedDealsRvAdapter);
                     allSavedDealsRvAdapter.notifyDataSetChanged();
                 } else {
                     showDialog(response.body().getMessage());
@@ -147,7 +150,7 @@ public class SavedDealsFragment extends RootFragment implements LocationListener
         }
 
         @Override
-        public void onBindViewHolder(final DealViewHolder holder, int position) {
+        public void onBindViewHolder(final DealViewHolder holder, final int position) {
             final Detail singleDeal = arrayListDeals.get(position);
 
             if (singleDeal.getIsFav() != 0) {
@@ -172,9 +175,9 @@ public class SavedDealsFragment extends RootFragment implements LocationListener
                         @Override
                         public void onResponse(Call<SaveDealModel> call, Response<SaveDealModel> response) {
                             if (response.body().getStatus()) {
-                                singleDeal.setIsFav(1);
                                 UtilHelper.animateOverShoot(holder.ivHeart);
-                                holder.ivHeart.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.heart));
+                                arrayListDeals.remove(position);
+                                notifyDataSetChanged();
                             } else {
                                 showMessageInSnackBar(response.body().getMessage());
                             }

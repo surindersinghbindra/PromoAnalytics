@@ -11,7 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.promoanalytics.R;
 import com.promoanalytics.databinding.ActivityPhoneNumberBinding;
-import com.promoanalytics.ui.HomeActivity;
+import com.promoanalytics.ui.MainActivityAfterLogin;
 import com.promoanalytics.utils.AppConstants;
 import com.promoanalytics.utils.AppController;
 import com.promoanalytics.utils.BaseAppCompatActivity;
@@ -67,7 +67,7 @@ public class PhoneNumberActivity extends BaseAppCompatActivity {
                                     AppController.sharedPreferencesCompat.edit().putString(AppConstants.PHONE_NUMBER, phoneNumberActivityBinding.etMobileNumber.getText().toString().trim()).apply();
                                     AppController.sharedPreferencesCompat.edit().putString(AppConstants.IMAGE_URL, intent.getStringExtra(AppConstants.IMAGE_URL)).apply();
 
-                                    startActivity(new Intent(PhoneNumberActivity.this, HomeActivity.class));
+                                    startActivity(new Intent(PhoneNumberActivity.this, MainActivityAfterLogin.class));
                                     overridePendingTransition(R.anim.enter, R.anim.exit);
                                 } else {
 

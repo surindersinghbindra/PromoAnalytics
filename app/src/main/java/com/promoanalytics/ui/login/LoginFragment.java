@@ -32,7 +32,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.promoanalytics.R;
 import com.promoanalytics.databinding.FragmentLoginBinding;
-import com.promoanalytics.ui.HomeActivity;
+import com.promoanalytics.ui.MainActivityAfterLogin;
 import com.promoanalytics.utils.AppConstants;
 import com.promoanalytics.utils.AppController;
 import com.promoanalytics.utils.PromoAnalyticsServices;
@@ -142,6 +142,7 @@ public class LoginFragment extends RootFragment implements GoogleApiClient.OnCon
             @Override
             public void onClick(View v) {
 
+
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                 startActivityForResult(signInIntent, RC_SIGN_IN);
 
@@ -193,7 +194,7 @@ public class LoginFragment extends RootFragment implements GoogleApiClient.OnCon
                     AppController.getSharedPrefEditor().putString(AppConstants.EMAIL, response.body().getData().getEmail()).apply();
                     AppController.getSharedPrefEditor().putString(AppConstants.PHONE_NUMBER, response.body().getData().getPhone()).apply();
 
-                    getActivity().startActivity(new Intent(getActivity(), HomeActivity.class));
+                    getActivity().startActivity(new Intent(getActivity(), MainActivityAfterLogin.class));
                     getActivity().overridePendingTransition(R.anim.enter, R.anim.exit);
 
                 } else {
@@ -303,6 +304,8 @@ public class LoginFragment extends RootFragment implements GoogleApiClient.OnCon
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
 
+
+                showProgressBarWithMessage("Getting Data from Google");
                 GoogleSignInAccount account = result.getSignInAccount();
                 logIn(account.getEmail(), "", LOGIN_WITH_SOCIAL);
 

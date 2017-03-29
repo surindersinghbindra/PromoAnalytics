@@ -3,12 +3,14 @@ package com.promoanalytics.ui;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.IdRes;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.widget.Toast;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.promoanalytics.R;
 import com.promoanalytics.adapter.LoginPagerAdapter;
@@ -19,19 +21,18 @@ import com.promoanalytics.ui.dealslist.ListDealsFragment;
 import com.promoanalytics.ui.profile.EditProfileFragment;
 import com.promoanalytics.utils.AppConstants;
 import com.promoanalytics.utils.AppController;
-import com.promoanalytics.utils.BaseAppCompatActivity;
 import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends BaseAppCompatActivity implements DealsOnMapFragment.OnFragmentInteractionListener {
+public class HomeFragment extends Fragment implements DealsOnMapFragment.OnFragmentInteractionListener {
 
     private boolean doubleBackToExitPressedOnce = false;
 
     private ActivityHomeBinding activityHomeBinding;
-
+    private LoginPagerAdapter loginPagerAdapter;
 
     private List<Fragment> getFragments() {
         List<Fragment> fList = new ArrayList<Fragment>();
@@ -42,16 +43,23 @@ public class HomeActivity extends BaseAppCompatActivity implements DealsOnMapFra
         return fList;
     }
 
-    @Override
+  /*  @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);*/
 
-        activityHomeBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+
+        activityHomeBinding = DataBindingUtil.inflate(inflater, R.layout.activity_home, container, false);
 
         AppController.sharedPreferencesCompat.edit().putBoolean(AppConstants.IS_LOGIN, true).apply();
 
-        activityHomeBinding.vpHomeActivity.setOffscreenPageLimit(4);
-        activityHomeBinding.vpHomeActivity.setAdapter(new LoginPagerAdapter(getSupportFragmentManager(), getFragments()));
+        activityHomeBinding.vpHomeActivity.setOffscreenPageLimit(1);
+
+        loginPagerAdapter = new LoginPagerAdapter(getChildFragmentManager(), getFragments());
+        activityHomeBinding.vpHomeActivity.setAdapter(loginPagerAdapter);
         activityHomeBinding.vpHomeActivity.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -115,7 +123,7 @@ public class HomeActivity extends BaseAppCompatActivity implements DealsOnMapFra
             }
         });
 
-
+        return activityHomeBinding.getRoot();
     }
 
     @Override
@@ -123,30 +131,22 @@ public class HomeActivity extends BaseAppCompatActivity implements DealsOnMapFra
 
     }
 
-    @Override
-    public void onBackPressed() {
+    /**
+     * Retrieve the currently visible Tab Fragment and propagate the onBackPressed callback
+     *
+     * @return true = if this fragment and/or one of its associates Fragment can handle the backPress
+     */
+    public boolean onBackPressed() {
+        // currently visible tab Fragment
+        OnBackPressListener currentFragment = (OnBackPressListener) loginPagerAdapter.getRegisteredFragment(activityHomeBinding.vpHomeActivity.getCurrentItem());
 
-
-        if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
-            finish();
-            return;
+        if (currentFragment != null) {
+            // lets see if the currentFragment or any of its childFragment can handle onBackPressed
+            return currentFragment.onBackPressed();
         }
 
-        this.doubleBackToExitPressedOnce = true;
-        //showMessageInSnackBar(activityHomeBinding.vpHomeActivity, "Please BACK again to exit");
-        Toast.makeText(this, "Please BACK again to exit", Toast.LENGTH_SHORT).show();
-
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-
-                doubleBackToExitPressedOnce = false;
-            }
-        }, 2000);
-
-
+        // this Fragment couldn't handle the onBackPressed call
+        return false;
     }
 
 }

@@ -23,7 +23,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_splash2);
+        setContentView(R.layout.activity_splash);
 
         handler = new Handler();
 
@@ -33,7 +33,7 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
 
                 if (AppController.sharedPreferencesCompat.getBoolean(AppConstants.IS_LOGIN, false) && AppController.sharedPreferencesCompat.getBoolean(AppConstants.IS_REMEMBER_TAPPED, false)) {
-                    startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+                    startActivity(new Intent(SplashActivity.this, MainActivityAfterLogin.class));
                 } else {
                     startActivity(new Intent(SplashActivity.this, LoginActivity.class));
 
@@ -60,7 +60,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        handler.removeCallbacksAndMessages(null);
+        //  handler.removeCallbacksAndMessages(null);
     }
 
     @Override
