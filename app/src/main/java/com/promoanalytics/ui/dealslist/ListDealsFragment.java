@@ -254,7 +254,7 @@ public class ListDealsFragment extends RootFragment implements LocationListener 
                     transaction.addToBackStack(null);
                     transaction.replace(R.id.container, CouponDetailFragment.newInstance("", "")).commitAllowingStateLoss();
 */
-                    trasactFragment(R.id.container, CouponDetailFragment.newInstance("", ""));
+                    trasactFragment(R.id.container, CouponDetailFragment.newInstance(singleDeal, ""));
                 }
             });
 

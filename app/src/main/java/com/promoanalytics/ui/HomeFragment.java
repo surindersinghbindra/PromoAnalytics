@@ -56,7 +56,7 @@ public class HomeFragment extends Fragment implements DealsOnMapFragment.OnFragm
 
         AppController.sharedPreferencesCompat.edit().putBoolean(AppConstants.IS_LOGIN, true).apply();
 
-        activityHomeBinding.vpHomeActivity.setOffscreenPageLimit(1);
+        activityHomeBinding.vpHomeActivity.setOffscreenPageLimit(4);
 
         loginPagerAdapter = new LoginPagerAdapter(getChildFragmentManager(), getFragments());
         activityHomeBinding.vpHomeActivity.setAdapter(loginPagerAdapter);

@@ -17,6 +17,7 @@ import com.promoanalytics.databinding.HomecpnBinding;
 import com.promoanalytics.model.AllDeals.AllDeals;
 import com.promoanalytics.model.AllDeals.Detail;
 import com.promoanalytics.model.SaveDealModel;
+import com.promoanalytics.ui.CouponDetailFragment;
 import com.promoanalytics.utils.AppConstants;
 import com.promoanalytics.utils.AppController;
 import com.promoanalytics.utils.PromoAnalyticsServices;
@@ -188,6 +189,13 @@ public class SavedDealsFragment extends RootFragment implements LocationListener
                             showMessageInSnackBar(t.getMessage());
                         }
                     });
+                }
+            });
+
+            holder.cvLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    trasactFragment(R.id.container, CouponDetailFragment.newInstance(singleDeal, ""));
                 }
             });
         }

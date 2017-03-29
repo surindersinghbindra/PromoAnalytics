@@ -1,44 +1,50 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <include layout="@layout/toolbar_layout" />
-
-    <RelativeLayout
-        android:id="@+id/rl_Date"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_below="@+id/compactcalendar_view"
-        android:background="@drawable/gradient">
-
-
-        <com.promoanalytics.utils.Fonts.RobotoNormalTextView
-
-            android:id="@+id/tvSearchNearBy"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:gravity="center_vertical"
-            android:paddingLeft="15dp"
-            android:text="Saved Coupons" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/appGrayLight" />
-
-    </RelativeLayout>
-
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvSavedCoupons"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:overScrollMode="never">
+        android:orientation="vertical">
 
-    </android.support.v7.widget.RecyclerView>
+        <include layout="@layout/toolbar_layout" />
+
+        <RelativeLayout
+            android:id="@+id/rl_Date"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/compactcalendar_view"
+            android:background="@drawable/gradient">
 
 
-</LinearLayout>
+            <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+
+                android:id="@+id/tvSearchNearBy"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="15dp"
+                android:text="Saved Coupons" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/appGrayLight" />
+
+        </RelativeLayout>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvSavedCoupons"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never">
+
+        </android.support.v7.widget.RecyclerView>
+
+
+    </LinearLayout>
+</FrameLayout>
 

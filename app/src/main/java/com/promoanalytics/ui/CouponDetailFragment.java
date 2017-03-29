@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.promoanalytics.R;
 import com.promoanalytics.databinding.FragmentCouponDetailsBinding;
+import com.promoanalytics.model.AllDeals.Detail;
 import com.promoanalytics.utils.RootFragment;
 
 /**
@@ -28,7 +29,7 @@ public class CouponDetailFragment extends RootFragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
+    private Detail mParam1;
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
@@ -47,10 +48,10 @@ public class CouponDetailFragment extends RootFragment {
      * @return A new instance of fragment CouponDetailFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static CouponDetailFragment newInstance(String param1, String param2) {
+    public static CouponDetailFragment newInstance(Detail param1, String param2) {
         CouponDetailFragment fragment = new CouponDetailFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
+        args.putParcelable(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
@@ -60,7 +61,7 @@ public class CouponDetailFragment extends RootFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam1 = getArguments().getParcelable(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
@@ -70,6 +71,10 @@ public class CouponDetailFragment extends RootFragment {
                              Bundle savedInstanceState) {
 
         fragmentCouponDetailsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_coupon_details, container, false);
+        fragmentCouponDetailsBinding.tvDiscount.setText(mParam1.getDiscount());
+        //  fragmentCouponDetailsBinding.addresses.setText(mParam1.getDescription());
+        fragmentCouponDetailsBinding.cpncode.setText(mParam1.getId());
+        fragmentCouponDetailsBinding.descrptn.setText(mParam1.getDescription());
 
         return fragmentCouponDetailsBinding.getRoot();
     }

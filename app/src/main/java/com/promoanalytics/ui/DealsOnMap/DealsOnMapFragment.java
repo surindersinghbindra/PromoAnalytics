@@ -346,7 +346,7 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
                 googleMap.addMarker(new MarkerOptions().position(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude())).title("Marker"));
 
                 //setting bounds to search in places API google
-                mAdapter.setBounds(new LatLngBounds(new LatLng(85, -180), new LatLng(-85, 180)));
+                //  mAdapter.setBounds(new LatLngBounds(new LatLng(84, -179), new LatLng(-84, 179)));
             }
         }
 
