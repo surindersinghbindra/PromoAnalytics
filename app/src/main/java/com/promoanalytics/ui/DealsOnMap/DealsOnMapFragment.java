@@ -38,9 +38,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.promoanalytics.R;
+import com.promoanalytics.adapter.CategoryAutoCompeleteAdapter;
 import com.promoanalytics.adapter.PlaceAutocompleteAdapter;
 import com.promoanalytics.databinding.FragmentDealsOnMapBinding;
+import com.promoanalytics.model.Category.CategoryModel;
+import com.promoanalytics.utils.PromoAnalyticsServices;
 import com.promoanalytics.utils.RootFragment;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -195,7 +202,6 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
                     .build();
         }
 
-
         // Inflate the layout for this fragment
 
         fragmentDealsOnMapBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_deals_on_map, container, false);
@@ -223,8 +229,29 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
 
         fragmentDealsOnMapBinding.searchLayout.autoCompleteLocationSearch.setAdapter(mAdapter);
 
+        PromoAnalyticsServices promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
+        Call<CategoryModel> categoryModelCall = promoAnalyticsServices.getCategories();
+        categoryModelCall.enqueue(new Callback<CategoryModel>() {
+
+
+            @Override
+            public void onResponse(Call<CategoryModel> call, Response<CategoryModel> response) {
+                if (response.body().getStatus()) {
+                    fragmentDealsOnMapBinding.searchLayout.autoCategorySearch.setAdapter(new CategoryAutoCompeleteAdapter(getActivity(), response.body().getData()));
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<CategoryModel> call, Throwable t) {
+
+            }
+        });
+
+
         return fragmentDealsOnMapBinding.getRoot();
     }
+
 
     @Override
     public void onMapReady(GoogleMap map) {
@@ -318,6 +345,8 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
                 googleMap.animateCamera(cameraUpdate);
                 googleMap.addMarker(new MarkerOptions().position(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude())).title("Marker"));
 
+                //setting bounds to search in places API google
+                mAdapter.setBounds(new LatLngBounds(new LatLng(85, -180), new LatLng(-85, 180)));
             }
         }
 

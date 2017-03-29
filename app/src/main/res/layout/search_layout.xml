@@ -51,8 +51,8 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="#fff" />
 
-        <com.promoanalytics.utils.Fonts.RobotoNormalEditText
-
+        <AutoCompleteTextView
+            android:id="@+id/autoCategorySearch"
             android:layout_width="match_parent"
 
             android:layout_height="match_parent"

@@ -2,6 +2,7 @@ package com.promoanalytics.utils;
 
 import com.google.gson.GsonBuilder;
 import com.promoanalytics.model.AllDeals.AllDeals;
+import com.promoanalytics.model.Category.CategoryModel;
 import com.promoanalytics.model.SaveDealModel;
 import com.promoanalytics.ui.login.RegisterUser;
 import com.promoanalytics.ui.login.User;
@@ -79,6 +80,9 @@ public interface PromoAnalyticsServices {
     @FormUrlEncoded
     @POST("fav_list/")
     Call<AllDeals> getSavedCoupons(@Field("user_id") String userid);
+
+    @POST("deal_category/")
+    Call<CategoryModel> getCategories();
 
 
 }
