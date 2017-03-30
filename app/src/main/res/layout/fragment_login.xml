@@ -19,7 +19,7 @@
             android:orientation="vertical">
 
 
-            <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+            <com.promoanalytics.utils.Fonts.RobotoLightTextView
                 style="@style/TextViewHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
                     style="@style/EditTextImage"
                     android:src="@drawable/email" />
 
-                <com.promoanalytics.utils.Fonts.RobotoNormalEditText
+                <com.promoanalytics.utils.Fonts.RobotoLightEditText
                     android:id="@+id/input_name"
                     style="@style/EditTextRoboto"
                     android:layout_width="match_parent"
@@ -46,7 +46,7 @@
             </LinearLayout>
 
 
-            <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+            <com.promoanalytics.utils.Fonts.RobotoLightTextView
                 style="@style/TextViewHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
                     style="@style/EditTextImage"
                     android:src="@drawable/password" />
 
-                <com.promoanalytics.utils.Fonts.RobotoNormalEditText
+                <com.promoanalytics.utils.Fonts.RobotoLightEditText
                     android:id="@+id/input_password"
                     style="@style/EditTextRoboto"
                     android:layout_width="match_parent"
@@ -108,7 +108,7 @@
                         android:checked="false"
                         android:gravity="center_vertical"
                         android:text="Remember me"
-                        android:textColor="@color/appOrange"
+                        android:textColor="@color/appGray"
                         app:buttonTint="@color/appOrange" />
 
                 </RelativeLayout>
@@ -120,22 +120,23 @@
                     android:layout_weight="1"
                     android:gravity="right|center_vertical"
                     android:text="Forgot Password ?"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="#EE4239" />
+                    android:textColor="@color/appGray" />
 
             </LinearLayout>
 
             <!-- Signup Button -->
-            <Button
-
+            <com.promoanalytics.utils.Fonts.RobotoBoldTextView
                 android:id="@+id/btnSignIn"
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
+                android:layout_gravity="center"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:background="@drawable/rectanglefilled"
-                android:text="Login"
-                android:textColor="#fff" />
+                android:gravity="center"
+                android:text="LOGIN"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
 
             <include
                 android:id="@+id/includeLogin"

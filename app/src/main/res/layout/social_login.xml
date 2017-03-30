@@ -36,7 +36,7 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                <com.promoanalytics.utils.Fonts.RobotoLightTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
