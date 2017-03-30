@@ -8,7 +8,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
         <include layout="@layout/toolbar_layout" />
 
         <RelativeLayout
@@ -23,9 +22,7 @@
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/toolbars"
-                android:fitsSystemWindows="true">
+                android:layout_height="match_parent">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -46,7 +43,7 @@
                             android:layout_marginTop="@dimen/activity_horizontal_margin"
                             android:src="@drawable/profilepic"
                             app:civ_border_color="@color/appOrangeLight"
-                            app:civ_border_width="8dp"
+                            app:civ_border_width="5dp"
                             app:civ_fill_color="@color/appBlue" />
 
                         <LinearLayout
@@ -65,7 +62,6 @@
                                 android:layout_marginRight="5dp"
                                 android:gravity="center"
                                 android:hint="Surinder Singh"
-                                android:textAppearance="?android:textAppearanceMedium"
                                 android:textColor="@color/white"
                                 android:textColorHint="@color/white"
                                 android:textSize="20sp"
@@ -96,7 +92,7 @@
                             style="@style/EditTextRoboto"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Surinder Singh"
+                            android:hint="Name"
                             android:inputType="textPersonName" />
 
                     </LinearLayout>

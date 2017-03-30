@@ -54,15 +54,18 @@
 
         <activity
             android:name=".ui.MainActivityAfterLogin"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".ui.login.PhoneNumberActivity"
             android:label="@string/title_activity_phone_number"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.login.LoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_splash" />
+            android:label="@string/title_activity_splash"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

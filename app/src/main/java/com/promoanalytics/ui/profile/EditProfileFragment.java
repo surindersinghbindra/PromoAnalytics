@@ -85,6 +85,9 @@ public class EditProfileFragment extends RootFragment implements IPickResult {
 
         }*/
         editProfileBinding = DataBindingUtil.inflate(inflater, R.layout.edit_profile, container, false);
+        editProfileBinding.editName.setText(AppController.sharedPreferencesCompat.getString(AppConstants.USER_NAME, ""));
+        editProfileBinding.tvName.setText(AppController.sharedPreferencesCompat.getString(AppConstants.USER_NAME, ""));
+
         editProfileBinding.editEmail.setText(AppController.sharedPreferencesCompat.getString(AppConstants.EMAIL, ""));
         editProfileBinding.EditMobile.setText(AppController.sharedPreferencesCompat.getString(AppConstants.PHONE_NUMBER, ""));
 

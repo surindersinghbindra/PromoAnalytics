@@ -95,9 +95,7 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
             // Get the Place object from the buffer.
             final Place place = places.get(0);
 
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 5);
-            googleMap.animateCamera(cameraUpdate);
-            googleMap.addMarker(new MarkerOptions().position(place.getLatLng()).title(place.getName().toString()));
+            cameraZoom(place.getLatLng(), place.getName().toString());
 
 
 
@@ -366,8 +364,10 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
                 googleMap.animateCamera(cameraUpdate);
                 googleMap.addMarker(new MarkerOptions().position(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude())).title("Marker"));
 
+                cameraZoom(latLng, "Current Location");
+
                 //setting bounds to search in places API google
-                //  mAdapter.setBounds(new LatLngBounds(new LatLng(84, -179), new LatLng(-84, 179)));
+                mAdapter.setBounds(new LatLngBounds(new LatLng(mLastLocation.getLatitude() - 5, mLastLocation.getLongitude() - 5), new LatLng(mLastLocation.getLatitude() + 5, mLastLocation.getLongitude() + 5)));
             }
         }
 
@@ -381,6 +381,14 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+
+    }
+
+    void cameraZoom(LatLng latLng, String placeName) {
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+        googleMap.animateCamera(cameraUpdate);
+        googleMap.addMarker(new MarkerOptions().position(latLng).title(placeName));
 
     }
 
@@ -398,4 +406,5 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
 }
