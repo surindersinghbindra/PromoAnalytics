@@ -32,6 +32,7 @@
             android:gravity="left|center"
             android:hint="@string/select_location"
             android:inputType="textFilter|textMultiLine"
+            android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="#fff"
             android:textColorHint="@color/white"
@@ -51,20 +52,21 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="#fff" />
 
-        <AutoCompleteTextView
+        <com.promoanalytics.utils.InstantAutoComplete
             android:id="@+id/autoCategorySearch"
             android:layout_width="match_parent"
-
             android:layout_height="match_parent"
             android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
             android:layout_toRightOf="@+id/location"
             android:background="@null"
+            android:completionThreshold="1"
             android:drawablePadding="@dimen/activity_horizontal_margin"
             android:drawableRight="@drawable/forward"
             android:gravity="left|center"
             android:hint="@string/select_category"
             android:inputType="textFilter|textMultiLine"
+            android:padding="5dp"
+            android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="#fff"
             android:textColorHint="@color/white"

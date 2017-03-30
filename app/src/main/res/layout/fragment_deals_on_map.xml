@@ -26,6 +26,7 @@
 
 
                     <RelativeLayout
+                        android:id="@+id/tbSearch"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginRight="20dp"
@@ -69,7 +70,7 @@
 
                     <ImageView
 
-                        android:id="@+id/filter"
+
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_alignParentRight="true"

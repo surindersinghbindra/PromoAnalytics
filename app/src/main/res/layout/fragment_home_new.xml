@@ -1,98 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:overScrollMode="never">
 
+<layout>
 
-    <android.support.v4.widget.NestedScrollView
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:overScrollMode="never">
 
-        <LinearLayout
+
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:overScrollMode="never">
 
-
-            <include
-                android:id="@+id/toolbatLayout"
-                layout="@layout/toolbar_layout" />
-
-            <include
-                android:id="@+id/searchLayout"
-                layout="@layout/search_layout" />
-
-
-            <RelativeLayout
-                android:id="@+id/rl_Date"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_below="@+id/compactcalendar_view"
-                android:background="@drawable/gradient">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
 
-                <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                <include
+                    android:id="@+id/toolbatLayout"
+                    layout="@layout/toolbar_layout" />
 
-                    android:id="@+id/tvSearchNearBy"
+                <include
+                    android:id="@+id/searchLayout"
+                    layout="@layout/search_layout" />
+
+
+                <RelativeLayout
+                    android:id="@+id/rl_Date"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:text="Featured Coupons in Toronoto" />
+                    android:layout_below="@+id/compactcalendar_view"
+                    android:background="@drawable/gradient">
 
-                <View
+
+                    <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+
+                        android:id="@+id/tvSearchNearBy"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="15dp"
+                        android:text="Featured Coupons in Toronoto" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/appGrayLight" />
+
+                </RelativeLayout>
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rvFeaturedCoupons"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="@color/appGrayLight" />
+                    android:layout_height="180dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:overScrollMode="never">
 
-            </RelativeLayout>
+                </android.support.v7.widget.RecyclerView>
 
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvFeaturedCoupons"
-                android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
-                android:overScrollMode="never">
-
-            </android.support.v7.widget.RecyclerView>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@drawable/gradient">
-
-                <com.promoanalytics.utils.Fonts.RobotoNormalTextView
-                    android:id="@+id/tvNormalCoupons"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:text="Other Coupons in Toronoto" />
+                    android:background="@drawable/gradient">
 
-                <View
+                    <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                        android:id="@+id/tvNormalCoupons"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="15dp"
+                        android:text="Other Coupons in Toronoto" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/appGrayLight" />
+
+                </RelativeLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rvNormalCoupons"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="@color/appGrayLight" />
+                    android:layout_height="wrap_content"
+                    android:overScrollMode="never">
 
-            </RelativeLayout>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvNormalCoupons"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:overScrollMode="never">
-
-            </android.support.v7.widget.RecyclerView>
+                </android.support.v7.widget.RecyclerView>
 
 
-        </LinearLayout>
+            </LinearLayout>
 
-    </android.support.v4.widget.NestedScrollView>
-</FrameLayout>
+        </android.support.v4.widget.NestedScrollView>
+    </FrameLayout>
+</layout>

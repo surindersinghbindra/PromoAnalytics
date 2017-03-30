@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.promoanalytics.model.Category.Datum;
@@ -16,7 +15,7 @@ import java.util.List;
  * Created by think360 on 29/03/17.
  */
 
-public class CategoryAutoCompeleteAdapter extends ArrayAdapter<Datum> implements Filterable {
+public class CategoryAutoCompeleteAdapter extends ArrayAdapter<Datum> {
 
     private List<Datum> datumArrayList;
 
@@ -24,8 +23,6 @@ public class CategoryAutoCompeleteAdapter extends ArrayAdapter<Datum> implements
     public CategoryAutoCompeleteAdapter(@NonNull Context context, @NonNull List<Datum> objects) {
         super(context, android.R.layout.simple_expandable_list_item_1, android.R.id.text1, objects);
         this.datumArrayList = objects;
-
-
     }
 
     /**

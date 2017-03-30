@@ -340,7 +340,7 @@ public class LoginFragment extends RootFragment implements GoogleApiClient.OnCon
 
     @Override
     public void onDetach() {
-        //  location.endUpdates();
+
         super.onDetach();
         mListener = null;
     }

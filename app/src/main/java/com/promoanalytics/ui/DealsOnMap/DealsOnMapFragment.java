@@ -18,7 +18,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -38,12 +40,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.promoanalytics.R;
-import com.promoanalytics.adapter.CategoryAutoCompeleteAdapter;
 import com.promoanalytics.adapter.PlaceAutocompleteAdapter;
 import com.promoanalytics.databinding.FragmentDealsOnMapBinding;
 import com.promoanalytics.model.Category.CategoryModel;
+import com.promoanalytics.model.Category.Datum;
 import com.promoanalytics.utils.PromoAnalyticsServices;
 import com.promoanalytics.utils.RootFragment;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -79,8 +83,7 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
      * Callback for results from a Places Geo Data API query that shows the first place result in
      * the details view on screen.
      */
-    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
-            = new ResultCallback<PlaceBuffer>() {
+    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback = new ResultCallback<PlaceBuffer>() {
         @Override
         public void onResult(PlaceBuffer places) {
             if (!places.getStatus().isSuccess()) {
@@ -91,6 +94,13 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
             }
             // Get the Place object from the buffer.
             final Place place = places.get(0);
+
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 5);
+            googleMap.animateCamera(cameraUpdate);
+            googleMap.addMarker(new MarkerOptions().position(place.getLatLng()).title(place.getName().toString()));
+
+
+
 
            /* // Format details of the place for display and show it in a TextView.
             mPlaceDetailsText.setText(formatPlaceDetails(getResources(), place.getName(),
@@ -134,6 +144,7 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
 
             Log.i(TAG, "Autocomplete item selected: " + primaryText);
 
+
             /*
              Issue a request to the Places Geo Data API to retrieve a Place object with additional
              details about the place.
@@ -145,6 +156,10 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
             Toast.makeText(getActivity(), "Clicked: " + primaryText,
                     Toast.LENGTH_SHORT).show();
             Log.i(TAG, "Called getPlaceById to get Place details for " + placeId);
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+
+
         }
     };
 
@@ -205,7 +220,7 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
         // Inflate the layout for this fragment
 
         fragmentDealsOnMapBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_deals_on_map, container, false);
-        fragmentDealsOnMapBinding.filter.setOnClickListener(new View.OnClickListener() {
+        fragmentDealsOnMapBinding.tbSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (fragmentDealsOnMapBinding.searchLayout.slectn.getVisibility() == View.GONE)
@@ -237,7 +252,13 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
             @Override
             public void onResponse(Call<CategoryModel> call, Response<CategoryModel> response) {
                 if (response.body().getStatus()) {
-                    fragmentDealsOnMapBinding.searchLayout.autoCategorySearch.setAdapter(new CategoryAutoCompeleteAdapter(getActivity(), response.body().getData()));
+
+                    ArrayList<String> categoryList = new ArrayList<String>();
+                    for (Datum datum : response.body().getData()) {
+                        categoryList.add(datum.getName());
+                    }
+                    fragmentDealsOnMapBinding.searchLayout.autoCategorySearch.setAdapter(new ArrayAdapter<>
+                            (getActivity(), R.layout.autocomplete_layout, categoryList));
                 }
 
             }
@@ -341,7 +362,7 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
         if (mLastLocation != null) {
             if (isMapReady && googleMap != null) {
                 LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 5);
                 googleMap.animateCamera(cameraUpdate);
                 googleMap.addMarker(new MarkerOptions().position(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude())).title("Marker"));
 
