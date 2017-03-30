@@ -46,7 +46,7 @@
         </RelativeLayout>
 
 
-        <com.promoanalytics.utils.Fonts.RobotoBoldTextView
+        <com.promoanalytics.utils.Fonts.RobotoNormalTextView
             android:id="@+id/tvDiscount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
             android:textColorHint="@color/colorPrimaryDark"
             android:textSize="16sp" />
 
-        <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+        <com.promoanalytics.utils.Fonts.RobotoLightTextView
             android:id="@+id/tvDealDetail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

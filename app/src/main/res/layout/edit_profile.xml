@@ -72,7 +72,7 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                    <com.promoanalytics.utils.Fonts.RobotoLightTextView
                         style="@style/TextViewHeader"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -85,9 +85,9 @@
 
                         <ImageView
                             style="@style/EditTextImage"
-                            android:src="@drawable/profile" />
+                            android:src="@drawable/user" />
 
-                        <com.promoanalytics.utils.Fonts.RobotoNormalEditText
+                        <com.promoanalytics.utils.Fonts.RobotoLightEditText
                             android:id="@+id/editName"
                             style="@style/EditTextRoboto"
                             android:layout_width="match_parent"
@@ -98,7 +98,7 @@
                     </LinearLayout>
 
 
-                    <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                    <com.promoanalytics.utils.Fonts.RobotoLightTextView
                         style="@style/TextViewHeader"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -113,7 +113,7 @@
                             style="@style/EditTextImage"
                             android:src="@drawable/email" />
 
-                        <com.promoanalytics.utils.Fonts.RobotoNormalEditText
+                        <com.promoanalytics.utils.Fonts.RobotoLightEditText
                             android:id="@+id/editEmail"
                             style="@style/EditTextRoboto"
                             android:layout_width="match_parent"
@@ -124,7 +124,7 @@
                             android:inputType="textEmailAddress" />
                     </LinearLayout>
 
-                    <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                    <com.promoanalytics.utils.Fonts.RobotoLightTextView
                         style="@style/TextViewHeader"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -139,7 +139,7 @@
                             style="@style/EditTextImage"
                             android:src="@drawable/phone" />
 
-                        <com.promoanalytics.utils.Fonts.RobotoNormalEditText
+                        <com.promoanalytics.utils.Fonts.RobotoLightEditText
                             android:id="@+id/EditMobile"
                             style="@style/EditTextRoboto"
                             android:layout_width="match_parent"
@@ -149,7 +149,7 @@
                             android:inputType="phone" />
                     </LinearLayout>
 
-                    <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                    <com.promoanalytics.utils.Fonts.RobotoLightTextView
                         style="@style/TextViewHeader"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -164,7 +164,7 @@
                             style="@style/EditTextImage"
                             android:src="@drawable/password" />
 
-                        <com.promoanalytics.utils.Fonts.RobotoNormalEditText
+                        <com.promoanalytics.utils.Fonts.RobotoLightEditText
                             android:id="@+id/editPassword"
                             style="@style/EditTextRoboto"
                             android:layout_width="match_parent"
@@ -173,7 +173,7 @@
                             android:inputType="textPassword" />
                     </LinearLayout>
 
-                    <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                    <com.promoanalytics.utils.Fonts.RobotoLightTextView
                         style="@style/TextViewHeader"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -188,7 +188,7 @@
                             style="@style/EditTextImage"
                             android:src="@drawable/password" />
 
-                        <EditText
+                        <com.promoanalytics.utils.Fonts.RobotoLightEditText
                             android:id="@+id/EditReEnterPassword"
                             style="@style/EditTextRoboto"
                             android:layout_width="match_parent"
@@ -198,17 +198,19 @@
                     </LinearLayout>
 
                     <!-- Signup Button -->
-                    <android.support.v7.widget.AppCompatButton
+                    <com.promoanalytics.utils.Fonts.RobotoLightEditText
                         android:id="@+id/btnSaveProfile"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
                         android:layout_marginBottom="@dimen/activity_horizontal_margin"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin"
                         android:layout_marginRight="@dimen/activity_horizontal_margin"
                         android:layout_marginTop="@dimen/activity_horizontal_margin"
                         android:background="@drawable/rectanglefilled"
-                        android:text="Save Profile"
-                        android:textColor="@color/white" />
+                        android:gravity="center"
+                        android:text="SAVE PROFILE"
+                        android:textColor="@color/white"
+                        android:textSize="18sp" />
 
 
                 </LinearLayout>

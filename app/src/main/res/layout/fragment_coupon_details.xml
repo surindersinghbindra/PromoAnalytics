@@ -187,7 +187,7 @@
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
-                    <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                    <com.promoanalytics.utils.Fonts.RobotoLightTextView
 
                         android:id="@+id/descrptn"
                         android:layout_width="match_parent"

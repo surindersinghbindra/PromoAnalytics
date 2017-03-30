@@ -29,19 +29,18 @@
                         android:id="@+id/tbSearch"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginRight="20dp"
-                        android:layout_toLeftOf="@+id/filter">
+                        android:layout_toLeftOf="@+id/ivMapIndicator">
 
                         <ImageView
                             android:id="@+id/searchIcon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_search" />
 
 
-                        <com.promoanalytics.utils.Fonts.RobotoNormalEditText
-                            android:id="@+id/et_Projects_Search"
+                        <com.promoanalytics.utils.Fonts.RobotoLightEditText
+                            android:id="@+id/etSearchPlaceOrCategory"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
@@ -49,6 +48,7 @@
                             android:layout_toRightOf="@+id/searchIcon"
                             android:background="@android:color/transparent"
                             android:drawableBottom="@color/white"
+                            android:enabled="false"
                             android:hint="Search"
                             android:imeOptions="actionSearch"
                             android:singleLine="true"
@@ -61,7 +61,7 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="0.7dp"
-                            android:layout_below="@+id/et_Projects_Search"
+                            android:layout_below="@+id/etSearchPlaceOrCategory"
                             android:layout_marginTop="5dp"
                             android:background="@android:color/white" />
 
@@ -69,10 +69,9 @@
 
 
                     <ImageView
-
-
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:id="@+id/ivMapIndicator"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_margin="10dp"

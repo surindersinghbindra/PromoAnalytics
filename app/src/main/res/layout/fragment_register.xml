@@ -41,7 +41,7 @@
 
                     <ImageView
                         style="@style/EditTextImage"
-                        android:src="@drawable/profile" />
+                        android:src="@drawable/user" />
 
                     <com.promoanalytics.utils.Fonts.RobotoLightEditText
                         android:id="@+id/etName"

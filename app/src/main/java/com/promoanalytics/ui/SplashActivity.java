@@ -10,6 +10,8 @@ import com.promoanalytics.ui.login.LoginActivity;
 import com.promoanalytics.utils.AppConstants;
 import com.promoanalytics.utils.AppController;
 
+import net.hockeyapp.android.CrashManager;
+
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
@@ -44,7 +46,11 @@ public class SplashActivity extends AppCompatActivity {
             }
         }, 3000);
 
+        checkForCrashes();
+    }
 
+    private void checkForCrashes() {
+        CrashManager.register(this);
     }
 
     @Override

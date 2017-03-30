@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,18 +38,24 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.promoanalytics.R;
 import com.promoanalytics.adapter.PlaceAutocompleteAdapter;
 import com.promoanalytics.databinding.FragmentDealsOnMapBinding;
+import com.promoanalytics.model.AllDeals.AllDeals;
+import com.promoanalytics.model.AllDeals.Detail;
 import com.promoanalytics.model.Category.CategoryModel;
 import com.promoanalytics.model.Category.Datum;
 import com.promoanalytics.utils.PromoAnalyticsServices;
 import com.promoanalytics.utils.RootFragment;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -68,7 +76,10 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
-            new LatLng(-34.041458, 150.790100), new LatLng(-33.682247, 151.383362));
+            new LatLng(43.717899, -79.658251), new LatLng(46.717899, -75.658251));
+
+    private LatLng latLng = new LatLng(43.717899, -79.658251);
+    private String categoryName = "";
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -79,13 +90,16 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
     private boolean isMapReady = false, isLocationAvailable = false;
     private GoogleApiClient mGoogleApiClient;
     private PlaceAutocompleteAdapter mAdapter;
+    private ArrayAdapter mCategoryAdapter;
+
+    private PromoAnalyticsServices promoAnalyticsServices;
     /**
      * Callback for results from a Places Geo Data API query that shows the first place result in
      * the details view on screen.
      */
     private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback = new ResultCallback<PlaceBuffer>() {
         @Override
-        public void onResult(PlaceBuffer places) {
+        public void onResult(final PlaceBuffer places) {
             if (!places.getStatus().isSuccess()) {
                 // Request did not complete successfully
                 Log.e(TAG, "Place query did not complete. Error: " + places.getStatus().toString());
@@ -95,10 +109,12 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
             // Get the Place object from the buffer.
             final Place place = places.get(0);
 
-            cameraZoom(place.getLatLng(), place.getName().toString());
+            latLng = place.getLatLng();
 
+            fragmentDealsOnMapBinding.etSearchPlaceOrCategory.setText(place.getName());
 
-
+            hideKeyBoard();
+            fetchDataFromRemote(categoryName, latLng);
 
            /* // Format details of the place for display and show it in a TextView.
             mPlaceDetailsText.setText(formatPlaceDetails(getResources(), place.getName(),
@@ -113,12 +129,24 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
                 mPlaceDetailsAttribution.setVisibility(View.VISIBLE);
                 mPlaceDetailsAttribution.setText(Html.fromHtml(thirdPartyAttribution.toString()));
             }*/
-
             Log.i(TAG, "Place details received: " + place.getName());
 
             places.release();
+
         }
     };
+
+    private AdapterView.OnItemClickListener mCategoryAutoCompleteItemClickListner = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            hideKeyBoard();
+            categoryName = (String) mCategoryAdapter.getItem(position);
+            fetchDataFromRemote(categoryName, latLng);
+        }
+    };
+
+
     /**
      * Listener that handles selections from suggestions from the AutoCompleteTextView that
      * displays Place suggestions.
@@ -154,8 +182,8 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
             Toast.makeText(getActivity(), "Clicked: " + primaryText,
                     Toast.LENGTH_SHORT).show();
             Log.i(TAG, "Called getPlaceById to get Place details for " + placeId);
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+
+            hideKeyBoard();
 
 
         }
@@ -233,16 +261,18 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
 
 
         // Register a listener that receives callbacks when a suggestion has been selected
-        fragmentDealsOnMapBinding.searchLayout.autoCompleteLocationSearch.setOnItemClickListener(mAutocompleteClickListener);
+        fragmentDealsOnMapBinding.searchLayout.autoCategorySearch.setOnItemClickListener(mCategoryAutoCompleteItemClickListner);
+
 
         // Set up the adapter that will retrieve suggestions from the Places Geo Data API that cover
         // the entire world.
         mAdapter = new PlaceAutocompleteAdapter(getActivity(), mGoogleApiClient, BOUNDS_GREATER_SYDNEY,
                 null);
-
+        fragmentDealsOnMapBinding.searchLayout.autoCompleteLocationSearch.setOnItemClickListener(mAutocompleteClickListener);
         fragmentDealsOnMapBinding.searchLayout.autoCompleteLocationSearch.setAdapter(mAdapter);
 
-        PromoAnalyticsServices promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
+
+        promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
         Call<CategoryModel> categoryModelCall = promoAnalyticsServices.getCategories();
         categoryModelCall.enqueue(new Callback<CategoryModel>() {
 
@@ -255,8 +285,9 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
                     for (Datum datum : response.body().getData()) {
                         categoryList.add(datum.getName());
                     }
-                    fragmentDealsOnMapBinding.searchLayout.autoCategorySearch.setAdapter(new ArrayAdapter<>
-                            (getActivity(), R.layout.autocomplete_layout, categoryList));
+
+                    mCategoryAdapter = new ArrayAdapter<>(getActivity(), R.layout.autocomplete_layout, categoryList);
+                    fragmentDealsOnMapBinding.searchLayout.autoCategorySearch.setAdapter(mCategoryAdapter);
                 }
 
             }
@@ -384,11 +415,80 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
 
     }
 
-    void cameraZoom(LatLng latLng, String placeName) {
+    private void fetchDataFromRemote(@NonNull final String s, @NonNull final LatLng latLng) {
 
+
+        Call<AllDeals> allDealsCall = promoAnalyticsServices.getAllDealsOnMap(s, latLng.latitude + "", latLng.longitude + "");
+        allDealsCall.enqueue(new Callback<AllDeals>() {
+            @Override
+            public void onResponse(Call<AllDeals> call, Response<AllDeals> response) {
+
+                if (response.isSuccessful()) {
+
+
+                    if (response.body().getStatus()) {
+
+                        if (response.body().getData().getDetail().size() > 0) {
+                            cameraZoom(latLng, s);
+                            addMarkersToMap(response.body().getData().getDetail());
+                        } else {
+                            showMessageInSnackBar(response.body().getMessage());
+                            googleMap.clear();
+                        }
+                    } else {
+
+                        showMessageInSnackBar(response.body().getMessage());
+                    }
+                } else {
+                    showMessageInSnackBar("Please try again");
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<AllDeals> call, Throwable t) {
+
+            }
+        });
+
+    }
+
+
+    void cameraZoom(LatLng latLng, String placeName) {
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
         googleMap.animateCamera(cameraUpdate);
         googleMap.addMarker(new MarkerOptions().position(latLng).title(placeName));
+
+    }
+
+
+    //adding markers to map after clearing the map
+    void addMarkersToMap(List<Detail> allDealsList) {
+        googleMap.clear();
+        for (final Detail item : allDealsList) {
+
+            Target target = new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+
+                    LatLng latLng = new LatLng(Double.parseDouble(item.getLatitude()), Double.parseDouble(item.getLongitude()));
+                    googleMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromBitmap(bitmap)).title(item.getName()));
+                }
+
+                @Override
+                public void onBitmapFailed(Drawable errorDrawable) {
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {
+                }
+            };
+            Picasso.with(getActivity()).load(item.getCategoryPic()).into(target);
+
+
+        }
+
 
     }
 
@@ -405,6 +505,12 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    void hideKeyBoard() {
+        // hide leyboard on location selected
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
     }
 
 }

@@ -85,4 +85,11 @@ public interface PromoAnalyticsServices {
     Call<CategoryModel> getCategories();
 
 
+    @FormUrlEncoded
+    @POST("deal_all_map/")
+    Call<AllDeals> getAllDealsOnMap(@Field("category") String category,
+                                    @Field("latitude") String latitude,
+                                    @Field("longitude") String longitude);
+
+
 }
