@@ -64,7 +64,13 @@ public interface PromoAnalyticsServices {
 
     @Multipart
     @POST("edit_profile/")
-    Call<User> editUser(@Part("name") RequestBody name,
+    Call<User> editUserWithoutPassword(@Part("name") RequestBody name,
+                        @Part("user_id") RequestBody userid,
+                        @Part("image") RequestBody file);
+
+    @Multipart
+    @POST("edit_profile/")
+    Call<User> editUserWithPAssword(@Part("name") RequestBody name,
                         @Part("user_id") RequestBody userid,
                         @Part("password") RequestBody password,
                         @Part("image") RequestBody file);

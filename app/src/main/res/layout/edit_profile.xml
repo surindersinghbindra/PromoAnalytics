@@ -35,16 +35,35 @@
                         android:background="#EE4239"
                         android:orientation="vertical">
 
-                        <com.promoanalytics.modules.CircleImageview
-                            android:id="@+id/ivUser"
-                            android:layout_width="96dp"
-                            android:layout_height="96dp"
+                        <RelativeLayout
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
                             android:layout_gravity="center"
-                            android:layout_marginTop="@dimen/activity_horizontal_margin"
-                            android:src="@drawable/profilepic"
-                            app:civ_border_color="@color/appOrangeLight"
-                            app:civ_border_width="5dp"
-                            app:civ_fill_color="@color/appBlue" />
+                            android:gravity="center">
+
+                            <com.promoanalytics.modules.CircleImageview
+                                android:id="@+id/ivUser"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                                android:src="@drawable/profilepic"
+                                app:civ_border_color="@color/appOrangeLight"
+                                app:civ_border_width="5dp"
+                                app:civ_fill_color="@color/appBlue" />
+
+                            <android.support.design.widget.FloatingActionButton
+                                android:layout_width="wrap_content"
+                                android:id="@+id/fabImagePickup"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_margin="3dp"
+                                android:backgroundTint="@color/appOrangeLight"
+                                android:backgroundTintMode="src_over"
+                                android:src="@drawable/ic_camera"
+                                app:fabSize="mini" />
+
+                        </RelativeLayout>
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -88,7 +107,7 @@
                             android:src="@drawable/user" />
 
                         <com.promoanalytics.utils.Fonts.RobotoLightEditText
-                            android:id="@+id/editName"
+                            android:id="@+id/etName"
                             style="@style/EditTextRoboto"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -198,7 +217,7 @@
                     </LinearLayout>
 
                     <!-- Signup Button -->
-                    <com.promoanalytics.utils.Fonts.RobotoLightEditText
+                    <com.promoanalytics.utils.Fonts.RobotoLightTextView
                         android:id="@+id/btnSaveProfile"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"

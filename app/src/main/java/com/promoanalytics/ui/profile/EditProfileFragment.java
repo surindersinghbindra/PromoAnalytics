@@ -3,6 +3,7 @@ package com.promoanalytics.ui.profile;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.promoanalytics.utils.AppConstants;
 import com.promoanalytics.utils.AppController;
 import com.promoanalytics.utils.PromoAnalyticsServices;
 import com.promoanalytics.utils.RootFragment;
+import com.squareup.picasso.Picasso;
 import com.vansuita.pickimage.bean.PickResult;
 import com.vansuita.pickimage.bundle.PickSetup;
 import com.vansuita.pickimage.dialog.PickImageDialog;
@@ -80,12 +82,15 @@ public class EditProfileFragment extends RootFragment implements IPickResult {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
 
-       /* if (!TextUtils.isEmpty(MyApplication.sharedPreferencesCompat.getString(AppConstants.IMAGE_URL, ""))) {
-            Picasso.with(getActivity()).load(MyApplication.sharedPreferencesCompat.getString(AppConstants.IMAGE_URL, "")).centerCrop().error(R.drawable.user).into(editProfileBinding.ivUser);
-
-        }*/
         editProfileBinding = DataBindingUtil.inflate(inflater, R.layout.edit_profile, container, false);
-        editProfileBinding.editName.setText(AppController.sharedPreferencesCompat.getString(AppConstants.USER_NAME, ""));
+
+
+        if (!TextUtils.isEmpty(AppController.sharedPreferencesCompat.getString(AppConstants.IMAGE_URL, ""))) {
+            Picasso.with(getActivity()).load(AppController.sharedPreferencesCompat.getString(AppConstants.IMAGE_URL, "")).centerCrop().error(R.drawable.user).into(editProfileBinding.ivUser);
+
+        }
+
+        editProfileBinding.etName.setText(AppController.sharedPreferencesCompat.getString(AppConstants.USER_NAME, ""));
         editProfileBinding.tvName.setText(AppController.sharedPreferencesCompat.getString(AppConstants.USER_NAME, ""));
 
         editProfileBinding.editEmail.setText(AppController.sharedPreferencesCompat.getString(AppConstants.EMAIL, ""));
@@ -95,33 +100,106 @@ public class EditProfileFragment extends RootFragment implements IPickResult {
             @Override
             public void onClick(View v) {
 
+                if (TextUtils.isEmpty(editProfileBinding.etName.getText())) {
 
-                File file = new File(imagePath);
-                RequestBody fbody = RequestBody.create(MediaType.parse("image*//*"), file);
-                RequestBody name = RequestBody.create(MediaType.parse("text/plain"), editProfileBinding.editName.getText().toString());
-                RequestBody id = RequestBody.create(MediaType.parse("text/plain"), AppController.sharedPreferencesCompat.getString(AppConstants.USER_ID, ""));
+                    showMessageInSnackBar("Your name can't be empty");
 
-                PromoAnalyticsServices promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
 
-                Call<User> call = promoAnalyticsServices.editUser(fbody, name, id, fbody);
-                call.enqueue(new Callback<User>() {
-                    @Override
-                    public void onResponse(Call<User> call, Response<User> response) {
+                } else {
 
+                    if (!TextUtils.isEmpty(editProfileBinding.editPassword.getText()) || !TextUtils.isEmpty(editProfileBinding.EditReEnterPassword.getText())) {
+                        if (!editProfileBinding.editPassword.getText().toString().trim().equals(editProfileBinding.EditReEnterPassword.getText().toString().trim())) {
+                            showMessageInSnackBar("Your password doesn't match");
+                        } else {
+                            showProgressBarWithMessage("Saving your profile");
+
+                            RequestBody password = RequestBody.create(MediaType.parse("text/plain"), editProfileBinding.editPassword.getText().toString());
+                            RequestBody fbody = RequestBody.create(MediaType.parse("image*//*"), file);
+
+                            RequestBody etName = RequestBody.create(MediaType.parse("text/plain"), editProfileBinding.etName.getText().toString());
+                            RequestBody id = RequestBody.create(MediaType.parse("text/plain"), AppController.sharedPreferencesCompat.getString(AppConstants.USER_ID, ""));
+
+                            PromoAnalyticsServices promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
+
+
+
+                            Call<User> call;
+                            if (TextUtils.isEmpty(imagePath) || imagePath == null) {
+                                call = promoAnalyticsServices.editUserWithoutPassword(etName, id, null);
+                            } else {
+                                File file = new File(imagePath);
+                                RequestBody fbody = RequestBody.create(MediaType.parse("image*//*"), file);
+                                call = promoAnalyticsServices.editUserWithoutPassword(etName, id, fbody);
+                            }
+
+
+                            Call<User> call = promoAnalyticsServices.editUserWithPAssword(etName, id, password, fbody);
+                            call.enqueue(new Callback<User>() {
+                                @Override
+                                public void onResponse(Call<User> call, Response<User> response) {
+                                    if (response.isSuccessful()) {
+                                        pDialog.hide();
+                                        if (response.body().getStatus()) {
+                                            showMessageInSnackBar(response.body().getMessage());
+                                        }
+                                    }
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<User> call, Throwable t) {
+
+                                }
+                            });
+
+                        }
+
+
+                    } else {
+
+                        showProgressBarWithMessage("Saving your profile");
+
+
+                        PromoAnalyticsServices promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
+                        RequestBody etName = RequestBody.create(MediaType.parse("text/plain"), editProfileBinding.etName.getText().toString());
+                        RequestBody id = RequestBody.create(MediaType.parse("text/plain"), AppController.sharedPreferencesCompat.getString(AppConstants.USER_ID, ""));
+                        Call<User> call;
+                        if (TextUtils.isEmpty(imagePath) || imagePath == null) {
+                            call = promoAnalyticsServices.editUserWithoutPassword(etName, id, null);
+                        } else {
+                            File file = new File(imagePath);
+                            RequestBody fbody = RequestBody.create(MediaType.parse("image*//*"), file);
+                            call = promoAnalyticsServices.editUserWithoutPassword(etName, id, fbody);
+                        }
+                        call.enqueue(new Callback<User>() {
+                            @Override
+                            public void onResponse(Call<User> call, Response<User> response) {
+                                if (response.isSuccessful()) {
+                                    pDialog.hide();
+
+                                    if (response.body().getStatus()) {
+                                        showMessageInSnackBar(response.body().getMessage());
+                                    }
+                                }
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<User> call, Throwable t) {
+
+                            }
+                        });
                     }
 
-                    @Override
-                    public void onFailure(Call<User> call, Throwable t) {
 
-                    }
-                });
+                }
 
 
             }
         });
 
 
-        editProfileBinding.ivUser.setOnClickListener(new View.OnClickListener() {
+        editProfileBinding.fabImagePickup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -205,10 +283,15 @@ public class EditProfileFragment extends RootFragment implements IPickResult {
             ((ImageView) view.findViewById(R.id.ivUser)).setImageBitmap(r.getBitmap());
 
             imagePath = r.getPath();
+
         } else {
             //Handle possible errors
 
             Toast.makeText(getActivity(), r.getError().getMessage(), Toast.LENGTH_LONG).show();
         }
+    }
+
+    void savingProfile(String userid,passwor){
+
     }
 }

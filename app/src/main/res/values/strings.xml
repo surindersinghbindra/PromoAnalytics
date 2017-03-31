@@ -3,7 +3,7 @@
     <string name="title_activity_maps">Promo Analytics</string>
     <string name="facebook_app_id">404760849895061</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="userName">Name</string>
+    <string name="userName">Your Name</string>
     <string name="email">Email</string>
     <string name="phoneNumber">Phone</string>
     <string name="password">Password</string>

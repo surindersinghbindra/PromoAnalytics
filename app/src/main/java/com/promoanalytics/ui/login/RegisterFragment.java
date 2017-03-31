@@ -32,7 +32,6 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.promoanalytics.R;
 import com.promoanalytics.databinding.FragmentRegisterBinding;
-import com.promoanalytics.ui.HomeFragment;
 import com.promoanalytics.ui.MainActivityAfterLogin;
 import com.promoanalytics.utils.AppConstants;
 import com.promoanalytics.utils.AppController;
