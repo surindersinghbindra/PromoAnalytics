@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +24,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -55,6 +55,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -79,7 +80,7 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
             new LatLng(43.717899, -79.658251), new LatLng(46.717899, -75.658251));
 
     private LatLng latLng = new LatLng(43.717899, -79.658251);
-    private String categoryName = "";
+    private String categoryId = "";
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -91,6 +92,8 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
     private GoogleApiClient mGoogleApiClient;
     private PlaceAutocompleteAdapter mAdapter;
     private ArrayAdapter mCategoryAdapter;
+    private List<Datum> datumList;
+    private HashMap<String, String> hashMapCategory = new HashMap<>();
 
     private PromoAnalyticsServices promoAnalyticsServices;
     /**
@@ -112,9 +115,12 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
             latLng = place.getLatLng();
 
             fragmentDealsOnMapBinding.etSearchPlaceOrCategory.setText(place.getName());
-
+            categoryId = "";
             hideKeyBoard();
-            fetchDataFromRemote(categoryName, latLng);
+            fragmentDealsOnMapBinding.searchLayout.slectn.setVisibility(View.GONE);
+            fetchDataFromRemote(categoryId, latLng);
+
+
 
            /* // Format details of the place for display and show it in a TextView.
             mPlaceDetailsText.setText(formatPlaceDetails(getResources(), place.getName(),
@@ -141,8 +147,9 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
             hideKeyBoard();
-            categoryName = (String) mCategoryAdapter.getItem(position);
-            fetchDataFromRemote(categoryName, latLng);
+            fragmentDealsOnMapBinding.searchLayout.slectn.setVisibility(View.GONE);
+            categoryId = (String) mCategoryAdapter.getItem(position);
+            fetchDataFromRemote(categoryId, latLng);
         }
     };
 
@@ -179,8 +186,9 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
                     .getPlaceById(mGoogleApiClient, placeId);
             placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
 
-            Toast.makeText(getActivity(), "Clicked: " + primaryText,
-                    Toast.LENGTH_SHORT).show();
+
+            Log.i(TAG, "Clicked: " + primaryText);
+
             Log.i(TAG, "Called getPlaceById to get Place details for " + placeId);
 
             hideKeyBoard();
@@ -284,12 +292,12 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
                     ArrayList<String> categoryList = new ArrayList<String>();
                     for (Datum datum : response.body().getData()) {
                         categoryList.add(datum.getName());
+                        hashMapCategory.put(datum.getName(), datum.getId());
                     }
 
                     mCategoryAdapter = new ArrayAdapter<>(getActivity(), R.layout.autocomplete_layout, categoryList);
                     fragmentDealsOnMapBinding.searchLayout.autoCategorySearch.setAdapter(mCategoryAdapter);
                 }
-
             }
 
             @Override
@@ -297,7 +305,6 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
 
             }
         });
-
 
         return fragmentDealsOnMapBinding.getRoot();
     }
@@ -377,6 +384,7 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
 
 
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -384,6 +392,7 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
+
             return;
         }
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
@@ -391,7 +400,7 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
         if (mLastLocation != null) {
             if (isMapReady && googleMap != null) {
                 LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 5);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13);
                 googleMap.animateCamera(cameraUpdate);
                 googleMap.addMarker(new MarkerOptions().position(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude())).title("Marker"));
 
@@ -417,26 +426,25 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
 
     private void fetchDataFromRemote(@NonNull final String s, @NonNull final LatLng latLng) {
 
-
-        Call<AllDeals> allDealsCall = promoAnalyticsServices.getAllDealsOnMap(s, latLng.latitude + "", latLng.longitude + "");
+        Call<AllDeals> allDealsCall = promoAnalyticsServices.getAllDealsOnMap((TextUtils.isEmpty(hashMapCategory.get(s)) || hashMapCategory.get(s) == null) ? "" : hashMapCategory.get(s), latLng.latitude + "", latLng.longitude + "");
         allDealsCall.enqueue(new Callback<AllDeals>() {
             @Override
             public void onResponse(Call<AllDeals> call, Response<AllDeals> response) {
 
                 if (response.isSuccessful()) {
 
-
                     if (response.body().getStatus()) {
 
                         if (response.body().getData().getDetail().size() > 0) {
-                            cameraZoom(latLng, s);
+                            LatLng latLng1 = new LatLng(Double.parseDouble(response.body().getData().getDetail().get(0).getLatitude()), Double.parseDouble(response.body().getData().getDetail().get(0).getLongitude()));
+                            cameraZoom(latLng1, s);
                             addMarkersToMap(response.body().getData().getDetail());
                         } else {
+
                             showMessageInSnackBar(response.body().getMessage());
-                            googleMap.clear();
                         }
                     } else {
-
+                        googleMap.clear();
                         showMessageInSnackBar(response.body().getMessage());
                     }
                 } else {
@@ -456,7 +464,7 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
 
 
     void cameraZoom(LatLng latLng, String placeName) {
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13);
         googleMap.animateCamera(cameraUpdate);
         googleMap.addMarker(new MarkerOptions().position(latLng).title(placeName));
 

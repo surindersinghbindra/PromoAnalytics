@@ -6,6 +6,7 @@ import com.promoanalytics.model.Category.CategoryModel;
 import com.promoanalytics.model.SaveDealModel;
 import com.promoanalytics.ui.login.RegisterUser;
 import com.promoanalytics.ui.login.User;
+import com.promoanalytics.ui.login.forgetpassword.OtpModel;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -47,7 +48,6 @@ public interface PromoAnalyticsServices {
     @POST("register/")
     Call<RegisterUser> registerUserWithSocial(@Field("name") String name,
                                               @Field("email") String email,
-                                              @Field("ccode") String ccode,
                                               @Field("mobile") String mobile,
                                               @Field("is_social") int isSocial);
 
@@ -90,6 +90,19 @@ public interface PromoAnalyticsServices {
     Call<AllDeals> getAllDealsOnMap(@Field("category") String category,
                                     @Field("latitude") String latitude,
                                     @Field("longitude") String longitude);
+
+    @FormUrlEncoded
+    @POST("forget_password/")
+    Call<OtpModel> getOtp(@Field("mobile") String mobile);
+
+    @FormUrlEncoded
+    @POST("resend_otp/")
+    Call<OtpModel> resendOtp(@Field("user_id") String user_id);
+
+    @FormUrlEncoded
+    @POST("forget_password/")
+    Call<OtpModel> verifyOtp(@Field("otp") String otp, @Field("user_id") String user_id);
+
 
 
 }

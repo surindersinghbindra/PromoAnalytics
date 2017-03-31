@@ -45,10 +45,6 @@ public class CategoryAutoCompeleteAdapter extends ArrayAdapter<Datum> {
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = super.getView(position, convertView, parent);
 
-        // Sets the primary and secondary text for a row.
-        // Note that getPrimaryText() and getSecondaryText() return a CharSequence that may contain
-        // styling based on the given CharacterStyle.
-
         Datum item = getItem(position);
 
         TextView textView1 = (TextView) row.findViewById(android.R.id.text1);

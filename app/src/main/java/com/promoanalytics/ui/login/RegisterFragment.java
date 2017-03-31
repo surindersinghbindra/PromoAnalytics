@@ -33,6 +33,7 @@ import com.google.android.gms.common.api.Status;
 import com.promoanalytics.R;
 import com.promoanalytics.databinding.FragmentRegisterBinding;
 import com.promoanalytics.ui.HomeFragment;
+import com.promoanalytics.ui.MainActivityAfterLogin;
 import com.promoanalytics.utils.AppConstants;
 import com.promoanalytics.utils.AppController;
 import com.promoanalytics.utils.PromoAnalyticsServices;
@@ -187,9 +188,10 @@ public class RegisterFragment extends RootFragment implements GoogleApiClient.On
                                 AppController.sharedPreferencesCompat.edit().putString(AppConstants.PHONE_NUMBER, binding.phone.getText().toString().trim()).apply();
 
 
-                                Intent intent = new Intent(getActivity(), HomeFragment.class);
+                                Intent intent = new Intent(getActivity(), MainActivityAfterLogin.class);
                                 getActivity().startActivity(intent);
                                 getActivity().overridePendingTransition(R.anim.enter, R.anim.exit);
+                                getActivity().finish();
 
 
                             } else {

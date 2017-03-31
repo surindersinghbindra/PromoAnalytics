@@ -35,12 +35,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBeNAHSckNiKt_nfBpTO1IZVr3QdphBv5Q" />
-
-
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
-
         //your activity declarations and other stuff
         <meta-data
             android:name="net.hockeyapp.android.appIdentifier"
@@ -71,6 +68,10 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_splash"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.ForgetPasswordActivity"
+            android:label="@string/title_activity_forget_password"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

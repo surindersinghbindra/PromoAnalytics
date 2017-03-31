@@ -32,6 +32,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.promoanalytics.R;
 import com.promoanalytics.databinding.FragmentLoginBinding;
+import com.promoanalytics.ui.ForgetPasswordActivity;
 import com.promoanalytics.ui.MainActivityAfterLogin;
 import com.promoanalytics.utils.AppConstants;
 import com.promoanalytics.utils.AppController;
@@ -110,6 +111,14 @@ public class LoginFragment extends RootFragment implements GoogleApiClient.OnCon
         // Inflate the layout for this fragment with data Binding
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false);
 
+        binding.tvForgetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().startActivity(new Intent(getActivity(), ForgetPasswordActivity.class));
+                getActivity().overridePendingTransition(R.anim.enter, R.anim.exit);
+            }
+        });
+
 
         binding.btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -186,16 +195,22 @@ public class LoginFragment extends RootFragment implements GoogleApiClient.OnCon
                 if (response.isSuccessful()) {
 
                     pDialog.hide();
-                    // saving User data to shared preferences
-                    AppController.getSharedPrefEditor().putBoolean(AppConstants.IS_SOCIAL, isSocial != 0).apply();
-                    AppController.getSharedPrefEditor().putBoolean(AppConstants.IS_REMEMBER_TAPPED, binding.switchGprs.isChecked()).apply();
-                    AppController.getSharedPrefEditor().putString(AppConstants.USER_ID, response.body().getData().getUserId()).apply();
-                    AppController.getSharedPrefEditor().putString(AppConstants.USER_NAME, response.body().getData().getName()).apply();
-                    AppController.getSharedPrefEditor().putString(AppConstants.EMAIL, response.body().getData().getEmail()).apply();
-                    AppController.getSharedPrefEditor().putString(AppConstants.PHONE_NUMBER, response.body().getData().getPhone()).apply();
+                    if (response.body().getStatus()) {
+                        // saving User data to shared preferences
+                        AppController.getSharedPrefEditor().putBoolean(AppConstants.IS_SOCIAL, isSocial != 0).apply();
+                        AppController.getSharedPrefEditor().putBoolean(AppConstants.IS_REMEMBER_TAPPED, binding.switchGprs.isChecked()).apply();
+                        AppController.getSharedPrefEditor().putString(AppConstants.USER_ID, response.body().getData().getUserId()).apply();
+                        AppController.getSharedPrefEditor().putString(AppConstants.USER_NAME, response.body().getData().getName()).apply();
+                        AppController.getSharedPrefEditor().putString(AppConstants.EMAIL, response.body().getData().getEmail()).apply();
+                        AppController.getSharedPrefEditor().putString(AppConstants.PHONE_NUMBER, response.body().getData().getPhone()).apply();
 
-                    getActivity().startActivity(new Intent(getActivity(), MainActivityAfterLogin.class));
-                    getActivity().overridePendingTransition(R.anim.enter, R.anim.exit);
+                        getActivity().startActivity(new Intent(getActivity(), MainActivityAfterLogin.class));
+                        getActivity().overridePendingTransition(R.anim.enter, R.anim.exit);
+                        getActivity().finish();
+                    } else {
+                        showMessageInSnackBar(response.body().getMessage());
+                    }
+
 
                 } else {
                     System.out.print(response.errorBody());

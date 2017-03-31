@@ -20,16 +20,18 @@
                 android:minHeight="?attr/actionBarSize">
 
                 <RelativeLayout
+                    android:id="@+id/tbSearch"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:clickable="true"
                     android:gravity="center_vertical">
 
 
                     <RelativeLayout
-                        android:id="@+id/tbSearch"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_toLeftOf="@+id/ivMapIndicator">
+                        android:layout_toLeftOf="@+id/ivMapIndicator"
+                        android:descendantFocusability="blocksDescendants">
 
                         <ImageView
                             android:id="@+id/searchIcon"
@@ -39,7 +41,7 @@
                             android:src="@drawable/ic_search" />
 
 
-                        <com.promoanalytics.utils.Fonts.RobotoLightEditText
+                        <com.promoanalytics.utils.Fonts.RobotoLightTextView
                             android:id="@+id/etSearchPlaceOrCategory"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -48,7 +50,6 @@
                             android:layout_toRightOf="@+id/searchIcon"
                             android:background="@android:color/transparent"
                             android:drawableBottom="@color/white"
-                            android:enabled="false"
                             android:hint="Search"
                             android:imeOptions="actionSearch"
                             android:singleLine="true"

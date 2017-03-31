@@ -7,9 +7,10 @@ package com.promoanalytics.utils;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.widget.AutoCompleteTextView;
 
 
-public class InstantAutoComplete extends android.support.v7.widget.AppCompatAutoCompleteTextView {
+public class InstantAutoComplete extends AutoCompleteTextView {
 
     public InstantAutoComplete(Context context) {
         super(context);
@@ -32,9 +33,14 @@ public class InstantAutoComplete extends android.support.v7.widget.AppCompatAuto
     protected void onFocusChanged(boolean focused, int direction,
                                   Rect previouslyFocusedRect) {
         super.onFocusChanged(focused, direction, previouslyFocusedRect);
-        if (focused) {
-            performFiltering(getText(), 0);
+        try {
+            if (focused) {
+                performFiltering(getText(), 0);
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
+
     }
 
 }

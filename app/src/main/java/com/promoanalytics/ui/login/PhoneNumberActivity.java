@@ -52,7 +52,7 @@ public class PhoneNumberActivity extends BaseAppCompatActivity {
 
                     showProgressBar();
                     PromoAnalyticsServices promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
-                    Call<RegisterUser> registerUserCallback = promoAnalyticsServices.registerUserWithSocial(intent.getStringExtra(AppConstants.USER_NAME), intent.getStringExtra(AppConstants.EMAIL), "+" + getCountryISDCode(), phoneNumberActivityBinding.etMobileNumber.getText().toString().trim(), 1);
+                    Call<RegisterUser> registerUserCallback = promoAnalyticsServices.registerUserWithSocial(intent.getStringExtra(AppConstants.USER_NAME), intent.getStringExtra(AppConstants.EMAIL), phoneNumberActivityBinding.etMobileNumber.getText().toString().trim(), 1);
                     registerUserCallback.enqueue(new Callback<RegisterUser>() {
                         @Override
                         public void onResponse(Call<RegisterUser> call, Response<RegisterUser> response) {
@@ -92,23 +92,6 @@ public class PhoneNumberActivity extends BaseAppCompatActivity {
 
     }
 
-    String getCountryISDCode() {
 
-        String CountryID = "";
-        String CountryZipCode = "";
-
-        TelephonyManager manager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-        //getNetworkCountryIso
-        CountryID = manager.getSimCountryIso().toUpperCase();
-        String[] rl = this.getResources().getStringArray(R.array.CountryCodes);
-        for (int i = 0; i < rl.length; i++) {
-            String[] g = rl[i].split(",");
-            if (g[1].trim().equals(CountryID.trim())) {
-                CountryZipCode = g[0];
-                break;
-            }
-        }
-        return CountryZipCode;
-    }
 
 }
