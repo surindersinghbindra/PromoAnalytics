@@ -2,6 +2,14 @@
 
 <layout>
 
+
+    <data>
+
+        <variable
+            name="user"
+            type="com.promoanalytics.ui.login.RegisterUser" />
+    </data>
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
@@ -49,11 +57,12 @@
                                 android:src="@drawable/profilepic"
                                 app:civ_border_color="@color/appOrangeLight"
                                 app:civ_border_width="5dp"
-                                app:civ_fill_color="@color/appBlue" />
+                                app:civ_fill_color="@color/appBlue"
+                                app:imageUrl="@{user.data.pic}" />
 
                             <android.support.design.widget.FloatingActionButton
-                                android:layout_width="wrap_content"
                                 android:id="@+id/fabImagePickup"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentBottom="true"
                                 android:layout_alignParentRight="true"
@@ -81,6 +90,7 @@
                                 android:layout_marginRight="5dp"
                                 android:gravity="center"
                                 android:hint="Surinder Singh"
+                                android:text="@{user.data.name}"
                                 android:textColor="@color/white"
                                 android:textColorHint="@color/white"
                                 android:textSize="20sp"
@@ -107,12 +117,14 @@
                             android:src="@drawable/user" />
 
                         <com.promoanalytics.utils.Fonts.RobotoLightEditText
+
                             android:id="@+id/etName"
                             style="@style/EditTextRoboto"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Name"
-                            android:inputType="textPersonName" />
+                            android:inputType="textPersonName"
+                            android:text="@{user.data.name}" />
 
                     </LinearLayout>
 
@@ -140,7 +152,8 @@
                             android:background="@null"
                             android:enabled="false"
                             android:hint="Email"
-                            android:inputType="textEmailAddress" />
+                            android:inputType="textEmailAddress"
+                            android:text="@{user.data.email}" />
                     </LinearLayout>
 
                     <com.promoanalytics.utils.Fonts.RobotoLightTextView
@@ -165,7 +178,8 @@
                             android:layout_height="wrap_content"
                             android:enabled="false"
                             android:hint="Phone Number"
-                            android:inputType="phone" />
+                            android:inputType="phone"
+                            android:text="@{user.data.phone}" />
                     </LinearLayout>
 
                     <com.promoanalytics.utils.Fonts.RobotoLightTextView
@@ -234,6 +248,13 @@
 
                 </LinearLayout>
             </ScrollView>
+
+
+            <ProgressBar
+                android:id="@+id/pbEditProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" />
 
         </RelativeLayout>
     </LinearLayout>

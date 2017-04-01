@@ -8,6 +8,7 @@ import com.promoanalytics.ui.login.RegisterUser;
 import com.promoanalytics.ui.login.User;
 import com.promoanalytics.ui.login.forgetpassword.OtpModel;
 
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -45,6 +46,11 @@ public interface PromoAnalyticsServices {
                                     @Field("is_social") int isSocial);
 
     @FormUrlEncoded
+    @POST("user_profile/")
+    Call<RegisterUser> getProfile(@Field("user_id") String userid);
+
+
+    @FormUrlEncoded
     @POST("register/")
     Call<RegisterUser> registerUserWithSocial(@Field("name") String name,
                                               @Field("email") String email,
@@ -62,18 +68,18 @@ public interface PromoAnalyticsServices {
                                @Field("page") String page);
 
 
-    @Multipart
+  /*  @Multipart
     @POST("edit_profile/")
     Call<User> editUserWithoutPassword(@Part("name") RequestBody name,
                         @Part("user_id") RequestBody userid,
-                        @Part("image") RequestBody file);
+                        @Part("image") RequestBody file);*/
 
     @Multipart
     @POST("edit_profile/")
-    Call<User> editUserWithPAssword(@Part("name") RequestBody name,
-                        @Part("user_id") RequestBody userid,
-                        @Part("password") RequestBody password,
-                        @Part("image") RequestBody file);
+    Call<User> editUserProfile(@Part("user_id") RequestBody userid,
+                               @Part("name") RequestBody name,
+                               @Part("password") RequestBody password,
+                               @Part MultipartBody.Part file);
 
 
     @FormUrlEncoded
@@ -86,6 +92,7 @@ public interface PromoAnalyticsServices {
     @FormUrlEncoded
     @POST("fav_list/")
     Call<AllDeals> getSavedCoupons(@Field("user_id") String userid);
+
 
     @POST("deal_category/")
     Call<CategoryModel> getCategories();
@@ -108,7 +115,6 @@ public interface PromoAnalyticsServices {
     @FormUrlEncoded
     @POST("forget_password/")
     Call<OtpModel> verifyOtp(@Field("otp") String otp, @Field("user_id") String user_id);
-
 
 
 }

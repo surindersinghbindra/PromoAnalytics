@@ -63,7 +63,7 @@ public class SplashActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestExternalStoragePermission();
         } else {
-            new Handler().postDelayed(runnable, 500);
+            new Handler().postDelayed(runnable, 3000);
         }
 
         checkForCrashes();
