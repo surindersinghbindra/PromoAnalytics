@@ -1,8 +1,18 @@
 package com.promoanalytics.utils;
 
+import android.app.Dialog;
+import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.OvershootInterpolator;
+
+import com.promoanalytics.BR;
+import com.promoanalytics.R;
+import com.promoanalytics.adapter.RecyclerBindingAdapter;
+import com.promoanalytics.model.Category.Datum;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,6 +20,7 @@ import org.json.JSONObject;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by think360 on 22/03/17.
@@ -77,4 +88,35 @@ public class UtilHelper {
                 .setDuration(150)
                 .start();
     }
+
+
+    public static void showMyDialog(Context context, List<Datum> datumList) {
+        final Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.custom_dialog);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(true);
+
+        RecyclerView recyclerView = (RecyclerView) dialog.findViewById(R.id.listView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.setAdapter(new RecyclerBindingAdapter(R.layout.single_item_category, BR.category, datumList));
+
+        // BusProvider.getInstance().post(produceCategoryChangeEvent());
+
+
+        /**
+         * if you want the dialog to be specific size, do the following
+         * this will cover 85% of the screen (85% width and 85% height)
+         */
+      /*  DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        int dialogWidth = (int)(displayMetrics.widthPixels * 0.85);
+        int dialogHeight = (int)(displayMetrics.heightPixels * 0.85);
+        dialog.getWindow().setLayout(dialogWidth, dialogHeight);*/
+
+        dialog.show();
+    }
+
+
+
+
 }

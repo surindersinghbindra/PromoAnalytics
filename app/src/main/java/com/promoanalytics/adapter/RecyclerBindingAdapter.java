@@ -7,8 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by troy379 on 16.03.16.
@@ -16,10 +16,12 @@ import java.util.ArrayList;
 public class RecyclerBindingAdapter<T> extends RecyclerView.Adapter<RecyclerBindingAdapter.BindingHolder> {
 
     private int holderLayout, variableId;
-    private AbstractList<T> items = new ArrayList<>();
+    private List<T> items = new ArrayList<>();
     private OnItemClickListener<T> onItemClickListener;
 
-    public RecyclerBindingAdapter(int holderLayout, int variableId, AbstractList<T> items) {
+    private int itemPosition;
+
+    public RecyclerBindingAdapter(int holderLayout, int variableId, List<T> items) {
         this.holderLayout = holderLayout;
         this.variableId = variableId;
         this.items = items;
@@ -33,8 +35,22 @@ public class RecyclerBindingAdapter<T> extends RecyclerView.Adapter<RecyclerBind
     }
 
     @Override
-    public void onBindViewHolder(RecyclerBindingAdapter.BindingHolder holder, int position) {
+    public void onBindViewHolder(RecyclerBindingAdapter.BindingHolder holder, final int position) {
         final T item = items.get(position);
+
+
+        holder.getBinding().getRoot().setOnClickListener(new View.OnClickListener() {
+
+
+            @Override
+            public void onClick(View v) {
+
+                if (onItemClickListener != null)
+                    onItemClickListener.onItemClick(position, item);
+
+
+            }
+        });
 
 
       /*  holder.getBinding().getRoot().setOnClickListener(v -> {
@@ -72,4 +88,5 @@ public class RecyclerBindingAdapter<T> extends RecyclerView.Adapter<RecyclerBind
             return binding;
         }
     }
+
 }

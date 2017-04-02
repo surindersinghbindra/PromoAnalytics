@@ -2,6 +2,7 @@ package com.promoanalytics.ui.DealsOnMap;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
@@ -14,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -21,19 +23,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.AutocompletePrediction;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -47,20 +50,24 @@ import com.promoanalytics.adapter.PlaceAutocompleteAdapter;
 import com.promoanalytics.databinding.FragmentDealsOnMapBinding;
 import com.promoanalytics.model.AllDeals.AllDeals;
 import com.promoanalytics.model.AllDeals.Detail;
-import com.promoanalytics.model.Category.CategoryModel;
 import com.promoanalytics.model.Category.Datum;
+import com.promoanalytics.ui.CategoryDialogFragment;
+import com.promoanalytics.utils.BusProvider;
 import com.promoanalytics.utils.PromoAnalyticsServices;
 import com.promoanalytics.utils.RootFragment;
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,13 +79,15 @@ import retrofit2.Response;
  */
 public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     public static final String TAG = DealsOnMapFragment.class.getSimpleName();
+
+    private static final int REQUEST_CODE_AUTOCOMPLETE = 1;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
             new LatLng(43.717899, -79.658251), new LatLng(46.717899, -75.658251));
-
+    CategoryDialogFragment editNameDialogFragment;
     private LatLng latLng = new LatLng(43.717899, -79.658251);
     private String categoryId = "";
     // TODO: Rename and change types of parameters
@@ -94,106 +103,16 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
     private ArrayAdapter mCategoryAdapter;
     private List<Datum> datumList;
     private HashMap<String, String> hashMapCategory = new HashMap<>();
-
+    private List<Datum> datumAbstractList;
     private PromoAnalyticsServices promoAnalyticsServices;
-    /**
-     * Callback for results from a Places Geo Data API query that shows the first place result in
-     * the details view on screen.
-     */
-    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback = new ResultCallback<PlaceBuffer>() {
-        @Override
-        public void onResult(final PlaceBuffer places) {
-            if (!places.getStatus().isSuccess()) {
-                // Request did not complete successfully
-                Log.e(TAG, "Place query did not complete. Error: " + places.getStatus().toString());
-                places.release();
-                return;
-            }
-            // Get the Place object from the buffer.
-            final Place place = places.get(0);
-
-            latLng = place.getLatLng();
-
-            fragmentDealsOnMapBinding.etSearchPlaceOrCategory.setText(place.getName());
-            categoryId = "";
-            hideKeyBoard();
-            fragmentDealsOnMapBinding.searchLayout.slectn.setVisibility(View.GONE);
-            fetchDataFromRemote(categoryId, latLng);
-
-
-
-           /* // Format details of the place for display and show it in a TextView.
-            mPlaceDetailsText.setText(formatPlaceDetails(getResources(), place.getName(),
-                    place.getId(), place.getAddress(), place.getPhoneNumber(),
-                    place.getWebsiteUri()));*/
-
-            // Display the third party attributions if set.
-          /*  final CharSequence thirdPartyAttribution = places.getAttributions();
-            if (thirdPartyAttribution == null) {
-                mPlaceDetailsAttribution.setVisibility(View.GONE);
-            } else {
-                mPlaceDetailsAttribution.setVisibility(View.VISIBLE);
-                mPlaceDetailsAttribution.setText(Html.fromHtml(thirdPartyAttribution.toString()));
-            }*/
-            Log.i(TAG, "Place details received: " + place.getName());
-
-            places.release();
-
-        }
-    };
-
+    private FragmentManager fm;
     private AdapterView.OnItemClickListener mCategoryAutoCompleteItemClickListner = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            hideKeyBoard();
             fragmentDealsOnMapBinding.searchLayout.slectn.setVisibility(View.GONE);
             categoryId = (String) mCategoryAdapter.getItem(position);
             fetchDataFromRemote(categoryId, latLng);
-        }
-    };
-
-
-    /**
-     * Listener that handles selections from suggestions from the AutoCompleteTextView that
-     * displays Place suggestions.
-     * Gets the place id of the selected item and issues a request to the Places Geo Data API
-     * to retrieve more details about the place.
-     *
-     * @see com.google.android.gms.location.places.GeoDataApi#getPlaceById(com.google.android.gms.common.api.GoogleApiClient,
-     * String...)
-     */
-    private AdapterView.OnItemClickListener mAutocompleteClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            /*
-             Retrieve the place ID of the selected item from the Adapter.
-             The adapter stores each Place suggestion in a AutocompletePrediction from which we
-             read the place ID and title.
-              */
-            final AutocompletePrediction item = mAdapter.getItem(position);
-            final String placeId = item.getPlaceId();
-            final CharSequence primaryText = item.getPrimaryText(null);
-
-            Log.i(TAG, "Autocomplete item selected: " + primaryText);
-
-
-            /*
-             Issue a request to the Places Geo Data API to retrieve a Place object with additional
-             details about the place.
-              */
-            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
-                    .getPlaceById(mGoogleApiClient, placeId);
-            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
-
-
-            Log.i(TAG, "Clicked: " + primaryText);
-
-            Log.i(TAG, "Called getPlaceById to get Place details for " + placeId);
-
-            hideKeyBoard();
-
-
         }
     };
 
@@ -269,42 +188,31 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
 
 
         // Register a listener that receives callbacks when a suggestion has been selected
-        fragmentDealsOnMapBinding.searchLayout.autoCategorySearch.setOnItemClickListener(mCategoryAutoCompleteItemClickListner);
+        fragmentDealsOnMapBinding.searchLayout.autoCategorySearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                editNameDialogFragment = CategoryDialogFragment.newInstance("Some Title");
+                editNameDialogFragment.show(fm, "fragment_edit_name");
+
+                //  UtilHelper.showMyDialog(getContext(), datumAbstractList);
+            }
+        });
 
 
         // Set up the adapter that will retrieve suggestions from the Places Geo Data API that cover
         // the entire world.
         mAdapter = new PlaceAutocompleteAdapter(getActivity(), mGoogleApiClient, BOUNDS_GREATER_SYDNEY,
                 null);
-        fragmentDealsOnMapBinding.searchLayout.autoCompleteLocationSearch.setOnItemClickListener(mAutocompleteClickListener);
-        fragmentDealsOnMapBinding.searchLayout.autoCompleteLocationSearch.setAdapter(mAdapter);
-
-
-        promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
-        Call<CategoryModel> categoryModelCall = promoAnalyticsServices.getCategories();
-        categoryModelCall.enqueue(new Callback<CategoryModel>() {
-
-
+        // fragmentDealsOnMapBinding.searchLayout.autoCompleteLocationSearch.setOnItemClickListener(mAutocompleteClickListener);
+        //  fragmentDealsOnMapBinding.searchLayout.autoCompleteLocationSearch.setAdapter(mAdapter);
+        fragmentDealsOnMapBinding.searchLayout.autoCompleteLocationSearch.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onResponse(Call<CategoryModel> call, Response<CategoryModel> response) {
-                if (response.body().getStatus()) {
-
-                    ArrayList<String> categoryList = new ArrayList<String>();
-                    for (Datum datum : response.body().getData()) {
-                        categoryList.add(datum.getName());
-                        hashMapCategory.put(datum.getName(), datum.getId());
-                    }
-
-                    mCategoryAdapter = new ArrayAdapter<>(getActivity(), R.layout.autocomplete_layout, categoryList);
-                    fragmentDealsOnMapBinding.searchLayout.autoCategorySearch.setAdapter(mCategoryAdapter);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<CategoryModel> call, Throwable t) {
-
+            public void onClick(View v) {
+                openAutocompleteActivity();
             }
         });
+
 
         return fragmentDealsOnMapBinding.getRoot();
     }
@@ -332,6 +240,8 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+        fm = getChildFragmentManager();
+
     }
 
     @Override
@@ -344,7 +254,9 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
     public void onResume() {
         super.onResume();
         fragmentDealsOnMapBinding.mvDealsMap.onResume();
+        BusProvider.getInstance().register(this);
     }
+
 
     @Override
     public void onStart() {
@@ -364,6 +276,8 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
     @Override
     public void onPause() {
         fragmentDealsOnMapBinding.mvDealsMap.onPause();
+        // Always unregister when an object no longer should be on the bus.
+        BusProvider.getInstance().unregister(this);
         super.onPause();
     }
 
@@ -500,6 +414,92 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
 
     }
 
+    private void openAutocompleteActivity() {
+        try {
+            // The autocomplete activity requires Google Play Services to be available. The intent
+            // builder checks this and throws an exception if it is not the case.
+            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
+                    .build(getActivity());
+            startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE);
+        } catch (GooglePlayServicesRepairableException e) {
+            // Indicates that Google Play Services is either not installed or not up to date. Prompt
+            // the user to correct the issue.
+            GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), e.getConnectionStatusCode(),
+                    0 /* requestCode */).show();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            // Indicates that Google Play Services is not available and the problem is not easily
+            // resolvable.
+            String message = "Google Play Services is not available: " +
+                    GoogleApiAvailability.getInstance().getErrorString(e.errorCode);
+
+            Log.e(TAG, message);
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+/*    void hideKeyBoard() {
+        // hide leyboard on location selected
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+    }*/
+
+    /**
+     * Called after the autocomplete activity has finished to return its result.
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Check that the result was from the autocomplete widget.
+        if (requestCode == REQUEST_CODE_AUTOCOMPLETE) {
+            if (resultCode == RESULT_OK) {
+                // Get the user's selected place from the Intent.
+                Place place = PlaceAutocomplete.getPlace(getActivity(), data);
+                Log.i(TAG, "Place Selected: " + place.getName());
+
+                // Format the place's details and display them in the TextView.
+                fragmentDealsOnMapBinding.etSearchPlaceOrCategory.setText(place.getName());
+
+                latLng = place.getLatLng();
+
+                fragmentDealsOnMapBinding.etSearchPlaceOrCategory.setText(place.getName());
+                categoryId = "";
+
+                fragmentDealsOnMapBinding.searchLayout.slectn.setVisibility(View.GONE);
+                fetchDataFromRemote(categoryId, latLng);
+
+
+                // Display attributions if required.
+                CharSequence attributions = place.getAttributions();
+                if (!TextUtils.isEmpty(attributions)) {
+                    // mPlaceAttribution.setText(Html.fromHtml(attributions.toString()));
+                } else {
+                    //  mPlaceAttribution.setText("");
+                }
+
+                Log.i(TAG, "Place details received: " + place.getName());
+
+            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                Status status = PlaceAutocomplete.getStatus(getActivity(), data);
+                Log.e(TAG, "Error: Status = " + status.toString());
+            } else if (resultCode == RESULT_CANCELED) {
+                // Indicates that the activity closed before a selection was made. For example if
+                // the user pressed the back button.
+            }
+        }
+    }
+
+    @Subscribe
+    public void onCategoryChange(CategoryChange event) {
+
+        if (event != null && !TextUtils.isEmpty(event.categoryId)) {
+            editNameDialogFragment.dismiss();
+            Toast.makeText(getActivity(), event.categoryId, Toast.LENGTH_SHORT).show();
+            Log.i("CATEGORY_ID", event.categoryId);
+        }
+
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -513,12 +513,6 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-
-    void hideKeyBoard() {
-        // hide leyboard on location selected
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
     }
 
 }

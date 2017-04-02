@@ -16,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -204,14 +203,14 @@ public class ListDealsFragment extends RootFragment implements GoogleApiClient.O
 
         PromoAnalyticsServices promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
         // Register a listener that receives callbacks when a suggestion has been selected
-        fragmentHomeNewBinding.searchLayout.autoCompleteLocationSearch.setOnItemClickListener(mAutocompleteClickListener);
+        // fragmentHomeNewBinding.searchLayout.autoCompleteLocationSearch.setOnItemClickListener(mAutocompleteClickListener);
 
         // Set up the adapter that will retrieve suggestions from the Places Geo Data API that cover
         // the entire world.
         mAdapter = new PlaceAutocompleteAdapter(getActivity(), mGoogleApiClient, BOUNDS_GREATER_SYDNEY,
                 null);
 
-        fragmentHomeNewBinding.searchLayout.autoCompleteLocationSearch.setAdapter(mAdapter);
+        //  fragmentHomeNewBinding.searchLayout.autoCompleteLocationSearch.setAdapter(mAdapter);
 
         showProgressBar();
         Call<AllDeals> getAllDealsCall = promoAnalyticsServices.getAllDeals("", "30.7360306", "76.7328649", AppConstants.FEATURED_DEALS, AppController.sharedPreferencesCompat.getString(AppConstants.USER_ID, "0"), "1");
@@ -279,8 +278,10 @@ public class ListDealsFragment extends RootFragment implements GoogleApiClient.O
                     for (Datum datum : response.body().getData()) {
                         categoryList.add(datum.getName());
                     }
-                    fragmentHomeNewBinding.searchLayout.autoCategorySearch.setAdapter(new ArrayAdapter<>
-                            (getActivity(), R.layout.autocomplete_layout, categoryList));
+
+
+               /*     fragmentHomeNewBinding.searchLayout.autoCategorySearch.setAdapter(new ArrayAdapter<>
+                            (getActivity(), R.layout.autocomplete_layout, categoryList));*/
                 }
 
             }
