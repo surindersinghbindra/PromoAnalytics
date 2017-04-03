@@ -32,7 +32,7 @@ import retrofit2.Response;
 public class CategoryDialogFragment extends DialogFragment implements View.OnClickListener, RecyclerBindingAdapter.OnItemClickListener {
 
 
-    private String categoryId = "";
+    private Datum datum = new Datum();
 
     public static CategoryDialogFragment newInstance(String s) {
         return new CategoryDialogFragment();
@@ -102,7 +102,7 @@ public class CategoryDialogFragment extends DialogFragment implements View.OnCli
     @Produce
     public CategoryChange produceCategoryChangeEvent() {
         // Provide an initial value for location based on the last known position.
-        return new CategoryChange(categoryId);
+        return new CategoryChange(datum);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class CategoryDialogFragment extends DialogFragment implements View.OnCli
     @Override
     public void onItemClick(int position, Object item) {
 
-        categoryId = ((Datum) item).getId();
+        this.datum = (Datum) item;
         BusProvider.getInstance().post(produceCategoryChangeEvent());
 
     }

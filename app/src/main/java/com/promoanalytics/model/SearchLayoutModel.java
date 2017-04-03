@@ -11,9 +11,29 @@ import com.promoanalytics.BR;
 
 public class SearchLayoutModel extends BaseObservable {
 
-    String toolBatTitle;
-    String locationSearchTitle;
-    String categorySearchTitle;
+    private String toolBatTitle;
+    private String locationSearchTitle;
+    private String categorySearchTitle;
+    private boolean isOnAllCategory;
+
+    public SearchLayoutModel(String toolBatTitle, String locationSearchTitle, String categorySearchTitle, boolean isOnAllCategory) {
+        this.toolBatTitle = toolBatTitle;
+        this.locationSearchTitle = locationSearchTitle;
+        this.categorySearchTitle = categorySearchTitle;
+        this.isOnAllCategory = isOnAllCategory;
+    }
+
+
+    @Bindable
+    public boolean isOnAllCategory() {
+        return isOnAllCategory;
+    }
+
+    public void setOnAllCategory(boolean onAllCategory) {
+        isOnAllCategory = onAllCategory;
+        notifyPropertyChanged(BR.onAllCategory);
+    }
+
 
     @Bindable
     public String getToolBatTitle() {

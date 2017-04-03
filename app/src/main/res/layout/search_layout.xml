@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
+    <data>
+
+        <variable
+            name="data"
+            type="com.promoanalytics.model.SearchLayoutModel" />
+    </data>
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/slectn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#EE4239"
+        android:background="@color/appOrange"
         android:orientation="vertical"
         android:padding="@dimen/activity_horizontal_margin">
 
@@ -18,23 +25,33 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="#fff" />
 
-        <com.promoanalytics.utils.Fonts.RobotoLightTextView
-            android:id="@+id/autoCompleteLocationSearch"
-            style="@style/EditTextColorCustom"
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="5dp"
-            android:layout_toRightOf="@+id/location"
-            android:background="@null"
-            android:gravity="left|center"
-            android:hint="@string/select_location"
-            android:inputType="textFilter|textMultiLine"
-            android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="#fff"
-            android:textColorHint="@color/white"
-            android:textCursorDrawable="@drawable/color_cursor" />
+            android:layout_height="wrap_content">
+
+
+            <com.promoanalytics.utils.Fonts.RobotoLightTextView
+                android:id="@+id/autoCompleteLocationSearch"
+                style="@style/EditTextColorCustom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@+id/location"
+                android:background="@null"
+                android:gravity="left|center"
+                android:hint="@string/select_location"
+                android:inputType="textFilter|textMultiLine"
+                android:singleLine="true"
+                android:text="@{data.locationSearchTitle}"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#fff"
+                android:textColorHint="@color/white"
+                android:textCursorDrawable="@drawable/color_cursor" />
+
+        </RelativeLayout>
+
 
         <View
             android:layout_width="match_parent"
@@ -50,24 +67,41 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="#fff" />
 
-        <com.promoanalytics.utils.Fonts.RobotoLightTextView
-            android:id="@+id/autoCategorySearch"
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="5dp"
-            android:layout_toRightOf="@+id/location"
-            android:background="@null"
-            android:completionThreshold="1"
-            android:drawablePadding="@dimen/activity_horizontal_margin"
-            android:drawableRight="@drawable/ic_close"
-            android:gravity="left|center"
-            android:hint="@string/select_category"
-            android:inputType="textFilter|textMultiLine"
-            android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="#fff"
-            android:textColorHint="@color/white"
-            android:textCursorDrawable="@drawable/color_cursor" />
+            android:layout_height="wrap_content">
+
+
+            <com.promoanalytics.utils.Fonts.RobotoLightTextView
+                android:id="@+id/autoCategorySearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_toRightOf="@+id/location"
+                android:background="@null"
+                android:completionThreshold="1"
+                android:drawablePadding="@dimen/activity_horizontal_margin"
+                android:gravity="left|center"
+                android:hint="@string/select_category"
+                android:inputType="textFilter|textMultiLine"
+                android:singleLine="true"
+                android:text="@{data.categorySearchTitle}"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#fff"
+                android:textColorHint="@color/white"
+                android:textCursorDrawable="@drawable/color_cursor" />
+
+
+            <ImageView
+                android:id="@+id/ivResetCategory"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_alignParentRight="true"
+                android:src="@{data.isOnAllCategory? @drawable/ic_close: @drawable/ic_close_orange}" />
+
+        </RelativeLayout>
+
 
         <View
             android:layout_width="match_parent"
