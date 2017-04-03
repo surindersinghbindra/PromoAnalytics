@@ -453,7 +453,9 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
             public void onInfoWindowClick(Marker marker) {
 
                 Detail detail = (Detail) marker.getTag();
+                assert detail != null;
                 Log.i("Clicked", detail.getName());
+                
             }
         });
 
