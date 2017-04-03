@@ -21,8 +21,10 @@ import com.promoanalytics.ui.dealslist.ListDealsFragment;
 import com.promoanalytics.ui.profile.EditProfileFragment;
 import com.promoanalytics.utils.AppConstants;
 import com.promoanalytics.utils.AppController;
+import com.promoanalytics.utils.BusProvider;
 import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -149,4 +151,29 @@ public class HomeFragment extends Fragment implements DealsOnMapFragment.OnFragm
         return false;
     }
 
+    @Subscribe
+    public void wantToChangeTab(TabChangedOtto tabChangedOtto) {
+
+        switch (tabChangedOtto.getTabSelected()) {
+            case R.id.tab_list:
+                activityHomeBinding.bottomBar.selectTabWithId(R.id.tab_list);
+                break;
+            default:
+                break;
+
+        }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        BusProvider.getInstance().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        BusProvider.getInstance().unregister(this);
+    }
 }

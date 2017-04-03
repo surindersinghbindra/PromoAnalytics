@@ -33,9 +33,15 @@ public class CategoryDialogFragment extends DialogFragment implements View.OnCli
 
 
     private Datum datum = new Datum();
+    private int whoWillBetheListner;
 
-    public static CategoryDialogFragment newInstance(String s) {
+    public static CategoryDialogFragment newInstance() {
+
         return new CategoryDialogFragment();
+    }
+
+    public void setWhoWillBetheListner(int whoWillBetheListner) {
+        this.whoWillBetheListner = whoWillBetheListner;
     }
 
     @Nullable
@@ -102,7 +108,7 @@ public class CategoryDialogFragment extends DialogFragment implements View.OnCli
     @Produce
     public CategoryChange produceCategoryChangeEvent() {
         // Provide an initial value for location based on the last known position.
-        return new CategoryChange(datum);
+        return new CategoryChange(datum, whoWillBetheListner);
     }
 
     @Override
@@ -120,6 +126,7 @@ public class CategoryDialogFragment extends DialogFragment implements View.OnCli
     public void onItemClick(int position, Object item) {
 
         this.datum = (Datum) item;
+
         BusProvider.getInstance().post(produceCategoryChangeEvent());
 
     }

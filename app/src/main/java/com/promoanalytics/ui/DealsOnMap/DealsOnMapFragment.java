@@ -52,10 +52,12 @@ import com.promoanalytics.model.AllDeals.AllDeals;
 import com.promoanalytics.model.AllDeals.Detail;
 import com.promoanalytics.model.SearchLayoutModel;
 import com.promoanalytics.ui.CategoryDialogFragment;
+import com.promoanalytics.ui.TabChangedOtto;
 import com.promoanalytics.utils.AppConstants;
 import com.promoanalytics.utils.BusProvider;
 import com.promoanalytics.utils.PromoAnalyticsServices;
 import com.promoanalytics.utils.RootFragment;
+import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -121,6 +123,9 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
     private PromoAnalyticsServices promoAnalyticsServices;
     private FragmentManager fm;
     private SearchLayoutModel searchLayoutModel;
+
+    private int tabSelected = 0;
+    private Detail mDetail;
 
 
     public DealsOnMapFragment() {
@@ -208,7 +213,8 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
             @Override
             public void onClick(View v) {
 
-                editNameDialogFragment = CategoryDialogFragment.newInstance("Some Title");
+                editNameDialogFragment = CategoryDialogFragment.newInstance();
+                editNameDialogFragment.setWhoWillBetheListner(1);
                 editNameDialogFragment.show(fm, "fragment_edit_name");
 
             }
@@ -432,7 +438,7 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
 
                     LatLng latLng = new LatLng(Double.parseDouble(item.getLatitude()), Double.parseDouble(item.getLongitude()));
 
-                    Marker marker = googleMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromBitmap(bitmap)).title(item.getName()));
+                    Marker marker = googleMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromBitmap(bitmap)).title(item.getName() + "," + item.getCategoryName()));
                     marker.setTag(item);
                 }
 
@@ -455,7 +461,11 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
                 Detail detail = (Detail) marker.getTag();
                 assert detail != null;
                 Log.i("Clicked", detail.getName());
-                
+                tabSelected = R.id.tab_list;
+                mDetail = detail;
+                BusProvider.getInstance().post(produceTabChange());
+
+
             }
         });
 
@@ -505,6 +515,7 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
                 Place place = PlaceAutocomplete.getPlace(getActivity(), data);
                 Log.i(TAG, "Place Selected: " + place.getName());
 
+                tabSelected = 0;
                 this.currentLocation = place.getName() + "";
                 // Format the place's details and display them in the TextView.
                 fragmentDealsOnMapBinding.etSearchPlaceOrCategory.setText(place.getName());
@@ -539,7 +550,7 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
     @Subscribe
     public void onCategoryChange(CategoryChange event) {
 
-        if (event != null && !TextUtils.isEmpty(event.datum.getName())) {
+        if (event != null && !TextUtils.isEmpty(event.datum.getName()) && event.whoWillBetheListner == 1) {
             editNameDialogFragment.dismiss();
             searchLayoutModel.setOnAllCategory(true);
             searchLayoutModel.setCategorySearchTitle(event.datum.getName());
@@ -573,6 +584,11 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
         super.onSaveInstanceState(savedInstanceState);
     }
 
+    @Produce
+    public TabChangedOtto produceTabChange() {
+        // Provide an initial value for location based on the last known position.
+        return new TabChangedOtto(tabSelected, mDetail);
+    }
 
     /**
      * This interface must be implemented by activities that contain this

@@ -9,19 +9,13 @@ import com.promoanalytics.model.Category.Datum;
 public class CategoryChange {
 
     public final Datum datum;
+    public final int whoWillBetheListner;
 
-
-    public CategoryChange(Datum datum) {
+    public CategoryChange(Datum datum, int whoWillBetheListner) {
         this.datum = datum;
+        this.whoWillBetheListner = whoWillBetheListner;
+
 
     }
 
-    @Override
-    public String toString() {
-        return new StringBuilder("(") //
-                .append(datum.getName()) //
-                .append(", ") //
-                .append(")") //
-                .toString();
-    }
 }
