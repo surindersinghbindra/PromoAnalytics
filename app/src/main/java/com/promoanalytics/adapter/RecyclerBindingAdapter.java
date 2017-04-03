@@ -2,10 +2,15 @@ package com.promoanalytics.adapter;
 
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.RadioButton;
+
+import com.promoanalytics.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +40,7 @@ public class RecyclerBindingAdapter<T> extends RecyclerView.Adapter<RecyclerBind
     }
 
     @Override
-    public void onBindViewHolder(RecyclerBindingAdapter.BindingHolder holder, final int position) {
+    public void onBindViewHolder(final RecyclerBindingAdapter.BindingHolder holder, int position) {
         final T item = items.get(position);
 
 
@@ -46,8 +51,23 @@ public class RecyclerBindingAdapter<T> extends RecyclerView.Adapter<RecyclerBind
             public void onClick(View v) {
 
                 if (onItemClickListener != null)
-                    onItemClickListener.onItemClick(position, item);
+                    onItemClickListener.onItemClick(holder.getAdapterPosition(), item);
 
+
+            }
+        });
+        RadioButton radioButton = (RadioButton) (holder.getBinding().getRoot()).findViewById(R.id.radioButton);
+
+        radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (onItemClickListener != null)
+                            onItemClickListener.onItemClick(holder.getAdapterPosition(), item);
+                    }
+                }, 350);
 
             }
         });
@@ -58,7 +78,7 @@ public class RecyclerBindingAdapter<T> extends RecyclerView.Adapter<RecyclerBind
                 onItemClickListener.onItemClick(position, item);
         });*/
         holder.getBinding().setVariable(variableId, item);
-
+        holder.getBinding().executePendingBindings();
 
     }
 

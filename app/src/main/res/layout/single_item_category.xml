@@ -17,6 +17,7 @@
         android:orientation="horizontal">
 
         <RadioButton
+
             android:id="@+id/radioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -26,6 +27,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:text="@{category.name}"
+
             android:textColor="@color/appGray" />
 
     </LinearLayout>
