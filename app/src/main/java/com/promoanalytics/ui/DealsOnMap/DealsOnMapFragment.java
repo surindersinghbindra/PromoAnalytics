@@ -25,7 +25,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -44,13 +43,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.promoanalytics.FetchAddressIntentService;
 import com.promoanalytics.R;
 import com.promoanalytics.databinding.FragmentDealsOnMapBinding;
 import com.promoanalytics.model.AllDeals.AllDeals;
 import com.promoanalytics.model.AllDeals.Detail;
-import com.promoanalytics.model.Category.Datum;
 import com.promoanalytics.model.SearchLayoutModel;
 import com.promoanalytics.ui.CategoryDialogFragment;
 import com.promoanalytics.utils.AppConstants;
@@ -61,7 +60,6 @@ import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -116,12 +114,10 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
     private Location mLastLocation;
     private FragmentDealsOnMapBinding fragmentDealsOnMapBinding;
     private GoogleMap googleMap = null;
-    private boolean isMapReady = false, isLocationAvailable = false;
+    private boolean isMapReady = false;
+    private boolean isAlreadyFetchedDataForCurrentLocation = true;
     private GoogleApiClient mGoogleApiClient;
-    private ArrayAdapter mCategoryAdapter;
-    private List<Datum> datumList;
-    private HashMap<String, String> hashMapCategory = new HashMap<>();
-    private List<Datum> datumAbstractList;
+
     private PromoAnalyticsServices promoAnalyticsServices;
     private FragmentManager fm;
     private SearchLayoutModel searchLayoutModel;
@@ -326,9 +322,12 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
         if (mLastLocation != null) {
             if (isMapReady && googleMap != null) {
                 LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13);
-                googleMap.animateCamera(cameraUpdate);
-                googleMap.addMarker(new MarkerOptions().position(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude())).title("Marker"));
+                if (isAlreadyFetchedDataForCurrentLocation) {
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, AppConstants.ZOOM_LEVEL_IN_APP);
+                    googleMap.animateCamera(cameraUpdate);
+                    fetchDataFromRemote("", latLng);
+                    isAlreadyFetchedDataForCurrentLocation = false;
+                }
 
                 // We only start the service to fetch the address if GoogleApiClient is connected.
                 if (mGoogleApiClient.isConnected() && mLastLocation != null) {
@@ -417,9 +416,8 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
 
 
     void cameraZoom(LatLng latLng, String placeName) {
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, AppConstants.ZOOM_LEVEL_IN_APP);
         googleMap.animateCamera(cameraUpdate);
-        googleMap.addMarker(new MarkerOptions().position(latLng).title(placeName));
 
     }
 
@@ -433,7 +431,9 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
 
                     LatLng latLng = new LatLng(Double.parseDouble(item.getLatitude()), Double.parseDouble(item.getLongitude()));
-                    googleMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromBitmap(bitmap)).title(item.getName()));
+
+                    Marker marker = googleMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromBitmap(bitmap)).title(item.getName()));
+                    marker.setTag(item);
                 }
 
                 @Override
@@ -444,10 +444,18 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
                 public void onPrepareLoad(Drawable placeHolderDrawable) {
                 }
             };
-            Picasso.with(getActivity()).load(item.getCategoryPic()).into(target);
+            Picasso.with(getActivity()).load(item.getCategoryPic()).resize(120, 120).into(target);
 
 
         }
+        googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+
+                Detail detail = (Detail) marker.getTag();
+                Log.i("Clicked", detail.getName());
+            }
+        });
 
 
     }
@@ -498,10 +506,9 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
                 this.currentLocation = place.getName() + "";
                 // Format the place's details and display them in the TextView.
                 fragmentDealsOnMapBinding.etSearchPlaceOrCategory.setText(place.getName());
+                fragmentDealsOnMapBinding.searchLayout.autoCompleteLocationSearch.setText(place.getName());
 
                 latLng = place.getLatLng();
-
-                fragmentDealsOnMapBinding.etSearchPlaceOrCategory.setText(place.getName());
 
                 fragmentDealsOnMapBinding.searchLayout.slectn.setVisibility(View.GONE);
                 fetchDataFromRemote(categoryId, latLng);
@@ -548,6 +555,7 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
             case R.id.ivResetCategory:
                 searchLayoutModel.setCategorySearchTitle("Select Category");
                 searchLayoutModel.setOnAllCategory(false);
+                fetchDataFromRemote("", latLng);
                 break;
         }
 

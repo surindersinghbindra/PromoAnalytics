@@ -47,9 +47,13 @@ public class Detail implements Parcelable {
     @SerializedName("longitude")
     @Expose
     private String longitude;
+
     @SerializedName("category_pic")
     @Expose
     private String categoryPic;
+    @SerializedName("category_name")
+    @Expose
+    private String categoryName;
 
     public Detail() {
     }
@@ -64,6 +68,15 @@ public class Detail implements Parcelable {
         this.latitude = in.readString();
         this.longitude = in.readString();
         this.categoryPic = in.readString();
+        this.categoryName = in.readString();
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public String getId() {
@@ -154,6 +167,7 @@ public class Detail implements Parcelable {
         dest.writeString(this.latitude);
         dest.writeString(this.longitude);
         dest.writeString(this.categoryPic);
+        dest.writeString(this.categoryName);
     }
 }
 

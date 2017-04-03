@@ -133,7 +133,7 @@ public class FetchAddressIntentService extends IntentService {
                 addressFragments.add(address.getAddressLine(i));
             }*/
 
-            addressFragments.add(address.getLocality());
+            addressFragments.add(address.getSubLocality());
             addressFragments.add(address.getAdminArea());
             addressFragments.add(address.getCountryCode());
             Log.i(TAG, getString(R.string.address_found));

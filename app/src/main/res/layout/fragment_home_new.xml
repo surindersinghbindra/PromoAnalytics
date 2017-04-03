@@ -58,9 +58,10 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rvFeaturedCoupons"
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_height="170dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
                     android:overScrollMode="never">
 
                 </android.support.v7.widget.RecyclerView>
