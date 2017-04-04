@@ -1,11 +1,17 @@
 package com.promoanalytics.ui.dealslist;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 import android.databinding.DataBindingUtil;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
@@ -24,10 +30,11 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
+import com.promoanalytics.BR;
 import com.promoanalytics.R;
 import com.promoanalytics.adapter.DealViewHolder;
 import com.promoanalytics.databinding.FragmentHomeNewBinding;
@@ -38,6 +45,7 @@ import com.promoanalytics.model.SearchLayoutModel;
 import com.promoanalytics.ui.CategoryDialogFragment;
 import com.promoanalytics.ui.CouponDetailFragment;
 import com.promoanalytics.ui.DealsOnMap.CategoryChange;
+import com.promoanalytics.ui.DealsOnMap.DealsOnMapFragment;
 import com.promoanalytics.ui.SavedCoupons.SavedDealsFragment;
 import com.promoanalytics.ui.TabChangedOtto;
 import com.promoanalytics.utils.AppConstants;
@@ -80,12 +88,14 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
     private String mParam1;
     private String mParam2;
     private GoogleApiClient mGoogleApiClient;
+    private Location mLastLocation;
     private FragmentManager fm;
     private PromoAnalyticsServices promoAnalyticsServices;
     private LatLng latLng = new LatLng(43.717899, -79.658251);
 
     private SearchLayoutModel searchLayoutModel = new SearchLayoutModel("Searching..", "Select Location", "Select Category", false);
 
+    private TitlesOnListPage titlesOnListPage = new TitlesOnListPage("Featured Coupons", "Other Coupons");
     private CategoryDialogFragment editNameDialogFragment;
 
     public static ListDealsFragment newInstance(String param1, String param2) {
@@ -114,7 +124,7 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(getActivity()).enableAutoManage(getActivity(), 3, this)
                     .addConnectionCallbacks(ListDealsFragment.this)
-                    .addOnConnectionFailedListener(this).addApi(Places.GEO_DATA_API)
+                    .addOnConnectionFailedListener(this).addApi(LocationServices.API)
                     .build();
         }
 
@@ -127,9 +137,6 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
         fragmentHomeNewBinding.rvNormalCoupons.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
         promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
-
-        showFeaturedCoupons("", latLng);
-        showUnFeaturedCoupons("", latLng);
 
 
         // Register a listener that receives callbacks when a suggestion has been selected
@@ -172,8 +179,9 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
                 Log.i(TAG, "Place Selected: " + place.getName());
 
                 this.currentLocation = place.getName() + "";
+
                 // Format the place's details and display them in the TextView.
-                fragmentHomeNewBinding.searchLayout.autoCompleteLocationSearch.setText(place.getName());
+                searchLayoutModel.setLocationSearchTitle(place.getName() + "");
 
                 latLng = place.getLatLng();
 
@@ -240,15 +248,15 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
                             fragmentHomeNewBinding.rvNormalCoupons.setVisibility(View.VISIBLE);
 
                             fragmentHomeNewBinding.rvNormalCoupons.setAdapter(new AllDealsRvAdapter(response.body().getData().getDetail()));
-
+                            fragmentHomeNewBinding.svListDeals.smoothScrollTo(0, 0);
                         } else {
                             fragmentHomeNewBinding.tvNoUnFeaturedCoupons.setVisibility(View.VISIBLE);
                             fragmentHomeNewBinding.rvNormalCoupons.setVisibility(View.GONE);
 
                         }
                     } else {
-                        fragmentHomeNewBinding.tvNoFeaturedCoupons.setVisibility(View.VISIBLE);
-                        fragmentHomeNewBinding.rvFeaturedCoupons.setVisibility(View.GONE);
+                        fragmentHomeNewBinding.tvNoUnFeaturedCoupons.setVisibility(View.VISIBLE);
+                        fragmentHomeNewBinding.rvNormalCoupons.setVisibility(View.GONE);
                     }
 
 
@@ -275,9 +283,11 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
                 if (response.isSuccessful()) {
                     if (response.body().getStatus()) {
                         if (response.body().getData().getDetail().size() > 0) {
+
                             fragmentHomeNewBinding.tvNoFeaturedCoupons.setVisibility(View.GONE);
                             fragmentHomeNewBinding.rvFeaturedCoupons.setVisibility(View.VISIBLE);
                             fragmentHomeNewBinding.rvFeaturedCoupons.setAdapter(new AllDealsRvAdapter(response.body().getData().getDetail()));
+                            fragmentHomeNewBinding.svListDeals.smoothScrollTo(0, 0);
                         } else {
                             fragmentHomeNewBinding.tvNoFeaturedCoupons.setVisibility(View.VISIBLE);
                             fragmentHomeNewBinding.rvFeaturedCoupons.setVisibility(View.GONE);
@@ -308,11 +318,32 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 
+
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            return;
+        }
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+
+        if (mLastLocation != null) {
+
+            latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+
+            showFeaturedCoupons("", latLng);
+            showUnFeaturedCoupons("", latLng);
+
+
+        }
+
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        // The connection to Google Play services was lost for some reason. We call connect() to
+        // attempt to re-establish the connection.
+        Log.i(TAG, "Connection suspended");
+        mGoogleApiClient.connect();
     }
 
     @Override
@@ -325,9 +356,15 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
     @Override
     public void onResume() {
         super.onResume();
+        mGoogleApiClient.connect();
         BusProvider.getInstance().register(this);
     }
 
+    @Override
+    public void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -342,15 +379,16 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
         if (tabChangedOtto.getDetail() != null) {
             Log.i("IN_TAB_2", tabChangedOtto.getDetail().getCategoryName());
             searchLayoutModel.setCategorySearchTitle(tabChangedOtto.getDetail().getCategoryName());
-            searchLayoutModel.setLocationSearchTitle(tabChangedOtto.getDetail().getName());
+            searchLayoutModel.setLocationSearchTitle(tabChangedOtto.getLocation());
 
             this.categoryId = tabChangedOtto.getDetail().getCategoryId();
-            searchLayoutModel.setOnAllCategory(false);
+            searchLayoutModel.setOnAllCategory(true);
 
-            LatLng latLng = new LatLng(Double.parseDouble(tabChangedOtto.getDetail().getLatitude()), Double.parseDouble(tabChangedOtto.getDetail().getLongitude()));
+            latLng = new LatLng(Double.parseDouble(tabChangedOtto.getDetail().getLatitude()), Double.parseDouble(tabChangedOtto.getDetail().getLongitude()));
             showFeaturedCoupons(tabChangedOtto.getDetail().getCategoryId(), latLng);
             showUnFeaturedCoupons(tabChangedOtto.getDetail().getCategoryId(), latLng);
-
+            DealsOnMapFragment.tabSelected = 0;
+            DealsOnMapFragment.mDetail = null;
         }
     }
 
@@ -362,7 +400,10 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
             searchLayoutModel.setOnAllCategory(true);
             searchLayoutModel.setCategorySearchTitle(event.datum.getName());
             this.categoryId = event.datum.getId();
-            // fetchDataFromRemote(event.datum.getId(), latLng);
+
+            showFeaturedCoupons(event.datum.getId(), latLng);
+            showUnFeaturedCoupons(event.datum.getId(), latLng);
+
             Log.i("CATEGORY_ID", event.datum.getName());
         }
 
@@ -417,8 +458,8 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
                 }
             });
 
-            holder.tvDiscount.setText(singleDeal.getDiscount());
-            holder.tvDiscount.setText(singleDeal.getDiscount());
+            holder.tvDiscount.setText(String.format("%s%s OFF", singleDeal.getDiscount(), "%"));
+
             holder.tvDealDetail.setText(singleDeal.getDescription());
             Picasso.with(getActivity()).load(String.valueOf(arrayListDeals.get(position).getLogo())).placeholder(R.drawable.logo_placeholder).error(R.drawable.logo_placeholder).into(holder.ivDeal);
 
@@ -458,4 +499,30 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
     }
 
 
+    public class TitlesOnListPage extends BaseObservable {
+        public String featuredTitle, unFeaturedTitle;
+
+        public TitlesOnListPage(String featuredTitle, String unFeaturedTitle) {
+        }
+
+        @Bindable
+        public String getFeaturedTitle() {
+            return featuredTitle;
+        }
+
+        public void setFeaturedTitle(String featuredTitle) {
+            this.featuredTitle = featuredTitle;
+            notifyPropertyChanged(BR.featuredTitle);
+        }
+
+        @Bindable
+        public String getUnFeaturedTitle() {
+            return unFeaturedTitle;
+        }
+
+        public void setUnFeaturedTitle(String unFeaturedTitle) {
+            this.unFeaturedTitle = unFeaturedTitle;
+            notifyPropertyChanged(BR.unFeaturedTitle);
+        }
+    }
 }

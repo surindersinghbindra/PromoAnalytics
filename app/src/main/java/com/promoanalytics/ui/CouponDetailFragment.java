@@ -86,9 +86,26 @@ public class CouponDetailFragment extends RootFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
         fragmentCouponDetailsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_coupon_details, container, false);
 
+        fragmentCouponDetailsBinding.toolbar.setNavigationIcon(R.drawable.ic_back);
+        fragmentCouponDetailsBinding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivityAfterLogin.self.onBackPressed();
+            }
+        });
 
+        fragmentCouponDetailsBinding.toolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), android.R.color.white));
+       /* getActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getActivity().setSupportActionBar(myToolbar);
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);*/
+
+        fragmentCouponDetailsBinding.progressbarDetail.setVisibility(View.VISIBLE);
         PromoAnalyticsServices promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
         Call<DetalDetail> detalDetailCall = promoAnalyticsServices.getDealDetail(mParam1, AppController.sharedPreferencesCompat.getString(AppConstants.USER_ID, ""));
         detalDetailCall.enqueue(new Callback<DetalDetail>() {
@@ -97,14 +114,14 @@ public class CouponDetailFragment extends RootFragment {
 
                 if (response.isSuccessful()) {
                     if (response.body().getStatus()) {
-
+                        fragmentCouponDetailsBinding.progressbarDetail.setVisibility(View.GONE);
+                        fragmentCouponDetailsBinding.toolbar.setTitle(response.body().getData().getName());
                         isFavLocal = response.body().getData().getIsFav() == 0 ? 1 : 0;
                         data = response.body().getData();
                         fragmentCouponDetailsBinding.setDetail(data);
                         fragmentCouponDetailsBinding.addresses.setText(Html.fromHtml("<b> Address:</b> " + data.getAddress()));
 
-                        SpannableString styledString
-                                = new SpannableString("Valid from " + response.body().getData().getValid());
+                        SpannableString styledString = new SpannableString("Valid from " + response.body().getData().getValid());
 
                         styledString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getActivity(), R.color.appOrange)), 11, styledString.length(), 0);
                         fragmentCouponDetailsBinding.validity.setText(styledString);

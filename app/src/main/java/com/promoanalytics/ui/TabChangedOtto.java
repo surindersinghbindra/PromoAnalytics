@@ -10,14 +10,26 @@ public class TabChangedOtto {
 
     private int tabSelected;
 
-    private String category;
+
+    private String location;
     private Detail detail;
 
-    public TabChangedOtto(int tabSelected, Detail detail) {
+
+    public TabChangedOtto(int tabSelected, Detail detail, String location) {
         this.tabSelected = tabSelected;
         this.detail = detail;
+        this.location = location;
 
     }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
 
     public Detail getDetail() {
         return detail;

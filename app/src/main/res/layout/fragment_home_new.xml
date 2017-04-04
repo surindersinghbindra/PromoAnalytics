@@ -2,6 +2,13 @@
 
 <layout>
 
+    <data>
+
+        <variable
+            name="title"
+            type="com.promoanalytics.ui.dealslist.ListDealsFragment.TitlesOnListPage" />
+    </data>
+
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/container"
         android:layout_width="match_parent"
@@ -18,6 +25,7 @@
                 layout="@layout/toolbar_layout" />
 
             <android.support.v4.widget.NestedScrollView
+                android:id="@+id/svListDeals"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:overScrollMode="never">
@@ -46,8 +54,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
                             android:gravity="center_vertical"
+                            android:hint="Featured Coupons"
                             android:paddingLeft="15dp"
-                            android:text="Featured Coupons in Toronoto" />
+                            android:singleLine="true"
+                            android:text="@{title.featuredTitle}" />
 
                         <View
                             android:layout_width="match_parent"
@@ -84,12 +94,13 @@
 
                         <com.promoanalytics.utils.Fonts.RobotoNormalTextView
                             android:id="@+id/tvUnFeaturedCouponsTitle"
-
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
                             android:gravity="center_vertical"
+                            android:hint="Other Coupons"
                             android:paddingLeft="15dp"
-                            android:text="Other Coupons in Toronoto" />
+                            android:singleLine="true"
+                            android:text="@{title.unFeaturedTitle}" />
 
                         <View
                             android:layout_width="match_parent"

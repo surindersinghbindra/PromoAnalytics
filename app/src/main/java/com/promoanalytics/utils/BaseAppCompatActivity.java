@@ -64,5 +64,11 @@ public class BaseAppCompatActivity extends AppCompatActivity {
 
     }
 
-
+    @Override
+    protected void onPause() {
+        if (pDialog != null) {
+            pDialog.hide();
+        }
+        super.onPause();
+    }
 }

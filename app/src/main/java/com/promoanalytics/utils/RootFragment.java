@@ -81,5 +81,15 @@ public class RootFragment extends Fragment implements OnBackPressListener {
         ft.commitAllowingStateLoss();
     }
 
+    @Override
+    public void onPause() {
+        if (pDialog != null) {
+            pDialog.hide();
+        }
+        if (alertDialog != null) {
 
+        }
+
+        super.onPause();
+    }
 }

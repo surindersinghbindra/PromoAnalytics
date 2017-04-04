@@ -27,7 +27,7 @@ public class BindingHelper {
         if (imageUrlDetail != null && !TextUtils.isEmpty(imageUrlDetail))
             Picasso.with(view.getContext())
                     .load(imageUrlDetail)
-                    .placeholder(R.drawable.placeholder600_400).error(R.drawable.placeholder600_400)
+                    .placeholder(R.drawable.placeholder900_600).error(R.drawable.placeholder900_600)
                     .into(view);
     }
 

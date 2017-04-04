@@ -88,6 +88,8 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
     private static final int REQUEST_CODE_AUTOCOMPLETE = 1;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    public static int tabSelected = 0;
+    public static Detail mDetail;
     /**
      * Tracks whether the user has requested an address. Becomes true when the user requests an
      * address and false when the address (or an error message) is delivered.
@@ -119,13 +121,9 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
     private boolean isMapReady = false;
     private boolean isAlreadyFetchedDataForCurrentLocation = true;
     private GoogleApiClient mGoogleApiClient;
-
     private PromoAnalyticsServices promoAnalyticsServices;
     private FragmentManager fm;
     private SearchLayoutModel searchLayoutModel;
-
-    private int tabSelected = 0;
-    private Detail mDetail;
 
 
     public DealsOnMapFragment() {
@@ -587,7 +585,7 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
     @Produce
     public TabChangedOtto produceTabChange() {
         // Provide an initial value for location based on the last known position.
-        return new TabChangedOtto(tabSelected, mDetail);
+        return new TabChangedOtto(tabSelected, mDetail, currentLocation);
     }
 
     /**
@@ -626,7 +624,7 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
             // Show a toast message if an address was found.
             if (resultCode == AppConstants.SUCCESS_RESULT) {
 
-
+                currentLocation = mAddressOutput;
                 fragmentDealsOnMapBinding.etSearchPlaceOrCategory.setText(mAddressOutput);
                 // showToast(getString(R.string.address_found));
 
