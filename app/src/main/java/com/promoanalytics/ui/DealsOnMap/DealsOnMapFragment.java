@@ -448,7 +448,7 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
                 public void onPrepareLoad(Drawable placeHolderDrawable) {
                 }
             };
-            Picasso.with(getActivity()).load(item.getCategoryPic()).resize(120, 120).into(target);
+            Picasso.with(getActivity()).load(item.getCategoryPic()).resize(96, 96).into(target);
 
 
         }

@@ -160,8 +160,7 @@ public class SavedDealsFragment extends RootFragment implements LocationListener
                 holder.ivHeart.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.hrtunfilled));
             }
 
-            holder.tvDiscount.setText(singleDeal.getDiscount());
-            holder.tvDiscount.setText(singleDeal.getDiscount());
+            holder.tvDiscount.setText(String.format("%s%s OFF", singleDeal.getDiscount(), "%"));
             holder.tvDealDetail.setText(singleDeal.getDescription());
             Picasso.with(getActivity()).load(String.valueOf(arrayListDeals.get(position).getLogo())).placeholder(R.drawable.logo_placeholder).error(R.drawable.logo_placeholder).into(holder.ivDeal);
 
