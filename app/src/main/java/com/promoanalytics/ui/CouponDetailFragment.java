@@ -5,18 +5,23 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.promoanalytics.BR;
 import com.promoanalytics.R;
 import com.promoanalytics.databinding.FragmentCouponDetailsBinding;
 import com.promoanalytics.model.DealDetail.DetalDetail;
+import com.promoanalytics.model.SaveDealModel;
 import com.promoanalytics.utils.AppConstants;
 import com.promoanalytics.utils.AppController;
 import com.promoanalytics.utils.PromoAnalyticsServices;
 import com.promoanalytics.utils.RootFragment;
+import com.promoanalytics.utils.UtilHelper;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,8 +45,11 @@ public class CouponDetailFragment extends RootFragment {
     private String mParam1;
     private String mParam2;
 
+    private DetalDetail.Data data;
     private OnFragmentInteractionListener mListener;
     private FragmentCouponDetailsBinding fragmentCouponDetailsBinding;
+
+    private int isFavLocal = 0;
 
     public CouponDetailFragment() {
         // Required empty public constructor
@@ -69,7 +77,7 @@ public class CouponDetailFragment extends RootFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getParcelable(ARG_PARAM1);
+            mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
@@ -80,18 +88,26 @@ public class CouponDetailFragment extends RootFragment {
 
         fragmentCouponDetailsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_coupon_details, container, false);
 
-        PromoAnalyticsServices promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
-        Call<DetalDetail> detalDetailCall = promoAnalyticsServices.getDealDetail(AppController.sharedPreferencesCompat.getString(AppConstants.USER_ID, ""), mParam1);
 
+        PromoAnalyticsServices promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
+        Call<DetalDetail> detalDetailCall = promoAnalyticsServices.getDealDetail(mParam1, AppController.sharedPreferencesCompat.getString(AppConstants.USER_ID, ""));
         detalDetailCall.enqueue(new Callback<DetalDetail>() {
             @Override
             public void onResponse(Call<DetalDetail> call, Response<DetalDetail> response) {
 
                 if (response.isSuccessful()) {
                     if (response.body().getStatus()) {
-                        fragmentCouponDetailsBinding.setVariable(BR.detail, response.body().getData());
 
+                        isFavLocal = response.body().getData().getIsFav() == 0 ? 1 : 0;
+                        data = response.body().getData();
+                        fragmentCouponDetailsBinding.setDetail(data);
+                        fragmentCouponDetailsBinding.addresses.setText(Html.fromHtml("<b> Address:</b> " + data.getAddress()));
 
+                        SpannableString styledString
+                                = new SpannableString("Valid from " + response.body().getData().getValid());
+
+                        styledString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getActivity(), R.color.appOrange)), 11, styledString.length(), 0);
+                        fragmentCouponDetailsBinding.validity.setText(styledString);
                     } else {
                         showMessageInSnackBar(response.body().getMessage());
                     }
@@ -104,7 +120,51 @@ public class CouponDetailFragment extends RootFragment {
             }
         });
 
+        fragmentCouponDetailsBinding.ivHeart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                changeFavStatus(isFavLocal);
+            }
+        });
+
         return fragmentCouponDetailsBinding.getRoot();
+    }
+
+
+    private void changeFavStatus(int temp) {
+
+
+        PromoAnalyticsServices promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
+        Call<SaveDealModel> saveDealModelCall = promoAnalyticsServices.saveToFavourite(AppController.sharedPreferencesCompat.getString(AppConstants.USER_ID, ""), mParam1, temp);
+        saveDealModelCall.enqueue(new Callback<SaveDealModel>() {
+            @Override
+            public void onResponse(Call<SaveDealModel> call, Response<SaveDealModel> response) {
+                if (response.body().getStatus()) {
+
+                    if (response.body().getMessage().contains("Remove")) {
+                        data.setIsFav(0);
+                        isFavLocal = 1;
+                        UtilHelper.animateOverShoot(fragmentCouponDetailsBinding.ivHeart);
+                        showMessageInSnackBar(response.body().getMessage());
+                    }
+                    if (response.body().getMessage().contains("Add")) {
+                        data.setIsFav(1);
+                        isFavLocal = 0;
+                        UtilHelper.animateOverShoot(fragmentCouponDetailsBinding.ivHeart);
+                        showMessageInSnackBar(response.body().getMessage());
+                    }
+
+                } else {
+                    showMessageInSnackBar(response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SaveDealModel> call, Throwable t) {
+                showMessageInSnackBar(t.getMessage());
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event

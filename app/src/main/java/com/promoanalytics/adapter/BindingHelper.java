@@ -21,4 +21,14 @@ public class BindingHelper {
                     .placeholder(R.drawable.profilepic)
                     .into(view);
     }
+
+    @BindingAdapter("imageUrlDetail")
+    public static void loadImageDetail(ImageView view, String imageUrlDetail) {
+        if (imageUrlDetail != null && !TextUtils.isEmpty(imageUrlDetail))
+            Picasso.with(view.getContext())
+                    .load(imageUrlDetail)
+                    .placeholder(R.drawable.logo_placeholder)
+                    .into(view);
+    }
+
 }

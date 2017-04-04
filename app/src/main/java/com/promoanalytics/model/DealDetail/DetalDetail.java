@@ -4,8 +4,12 @@ package com.promoanalytics.model.DealDetail;
  * Created by surinder on 04-Apr-17.
  */
 
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.promoanalytics.BR;
 
 public class DetalDetail {
 
@@ -43,7 +47,7 @@ public class DetalDetail {
         this.data = data;
     }
 
-    public class Data {
+    public class Data extends BaseObservable {
 
         @SerializedName("id")
         @Expose
@@ -159,12 +163,15 @@ public class DetalDetail {
             this.code = code;
         }
 
+        @Bindable
         public Integer getIsFav() {
             return isFav;
         }
 
+
         public void setIsFav(Integer isFav) {
             this.isFav = isFav;
+            notifyPropertyChanged(BR.isFav);
         }
 
     }
