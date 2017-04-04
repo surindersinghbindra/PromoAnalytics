@@ -408,7 +408,7 @@ public class ListDealsFragment extends RootFragment implements GoogleApiClient.O
             holder.cvLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    trasactFragment(R.id.container, CouponDetailFragment.newInstance(singleDeal, ""));
+                    trasactFragment(R.id.container, CouponDetailFragment.newInstance(singleDeal.getId(), ""));
                 }
             });
 

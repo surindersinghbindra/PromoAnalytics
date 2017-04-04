@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -76,6 +75,7 @@ public class PhoneNumberActivity extends BaseAppCompatActivity {
                                 }
 
                             } else {
+                                pDialog.hide();
                                 showDialog(response.body().getMessage());
                             }
                         }
@@ -91,7 +91,6 @@ public class PhoneNumberActivity extends BaseAppCompatActivity {
 
 
     }
-
 
 
 }

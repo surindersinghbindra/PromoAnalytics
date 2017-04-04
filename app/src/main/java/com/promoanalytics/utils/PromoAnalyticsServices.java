@@ -3,6 +3,7 @@ package com.promoanalytics.utils;
 import com.google.gson.GsonBuilder;
 import com.promoanalytics.model.AllDeals.AllDeals;
 import com.promoanalytics.model.Category.CategoryModel;
+import com.promoanalytics.model.DealDetail.DetalDetail;
 import com.promoanalytics.model.SaveDealModel;
 import com.promoanalytics.ui.login.RegisterUser;
 import com.promoanalytics.ui.login.User;
@@ -68,11 +69,10 @@ public interface PromoAnalyticsServices {
                                @Field("page") String page);
 
 
-  /*  @Multipart
-    @POST("edit_profile/")
-    Call<User> editUserWithoutPassword(@Part("name") RequestBody name,
-                        @Part("user_id") RequestBody userid,
-                        @Part("image") RequestBody file);*/
+    @FormUrlEncoded
+    @POST("deal_detail/")
+    Call<DetalDetail> getDealDetail(@Field("deal_id") String name,
+                                    @Field("user_id") String userid);
 
     @Multipart
     @POST("edit_profile/")

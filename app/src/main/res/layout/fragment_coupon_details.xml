@@ -2,6 +2,13 @@
 
 <layout>
 
+    <data>
+
+        <variable
+            name="detail"
+            type="com.promoanalytics.model.DealDetail.DetalDetail.Data" />
+    </data>
+
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/coordinator_layout"
@@ -50,7 +57,7 @@
                         android:background="@drawable/circle"
                         android:foregroundGravity="right"
                         android:gravity="center"
-                        android:text="20% Off"
+                        android:text="@{detail.discount}"
                         android:textColor="@android:color/white"
                         android:textSize="12sp" />
 
@@ -110,7 +117,7 @@
                                     android:layout_alignParentRight="true"
                                     android:layout_marginRight="@dimen/activity_horizontal_margin"
                                     android:layout_marginTop="@dimen/activity_horizontal_margin"
-                                    android:src="@drawable/heart" />
+                                    android:src="@{detail.isFav==1 ? @drawable/heart : @drawable/hrtunfilled}" />
                             </RelativeLayout>
 
 
@@ -121,7 +128,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:layout_marginTop="4dp"
-                                android:text="COUPON CODE"
+                                android:hint="COUPON CODE"
                                 android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:textColor="@color/black" />
 
@@ -132,7 +139,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:layout_marginTop="@dimen/activity_horizontal_margin"
-                                android:text="PA078484"
+                                android:text="@{detail.code}"
                                 android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:textColor="@color/appOrangeDark"
                                 android:textSize="32sp"
@@ -149,7 +156,8 @@
                             android:layout_marginLeft="@dimen/activity_horizontal_margin"
                             android:layout_marginRight="@dimen/activity_horizontal_margin"
                             android:gravity="center"
-                            android:text="Address: Sector 40 c, Near Delhi Public School, Chandigarh"
+                            android:hint="Address: Sector 40 c, Near Delhi Public School, Chandigarh"
+                            android:text="@{detail.address}"
                             android:textSize="16sp" />
 
                         <com.promoanalytics.utils.Fonts.RobotoNormalTextView
@@ -188,7 +196,6 @@
                         android:textStyle="bold" />
 
                     <com.promoanalytics.utils.Fonts.RobotoLightTextView
-
                         android:id="@+id/descrptn"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -196,7 +203,8 @@
                         android:layout_marginLeft="@dimen/activity_horizontal_margin"
                         android:layout_marginRight="@dimen/activity_horizontal_margin"
                         android:layout_marginTop="@dimen/activity_horizontal_margin"
-                        android:text="this flag should be set for all views that want to scroll off the screen – for views that do not use this flag, they’ll remain pinned to the top of the screen.this flag should be set for all views that want to scroll off the screen – for views that do not use this flag, they’ll remain pinned to the top of the screen.this flag should be set for all views that want to scroll off the screen – for views that do not use this flag, they’ll remain pinned to the top of the screen.this flag should be set for all views that want to scroll off the screen – for views that do not use this flag, they’ll remain pinned to the top of the screen.this flag should be set for all views that want to scroll off the screen – for views that do not use this flag, they’ll remain pinned to the top of the screen.this flag should be set for all views that want to scroll off the screen – for views that do not use this flag, they’ll remain pinned to the top of the screen.this flag should be set for all views that want to scroll off the screen – for views that do not use this flag, they’ll remain pinned to the top of the screen.this flag should be set for all views that want to scroll off the screen – for views that do not use this flag, they’ll remain pinned to the top of the screen.this flag should be set for all views that want to scroll off the screen – for views that do not use this flag, they’ll remain pinned to the top of the screen.this flag should be set for all views that want to scroll off the screen – for views that do not use this flag, they’ll remain pinned to the top of the screen."
+                        android:hint="this flag should be set for all views that want to scroll off the screen – for views that do not use this flag, they’ll remain pinned to the top of the screen.this flag should be set for all views that want to scroll off the screen – for views that do not use this flag, they’ll remain pinned to the top of the screen.this flag should be set for all views that want to scroll off the screen – for views that do not use this flag, they’ll remain pinned to the top of the screen.this flag should be set for all views that want to scroll off the screen – for views that do not use this flag, they’ll remain pinned to the top of the screen.this flag should be set for all views that want to scroll off the screen – for views that do not use this flag, they’ll remain pinned to the top of the screen.this flag should be set for all views that want to scroll off the screen – for views that do not use this flag, they’ll remain pinned to the top of the screen.this flag should be set for all views that want to scroll off the screen – for views that do not use this flag, they’ll remain pinned to the top of the screen.this flag should be set for all views that want to scroll off the screen – for views that do not use this flag, they’ll remain pinned to the top of the screen.this flag should be set for all views that want to scroll off the screen – for views that do not use this flag, they’ll remain pinned to the top of the screen.this flag should be set for all views that want to scroll off the screen – for views that do not use this flag, they’ll remain pinned to the top of the screen."
+                        android:text="@{detail.description}"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textSize="14sp" />
 

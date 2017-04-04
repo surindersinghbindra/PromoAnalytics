@@ -9,10 +9,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.promoanalytics.BR;
 import com.promoanalytics.R;
 import com.promoanalytics.databinding.FragmentCouponDetailsBinding;
-import com.promoanalytics.model.AllDeals.Detail;
+import com.promoanalytics.model.DealDetail.DetalDetail;
+import com.promoanalytics.utils.AppConstants;
+import com.promoanalytics.utils.AppController;
+import com.promoanalytics.utils.PromoAnalyticsServices;
 import com.promoanalytics.utils.RootFragment;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,7 +37,7 @@ public class CouponDetailFragment extends RootFragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private Detail mParam1;
+    private String mParam1;
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
@@ -48,10 +56,10 @@ public class CouponDetailFragment extends RootFragment {
      * @return A new instance of fragment CouponDetailFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static CouponDetailFragment newInstance(Detail param1, String param2) {
+    public static CouponDetailFragment newInstance(String param1, String param2) {
         CouponDetailFragment fragment = new CouponDetailFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
@@ -71,10 +79,30 @@ public class CouponDetailFragment extends RootFragment {
                              Bundle savedInstanceState) {
 
         fragmentCouponDetailsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_coupon_details, container, false);
-        fragmentCouponDetailsBinding.tvDiscount.setText(mParam1.getDiscount());
-        //  fragmentCouponDetailsBinding.addresses.setText(mParam1.getDescription());
-        fragmentCouponDetailsBinding.cpncode.setText(mParam1.getId());
-        fragmentCouponDetailsBinding.descrptn.setText(mParam1.getDescription());
+
+        PromoAnalyticsServices promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
+        Call<DetalDetail> detalDetailCall = promoAnalyticsServices.getDealDetail(AppController.sharedPreferencesCompat.getString(AppConstants.USER_ID, ""), mParam1);
+
+        detalDetailCall.enqueue(new Callback<DetalDetail>() {
+            @Override
+            public void onResponse(Call<DetalDetail> call, Response<DetalDetail> response) {
+
+                if (response.isSuccessful()) {
+                    if (response.body().getStatus()) {
+                        fragmentCouponDetailsBinding.setVariable(BR.detail, response.body().getData());
+
+
+                    } else {
+                        showMessageInSnackBar(response.body().getMessage());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DetalDetail> call, Throwable t) {
+                showMessageInSnackBar(t.getMessage());
+            }
+        });
 
         return fragmentCouponDetailsBinding.getRoot();
     }
