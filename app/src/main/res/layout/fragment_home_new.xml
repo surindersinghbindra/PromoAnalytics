@@ -8,96 +8,119 @@
         android:layout_height="match_parent"
         android:overScrollMode="never">
 
-
-        <android.support.v4.widget.NestedScrollView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:overScrollMode="never">
+            android:orientation="vertical">
 
-            <LinearLayout
+            <include
+                android:id="@+id/toolbatLayout"
+                layout="@layout/toolbar_layout" />
+
+            <android.support.v4.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:overScrollMode="never">
 
-
-                <include
-                    android:id="@+id/toolbatLayout"
-                    layout="@layout/toolbar_layout" />
-
-                <include
-                    android:id="@+id/searchLayout"
-                    layout="@layout/search_layout" />
-
-
-                <RelativeLayout
-                    android:id="@+id/rl_Date"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_below="@+id/compactcalendar_view"
-                    android:background="@drawable/gradient">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
 
-                    <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                    <include
+                        android:id="@+id/searchLayout"
+                        layout="@layout/search_layout" />
 
-                        android:id="@+id/tvSearchNearBy"
+
+                    <RelativeLayout
+                        android:id="@+id/rl_Date"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="15dp"
-                        android:text="Featured Coupons in Toronoto" />
+                        android:layout_below="@+id/compactcalendar_view"
+                        android:background="@drawable/gradient">
 
-                    <View
+
+                        <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                            android:id="@+id/tvFeaturedCouponsTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:text="Featured Coupons in Toronoto" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@color/appGrayLight" />
+
+                    </RelativeLayout>
+
+                    <com.promoanalytics.utils.Fonts.RobotoLightTextView
+                        android:id="@+id/tvNoFeaturedCoupons"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_alignParentBottom="true"
-                        android:background="@color/appGrayLight" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:padding="10dp"
+                        android:text="No Coupon Available"
+                        android:visibility="gone" />
 
-                </RelativeLayout>
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rvFeaturedCoupons"
+                        android:layout_width="match_parent"
+                        android:layout_height="170dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginBottom="3dp"
+                        android:layout_marginTop="3dp"
+                        android:overScrollMode="never">
 
+                    </android.support.v7.widget.RecyclerView>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rvFeaturedCoupons"
-                    android:layout_width="match_parent"
-                    android:layout_height="170dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginBottom="3dp"
-                    android:layout_marginTop="3dp"
-                    android:overScrollMode="never">
-
-                </android.support.v7.widget.RecyclerView>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@drawable/gradient">
-
-                    <com.promoanalytics.utils.Fonts.RobotoNormalTextView
-                        android:id="@+id/tvNormalCoupons"
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="15dp"
-                        android:text="Other Coupons in Toronoto" />
+                        android:background="@drawable/gradient">
 
-                    <View
+                        <com.promoanalytics.utils.Fonts.RobotoNormalTextView
+                            android:id="@+id/tvUnFeaturedCouponsTitle"
+
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:text="Other Coupons in Toronoto" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@color/appGrayLight" />
+
+                    </RelativeLayout>
+
+                    <com.promoanalytics.utils.Fonts.RobotoLightTextView
+                        android:id="@+id/tvNoUnFeaturedCoupons"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_alignParentBottom="true"
-                        android:background="@color/appGrayLight" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:padding="10dp"
+                        android:text="No Coupon Available"
+                        android:visibility="gone" />
 
-                </RelativeLayout>
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rvNormalCoupons"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:overScrollMode="never">
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rvNormalCoupons"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:overScrollMode="never">
-
-                </android.support.v7.widget.RecyclerView>
+                    </android.support.v7.widget.RecyclerView>
 
 
-            </LinearLayout>
+                </LinearLayout>
 
-        </android.support.v4.widget.NestedScrollView>
+            </android.support.v4.widget.NestedScrollView>
+
+        </LinearLayout>
     </FrameLayout>
 </layout>

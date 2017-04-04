@@ -20,7 +20,7 @@
 
             <com.promoanalytics.utils.Fonts.RobotoNormalTextView
 
-                android:id="@+id/tvSearchNearBy"
+                android:id="@+id/tvFeaturedCouponsTitle"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:gravity="center_vertical"

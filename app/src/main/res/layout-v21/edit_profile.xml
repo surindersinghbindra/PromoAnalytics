@@ -87,7 +87,6 @@
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:gravity="center"
-                                android:hint="Surinder Singh"
                                 android:text="@{user.data.name}"
                                 android:textColor="@color/white"
                                 android:textColorHint="@color/white"

@@ -3,7 +3,6 @@ package com.promoanalytics.ui.dealslist;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,18 +28,13 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.promoanalytics.R;
 import com.promoanalytics.adapter.DealViewHolder;
 import com.promoanalytics.databinding.FragmentHomeNewBinding;
 import com.promoanalytics.model.AllDeals.AllDeals;
 import com.promoanalytics.model.AllDeals.Detail;
-import com.promoanalytics.model.Category.CategoryModel;
-import com.promoanalytics.model.Category.Datum;
 import com.promoanalytics.model.SaveDealModel;
 import com.promoanalytics.model.SearchLayoutModel;
-import com.promoanalytics.modules.ExpandableHeightGridView;
-import com.promoanalytics.modules.GPSTracker;
 import com.promoanalytics.ui.CategoryDialogFragment;
 import com.promoanalytics.ui.CouponDetailFragment;
 import com.promoanalytics.ui.DealsOnMap.CategoryChange;
@@ -54,8 +48,6 @@ import com.promoanalytics.utils.RootFragment;
 import com.promoanalytics.utils.UtilHelper;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
-
-import org.lucasr.twowayview.TwoWayView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +63,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by think360user on 15/3/17.
  */
 
-public class ListDealsFragment extends RootFragment implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+public class ListDealsFragment extends RootFragment implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
 
     public static final String TAG = ListDealsFragment.class.getSimpleName();
@@ -79,17 +71,10 @@ public class ListDealsFragment extends RootFragment implements GoogleApiClient.O
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
-            new LatLng(-34.041458, 150.790100), new LatLng(-33.682247, 151.383362));
-    ExpandableHeightGridView gridview;
-    ExpandableHeightGridView gridviews;
-    double currentLatitude, currentLongitude;
-    Location location;
-    TwoWayView lvTest;
-    GPSTracker gps;
+
+
     private String currentLocation = "";
     private String categoryId = "";
-    private ArrayList<Detail> myList;
     private FragmentHomeNewBinding fragmentHomeNewBinding;
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -136,38 +121,15 @@ public class ListDealsFragment extends RootFragment implements GoogleApiClient.O
 
         fragmentHomeNewBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home_new, container, false);
         fragmentHomeNewBinding.searchLayout.setData(searchLayoutModel);
+        fragmentHomeNewBinding.searchLayout.ivResetCategory.setOnClickListener(this);
 
         fragmentHomeNewBinding.rvFeaturedCoupons.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         fragmentHomeNewBinding.rvNormalCoupons.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
         promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
 
-        // showProgressBar();
-        showFeaturedCoupons("", "30.7360306", "76.7328649");
-        showUnFeaturedCoupons("", "30.7360306", "76.7328649");
-
-
-        Call<CategoryModel> categoryModelCall = promoAnalyticsServices.getCategories();
-        categoryModelCall.enqueue(new Callback<CategoryModel>() {
-
-
-            @Override
-            public void onResponse(Call<CategoryModel> call, Response<CategoryModel> response) {
-                if (response.body().getStatus()) {
-
-                    ArrayList<String> categoryList = new ArrayList<String>();
-                    for (Datum datum : response.body().getData()) {
-                        categoryList.add(datum.getName());
-                    }
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<CategoryModel> call, Throwable t) {
-
-            }
-        });
+        showFeaturedCoupons("", latLng);
+        showUnFeaturedCoupons("", latLng);
 
 
         // Register a listener that receives callbacks when a suggestion has been selected
@@ -215,11 +177,8 @@ public class ListDealsFragment extends RootFragment implements GoogleApiClient.O
 
                 latLng = place.getLatLng();
 
-                fragmentHomeNewBinding.searchLayout.slectn.setVisibility(View.GONE);
-
-
-                showFeaturedCoupons(categoryId, "30.7360306", "76.7328649");
-                showUnFeaturedCoupons(categoryId, "30.7360306", "76.7328649");
+                showFeaturedCoupons(categoryId, latLng);
+                showUnFeaturedCoupons(categoryId, latLng);
 
 
                 // Display attributions if required.
@@ -266,16 +225,33 @@ public class ListDealsFragment extends RootFragment implements GoogleApiClient.O
     }
 
 
-    private void showUnFeaturedCoupons(@NonNull String categoryId, @NonNull String lat, @NonNull String lng) {
-        Call<AllDeals> getAllFeaturedDealsCall = promoAnalyticsServices.getAllDeals(categoryId, lat, lng, AppConstants.UNFEATURED_DEALS, AppController.sharedPreferencesCompat.getString(AppConstants.USER_ID, "0"), "1");
+    private void showUnFeaturedCoupons(@NonNull String categoryId, @NonNull LatLng latLng) {
+        Call<AllDeals> getAllFeaturedDealsCall = promoAnalyticsServices.getAllDeals(categoryId, latLng.latitude + "", latLng.longitude + "", AppConstants.UNFEATURED_DEALS, AppController.sharedPreferencesCompat.getString(AppConstants.USER_ID, "0"), "1");
         getAllFeaturedDealsCall.enqueue(new Callback<AllDeals>() {
             @Override
             public void onResponse(Call<AllDeals> call, Response<AllDeals> response) {
 
 
-                if (response.body().getStatus()) {
+                if (response.isSuccessful()) {
+                    if (response.body().getStatus()) {
+                        if (response.body().getData().getDetail().size() > 0) {
 
-                    fragmentHomeNewBinding.rvNormalCoupons.setAdapter(new AllDealsRvAdapter(response.body().getData().getDetail()));
+                            fragmentHomeNewBinding.tvNoUnFeaturedCoupons.setVisibility(View.GONE);
+                            fragmentHomeNewBinding.rvNormalCoupons.setVisibility(View.VISIBLE);
+
+                            fragmentHomeNewBinding.rvNormalCoupons.setAdapter(new AllDealsRvAdapter(response.body().getData().getDetail()));
+
+                        } else {
+                            fragmentHomeNewBinding.tvNoUnFeaturedCoupons.setVisibility(View.VISIBLE);
+                            fragmentHomeNewBinding.rvNormalCoupons.setVisibility(View.GONE);
+
+                        }
+                    } else {
+                        fragmentHomeNewBinding.tvNoFeaturedCoupons.setVisibility(View.VISIBLE);
+                        fragmentHomeNewBinding.rvFeaturedCoupons.setVisibility(View.GONE);
+                    }
+
+
                 } else {
                     //  showDialog(response.body().getMessage());
                 }
@@ -289,15 +265,29 @@ public class ListDealsFragment extends RootFragment implements GoogleApiClient.O
     }
 
 
-    private void showFeaturedCoupons(@NonNull String categoryId, @NonNull String lat, @NonNull String lng) {
+    private void showFeaturedCoupons(@NonNull String categoryId, @NonNull LatLng latLng) {
 
-        Call<AllDeals> getAllDealsCall = promoAnalyticsServices.getAllDeals(categoryId, lat, lng, AppConstants.FEATURED_DEALS, AppController.sharedPreferencesCompat.getString(AppConstants.USER_ID, "0"), "1");
+        Call<AllDeals> getAllDealsCall = promoAnalyticsServices.getAllDeals(categoryId, latLng.latitude + "", latLng.longitude + "", AppConstants.FEATURED_DEALS, AppController.sharedPreferencesCompat.getString(AppConstants.USER_ID, "0"), "1");
         getAllDealsCall.enqueue(new Callback<AllDeals>() {
             @Override
             public void onResponse(Call<AllDeals> call, Response<AllDeals> response) {
 
-                if (response.body().getStatus()) {
-                    fragmentHomeNewBinding.rvFeaturedCoupons.setAdapter(new AllDealsRvAdapter(response.body().getData().getDetail()));
+                if (response.isSuccessful()) {
+                    if (response.body().getStatus()) {
+                        if (response.body().getData().getDetail().size() > 0) {
+                            fragmentHomeNewBinding.tvNoFeaturedCoupons.setVisibility(View.GONE);
+                            fragmentHomeNewBinding.rvFeaturedCoupons.setVisibility(View.VISIBLE);
+                            fragmentHomeNewBinding.rvFeaturedCoupons.setAdapter(new AllDealsRvAdapter(response.body().getData().getDetail()));
+                        } else {
+                            fragmentHomeNewBinding.tvNoFeaturedCoupons.setVisibility(View.VISIBLE);
+                            fragmentHomeNewBinding.rvFeaturedCoupons.setVisibility(View.GONE);
+                        }
+                    } else {
+                        fragmentHomeNewBinding.tvNoFeaturedCoupons.setVisibility(View.VISIBLE);
+                        fragmentHomeNewBinding.rvFeaturedCoupons.setVisibility(View.GONE);
+                    }
+
+
                 } else {
                     // showDialog(response.body().getMessage());
                 }
@@ -305,7 +295,7 @@ public class ListDealsFragment extends RootFragment implements GoogleApiClient.O
 
             @Override
             public void onFailure(Call<AllDeals> call, Throwable t) {
-
+                showMessageInSnackBar(t.getMessage());
             }
         });
     }
@@ -317,6 +307,11 @@ public class ListDealsFragment extends RootFragment implements GoogleApiClient.O
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
 
     }
 
@@ -333,10 +328,6 @@ public class ListDealsFragment extends RootFragment implements GoogleApiClient.O
         BusProvider.getInstance().register(this);
     }
 
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -355,13 +346,12 @@ public class ListDealsFragment extends RootFragment implements GoogleApiClient.O
 
             this.categoryId = tabChangedOtto.getDetail().getCategoryId();
             searchLayoutModel.setOnAllCategory(false);
-            showFeaturedCoupons(tabChangedOtto.getDetail().getCategoryId(), tabChangedOtto.getDetail().getLatitude(), tabChangedOtto.getDetail().getLongitude());
-            showUnFeaturedCoupons(tabChangedOtto.getDetail().getCategoryId(), tabChangedOtto.getDetail().getLatitude(), tabChangedOtto.getDetail().getLongitude());
 
+            LatLng latLng = new LatLng(Double.parseDouble(tabChangedOtto.getDetail().getLatitude()), Double.parseDouble(tabChangedOtto.getDetail().getLongitude()));
+            showFeaturedCoupons(tabChangedOtto.getDetail().getCategoryId(), latLng);
+            showUnFeaturedCoupons(tabChangedOtto.getDetail().getCategoryId(), latLng);
 
         }
-
-
     }
 
     @Subscribe
@@ -374,6 +364,21 @@ public class ListDealsFragment extends RootFragment implements GoogleApiClient.O
             this.categoryId = event.datum.getId();
             // fetchDataFromRemote(event.datum.getId(), latLng);
             Log.i("CATEGORY_ID", event.datum.getName());
+        }
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ivResetCategory:
+                searchLayoutModel.setCategorySearchTitle("Select Category");
+                searchLayoutModel.setOnAllCategory(false);
+
+                showUnFeaturedCoupons("", latLng);
+                showFeaturedCoupons("", latLng);
+
+                break;
         }
 
     }
