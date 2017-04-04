@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +18,18 @@ import com.promoanalytics.databinding.HomecpnBinding;
 import com.promoanalytics.model.AllDeals.AllDeals;
 import com.promoanalytics.model.AllDeals.Detail;
 import com.promoanalytics.model.SaveDealModel;
+import com.promoanalytics.ui.AddToFavFromDetail;
+import com.promoanalytics.ui.AddToFavFromList;
 import com.promoanalytics.ui.CouponDetailFragment;
+import com.promoanalytics.ui.dealslist.ListDealsFragment;
 import com.promoanalytics.utils.AppConstants;
 import com.promoanalytics.utils.AppController;
+import com.promoanalytics.utils.BusProvider;
+import com.promoanalytics.utils.Fonts.RobotoLightTextView;
 import com.promoanalytics.utils.PromoAnalyticsServices;
 import com.promoanalytics.utils.RootFragment;
 import com.promoanalytics.utils.UtilHelper;
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -52,6 +59,7 @@ public class SavedDealsFragment extends RootFragment implements LocationListener
     private String mParam2;
     private RecyclerView mUnFeaturedDealsRecyclerView;
     private View view;
+    private RobotoLightTextView tvNoSavedCoupons;
 
     /**
      * Use this factory method to create a new instance of
@@ -71,10 +79,6 @@ public class SavedDealsFragment extends RootFragment implements LocationListener
         return fragment;
     }
 
-    public static void updateReceiptsList(Detail obj) {
-        detailArrayList.add(obj);
-        allSavedDealsRvAdapter.notifyDataSetChanged();
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,28 +94,40 @@ public class SavedDealsFragment extends RootFragment implements LocationListener
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_saved_deals, container, false);
+
+        tvNoSavedCoupons = (RobotoLightTextView) view.findViewById(R.id.tvNoSavedCoupons);
+
         mUnFeaturedDealsRecyclerView = (RecyclerView) view.findViewById(R.id.rvSavedCoupons);
+
         mUnFeaturedDealsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
         allSavedDealsRvAdapter = new AllSavedDealsRvAdapter(detailArrayList);
+        fetchSavedCoupons();
+
+        return view;
+
+    }
+
+    private void fetchSavedCoupons() {
+
         PromoAnalyticsServices promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
 
-        showProgressBar();
         Call<AllDeals> allDealsCall = promoAnalyticsServices.getSavedCoupons(AppController.sharedPreferencesCompat.getString(AppConstants.USER_ID, "0"));
         allDealsCall.enqueue(new Callback<AllDeals>() {
             @Override
             public void onResponse(Call<AllDeals> call, Response<AllDeals> response) {
 
-                pDialog.hide();
-                if (response.body().getStatus()) {
-
-                    //  allSavedDealsRvAdapter = new AllSavedDealsRvAdapter(response.body().getData().getDetail());
-
-                    detailArrayList.addAll(response.body().getData().getDetail());
-                    mUnFeaturedDealsRecyclerView.setAdapter(allSavedDealsRvAdapter);
-                    allSavedDealsRvAdapter.notifyDataSetChanged();
-                } else {
-                    showDialog(response.body().getMessage());
+                if (response.isSuccessful()) {
+                    if (response.body().getStatus()) {
+                        allSavedDealsRvAdapter = new AllSavedDealsRvAdapter(response.body().getData().getDetail());
+                        mUnFeaturedDealsRecyclerView.setAdapter(allSavedDealsRvAdapter);
+                        allSavedDealsRvAdapter.notifyDataSetChanged();
+                        mUnFeaturedDealsRecyclerView.setVisibility(View.VISIBLE);
+                        tvNoSavedCoupons.setVisibility(View.GONE);
+                    } else {
+                        mUnFeaturedDealsRecyclerView.setVisibility(View.GONE);
+                        tvNoSavedCoupons.setVisibility(View.VISIBLE);
+                    }
                 }
             }
 
@@ -120,10 +136,21 @@ public class SavedDealsFragment extends RootFragment implements LocationListener
 
             }
         });
+    }
 
-        return view;
+    @Override
+    public void onPause() {
+        super.onPause();
+        BusProvider.getInstance().unregister(this);
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        BusProvider.getInstance().register(this);
+    }
+
 
     @Override
     public void onLocationChanged(Location location) {
@@ -131,6 +158,26 @@ public class SavedDealsFragment extends RootFragment implements LocationListener
         currentLatitude = location.getLatitude();
         currentLongitude = location.getLongitude();
 
+    }
+
+    @Subscribe
+    public void onAddtoChange(AddToFavFromList addToFavFromList) {
+
+        if (!TextUtils.isEmpty(addToFavFromList.id)) {
+            ListDealsFragment.id = "";
+            fetchSavedCoupons();
+
+        }
+    }
+
+    @Subscribe
+    public void onAddtoChangeFomDetail(AddToFavFromDetail addToFavFromList) {
+
+        if (!TextUtils.isEmpty(addToFavFromList.id)) {
+            CouponDetailFragment.id = "";
+            fetchSavedCoupons();
+
+        }
     }
 
     private class AllSavedDealsRvAdapter extends RecyclerView.Adapter<DealViewHolder> {

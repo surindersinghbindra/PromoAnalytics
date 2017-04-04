@@ -19,9 +19,11 @@ import com.promoanalytics.model.DealDetail.DetalDetail;
 import com.promoanalytics.model.SaveDealModel;
 import com.promoanalytics.utils.AppConstants;
 import com.promoanalytics.utils.AppController;
+import com.promoanalytics.utils.BusProvider;
 import com.promoanalytics.utils.PromoAnalyticsServices;
 import com.promoanalytics.utils.RootFragment;
 import com.promoanalytics.utils.UtilHelper;
+import com.squareup.otto.Produce;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,15 +42,13 @@ public class CouponDetailFragment extends RootFragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    public static String id = "";
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
     private DetalDetail.Data data;
     private OnFragmentInteractionListener mListener;
     private FragmentCouponDetailsBinding fragmentCouponDetailsBinding;
-
     private int isFavLocal = 0;
 
     public CouponDetailFragment() {
@@ -162,12 +162,16 @@ public class CouponDetailFragment extends RootFragment {
                     if (response.body().getMessage().contains("Remove")) {
                         data.setIsFav(0);
                         isFavLocal = 1;
+                        id = data.getId();
+                        BusProvider.getInstance().post(addToFav());
                         UtilHelper.animateOverShoot(fragmentCouponDetailsBinding.ivHeart);
                         showMessageInSnackBar(response.body().getMessage());
                     }
                     if (response.body().getMessage().contains("Add")) {
                         data.setIsFav(1);
                         isFavLocal = 0;
+                        id = data.getId();
+                        BusProvider.getInstance().post(addToFav());
                         UtilHelper.animateOverShoot(fragmentCouponDetailsBinding.ivHeart);
                         showMessageInSnackBar(response.body().getMessage());
                     }
@@ -203,10 +207,30 @@ public class CouponDetailFragment extends RootFragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        BusProvider.getInstance().unregister(this);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        BusProvider.getInstance().register(this);
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
+
+    @Produce
+    public AddToFavFromDetail addToFav() {
+
+        return new AddToFavFromDetail(id);
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this

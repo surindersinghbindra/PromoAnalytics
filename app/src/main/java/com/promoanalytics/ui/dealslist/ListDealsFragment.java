@@ -42,11 +42,11 @@ import com.promoanalytics.model.AllDeals.AllDeals;
 import com.promoanalytics.model.AllDeals.Detail;
 import com.promoanalytics.model.SaveDealModel;
 import com.promoanalytics.model.SearchLayoutModel;
+import com.promoanalytics.ui.AddToFavFromList;
 import com.promoanalytics.ui.CategoryDialogFragment;
 import com.promoanalytics.ui.CouponDetailFragment;
 import com.promoanalytics.ui.DealsOnMap.CategoryChange;
 import com.promoanalytics.ui.DealsOnMap.DealsOnMapFragment;
-import com.promoanalytics.ui.SavedCoupons.SavedDealsFragment;
 import com.promoanalytics.ui.TabChangedOtto;
 import com.promoanalytics.utils.AppConstants;
 import com.promoanalytics.utils.AppController;
@@ -54,6 +54,7 @@ import com.promoanalytics.utils.BusProvider;
 import com.promoanalytics.utils.PromoAnalyticsServices;
 import com.promoanalytics.utils.RootFragment;
 import com.promoanalytics.utils.UtilHelper;
+import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
@@ -79,8 +80,7 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-
+    public static String id = "";
     private String currentLocation = "";
     private String categoryId = "";
     private FragmentHomeNewBinding fragmentHomeNewBinding;
@@ -92,9 +92,7 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
     private FragmentManager fm;
     private PromoAnalyticsServices promoAnalyticsServices;
     private LatLng latLng = new LatLng(43.717899, -79.658251);
-
     private SearchLayoutModel searchLayoutModel = new SearchLayoutModel("Searching..", "Select Location", "Select Category", false);
-
     private TitlesOnListPage titlesOnListPage = new TitlesOnListPage("Featured Coupons", "Other Coupons");
     private CategoryDialogFragment editNameDialogFragment;
 
@@ -424,6 +422,12 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
 
     }
 
+    @Produce
+    public AddToFavFromList addToFav() {
+
+        return new AddToFavFromList(id);
+    }
+
     private class AllDealsRvAdapter extends RecyclerView.Adapter<DealViewHolder> {
 
         private ArrayList<Detail> arrayListDeals;
@@ -468,26 +472,57 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
                 @Override
                 public void onClick(View v) {
 
-                    PromoAnalyticsServices promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
-                    Call<SaveDealModel> saveDealModelCall = promoAnalyticsServices.saveToFavourite(AppController.sharedPreferencesCompat.getString(AppConstants.USER_ID, ""), singleDeal.getId(), 1);
-                    saveDealModelCall.enqueue(new Callback<SaveDealModel>() {
-                        @Override
-                        public void onResponse(Call<SaveDealModel> call, Response<SaveDealModel> response) {
-                            if (response.body().getStatus()) {
-                                singleDeal.setIsFav(1);
-                                UtilHelper.animateOverShoot(holder.ivHeart);
-                                holder.ivHeart.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.heart));
-                                SavedDealsFragment.updateReceiptsList(singleDeal);
-                            } else {
-                                showMessageInSnackBar(response.body().getMessage());
-                            }
-                        }
+                    if (singleDeal.getIsFav() != 1) {
+                        PromoAnalyticsServices promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
+                        Call<SaveDealModel> saveDealModelCall = promoAnalyticsServices.saveToFavourite(AppController.sharedPreferencesCompat.getString(AppConstants.USER_ID, ""), singleDeal.getId(), 1);
+                        saveDealModelCall.enqueue(new Callback<SaveDealModel>() {
+                            @Override
+                            public void onResponse(Call<SaveDealModel> call, Response<SaveDealModel> response) {
+                                if (response.body().getStatus()) {
 
-                        @Override
-                        public void onFailure(Call<SaveDealModel> call, Throwable t) {
-                            showMessageInSnackBar(t.getMessage());
-                        }
-                    });
+                                    singleDeal.setIsFav(1);
+                                    id = singleDeal.getId();
+                                    BusProvider.getInstance().post(addToFav());
+                                    UtilHelper.animateOverShoot(holder.ivHeart);
+                                    holder.ivHeart.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.heart));
+
+                                } else {
+                                    showMessageInSnackBar(response.body().getMessage());
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<SaveDealModel> call, Throwable t) {
+                                showMessageInSnackBar(t.getMessage());
+                            }
+                        });
+                    } else {
+                        PromoAnalyticsServices promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
+                        Call<SaveDealModel> saveDealModelCall = promoAnalyticsServices.saveToFavourite(AppController.sharedPreferencesCompat.getString(AppConstants.USER_ID, ""), singleDeal.getId(), 0);
+                        saveDealModelCall.enqueue(new Callback<SaveDealModel>() {
+                            @Override
+                            public void onResponse(Call<SaveDealModel> call, Response<SaveDealModel> response) {
+                                if (response.body().getStatus()) {
+
+                                    singleDeal.setIsFav(0);
+                                    id = singleDeal.getId();
+                                    BusProvider.getInstance().post(addToFav());
+                                    UtilHelper.animateOverShoot(holder.ivHeart);
+                                    holder.ivHeart.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.hrtunfilled));
+
+                                } else {
+                                    showMessageInSnackBar(response.body().getMessage());
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<SaveDealModel> call, Throwable t) {
+                                showMessageInSnackBar(t.getMessage());
+                            }
+                        });
+                    }
+
+
                 }
             });
         }
@@ -497,7 +532,6 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
             return arrayListDeals.size();
         }
     }
-
 
     public class TitlesOnListPage extends BaseObservable {
         public String featuredTitle, unFeaturedTitle;

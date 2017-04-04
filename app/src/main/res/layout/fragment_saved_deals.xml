@@ -36,6 +36,14 @@
         </RelativeLayout>
 
 
+        <com.promoanalytics.utils.Fonts.RobotoLightTextView
+            android:id="@+id/tvNoSavedCoupons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:padding="5dp"
+            android:text="@string/no_saved_coupons" />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvSavedCoupons"
             android:layout_width="match_parent"

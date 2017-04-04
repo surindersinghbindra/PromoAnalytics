@@ -43,5 +43,6 @@
     <string name="_30_off">30 % off</string>
 
     <string name="Generic_Text">%s Off</string>
+    <string name="no_saved_coupons">No Saved Coupons</string>
 
 </resources>
