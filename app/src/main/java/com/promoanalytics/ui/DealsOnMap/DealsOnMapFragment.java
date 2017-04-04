@@ -282,7 +282,6 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
         mGoogleApiClient.disconnect();
         fragmentDealsOnMapBinding.mvDealsMap.onStop();
         super.onStop();
-
     }
 
     @Override
@@ -321,8 +320,7 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
 
             return;
         }
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (mLastLocation != null) {
             if (isMapReady && googleMap != null) {
                 LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
