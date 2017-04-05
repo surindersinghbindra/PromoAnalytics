@@ -81,6 +81,7 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     public static String id = "";
+    private static boolean isFirstTime = false;
     private String currentLocation = "";
     private String categoryId = "";
     private FragmentHomeNewBinding fragmentHomeNewBinding;
@@ -366,20 +367,21 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 
-
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             return;
         }
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
         if (mLastLocation != null) {
 
-            latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
 
-            showFeaturedCoupons("", latLng);
-            showUnFeaturedCoupons("", latLng);
+            if (!isFirstTime) {
+                latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                showFeaturedCoupons("", latLng);
+                showUnFeaturedCoupons("", latLng);
+                isFirstTime = true;
+            }
 
 
         }
@@ -397,6 +399,10 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
     @Override
     public void onPause() {
         super.onPause();
+        if (mGoogleApiClient.isConnected()) {
+
+            mGoogleApiClient.disconnect();
+        }
         BusProvider.getInstance().unregister(this);
 
     }
@@ -404,20 +410,17 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
     @Override
     public void onDestroy() {
         super.onDestroy();
+        isFirstTime = false;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mGoogleApiClient.connect();
+        if (!mGoogleApiClient.isConnected())
+            mGoogleApiClient.connect();
         BusProvider.getInstance().register(this);
     }
 
-    @Override
-    public void onStop() {
-        mGoogleApiClient.disconnect();
-        super.onStop();
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -470,7 +473,7 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
             case R.id.ivResetCategory:
                 searchLayoutModel.setCategorySearchTitle("Select Category");
                 searchLayoutModel.setOnAllCategory(false);
-
+                categoryId = "";
                 clearLists();
                 showUnFeaturedCoupons("", latLng);
                 showFeaturedCoupons("", latLng);
