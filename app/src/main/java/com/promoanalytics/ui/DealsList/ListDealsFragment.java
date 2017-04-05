@@ -187,6 +187,8 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
 
                 latLng = place.getLatLng();
 
+
+                clearLists();
                 showFeaturedCoupons(categoryId, latLng);
                 showUnFeaturedCoupons(categoryId, latLng);
 
@@ -209,6 +211,11 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
                 // the user pressed the back button.
             }
         }
+    }
+
+    private void clearLists() {
+        detailListFeaturedCoupons.clear();
+        detailListUnFeaturedCoupons.clear();
     }
 
     private void openAutocompleteActivity() {
@@ -262,6 +269,8 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
                                 pageNumberFeatured = response.body().getData().getNextPage();
                                 if (pageNumberFeatured != 0) {
                                     showFeaturedCoupons(categoryId, latLng);
+                                } else {
+                                    pageNumberFeatured = 1;
                                 }
 
 
@@ -319,6 +328,9 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
                                     pageNumberUnFeatured = response.body().getData().getNextPage();
                                     if (pageNumberUnFeatured != 0) {
                                         showUnFeaturedCoupons(categoryId, latLng);
+                                    } else {
+                                        pageNumberUnFeatured = 1;
+
                                     }
                                 }
                             } else {
@@ -425,7 +437,9 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
             this.categoryId = tabChangedOtto.getDetail().getCategoryId();
             searchLayoutModel.setOnAllCategory(true);
 
+
             latLng = new LatLng(Double.parseDouble(tabChangedOtto.getDetail().getLatitude()), Double.parseDouble(tabChangedOtto.getDetail().getLongitude()));
+            clearLists();
             showFeaturedCoupons(tabChangedOtto.getDetail().getCategoryId(), latLng);
             showUnFeaturedCoupons(tabChangedOtto.getDetail().getCategoryId(), latLng);
             DealsOnMapFragment.tabSelected = 0;
@@ -441,7 +455,7 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
             searchLayoutModel.setOnAllCategory(true);
             searchLayoutModel.setCategorySearchTitle(event.datum.getName());
             this.categoryId = event.datum.getId();
-
+            clearLists();
             showFeaturedCoupons(event.datum.getId(), latLng);
             showUnFeaturedCoupons(event.datum.getId(), latLng);
 
@@ -457,6 +471,7 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
                 searchLayoutModel.setCategorySearchTitle("Select Category");
                 searchLayoutModel.setOnAllCategory(false);
 
+                clearLists();
                 showUnFeaturedCoupons("", latLng);
                 showFeaturedCoupons("", latLng);
 
