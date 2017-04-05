@@ -21,8 +21,8 @@ import com.promoanalytics.model.AllDeals.Detail;
 import com.promoanalytics.model.SaveDealModel;
 import com.promoanalytics.ui.AddToFavFromDetail;
 import com.promoanalytics.ui.AddToFavFromList;
-import com.promoanalytics.ui.CouponDetailActivity;
-import com.promoanalytics.ui.dealslist.ListDealsFragment;
+import com.promoanalytics.ui.DealDetail.CouponDetailActivity;
+import com.promoanalytics.ui.DealsList.ListDealsFragment;
 import com.promoanalytics.utils.AppConstants;
 import com.promoanalytics.utils.AppController;
 import com.promoanalytics.utils.BusProvider;
@@ -149,6 +149,11 @@ public class SavedDealsFragment extends RootFragment implements LocationListener
     @Override
     public void onResume() {
         super.onResume();
+        try {
+            fetchSavedCoupons();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         BusProvider.getInstance().register(this);
     }
 

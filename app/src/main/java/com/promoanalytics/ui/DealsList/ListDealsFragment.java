@@ -1,4 +1,4 @@
-package com.promoanalytics.ui.dealslist;
+package com.promoanalytics.ui.DealsList;
 
 import android.Manifest;
 import android.content.Context;
@@ -44,7 +44,7 @@ import com.promoanalytics.model.SaveDealModel;
 import com.promoanalytics.model.SearchLayoutModel;
 import com.promoanalytics.ui.AddToFavFromList;
 import com.promoanalytics.ui.CategoryDialogFragment;
-import com.promoanalytics.ui.CouponDetailActivity;
+import com.promoanalytics.ui.DealDetail.CouponDetailActivity;
 import com.promoanalytics.ui.DealsOnMap.CategoryChange;
 import com.promoanalytics.ui.DealsOnMap.DealsOnMapFragment;
 import com.promoanalytics.ui.TabChangedOtto;
@@ -95,6 +95,10 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
     private SearchLayoutModel searchLayoutModel = new SearchLayoutModel("Searching..", "Select Location", "Select Category", false);
     private TitlesOnListPage titlesOnListPage = new TitlesOnListPage("Featured Coupons", "Other Coupons");
     private CategoryDialogFragment editNameDialogFragment;
+    private List<Detail> detailListUnFeaturedCoupons = new ArrayList<>();
+    private List<Detail> detailListFeaturedCoupons = new ArrayList<>();
+    private Integer pageNumberUnFeatured = 1, pageNumberFeatured = 1;
+    private AllDealsRvAdapter allUnFeaturedDealsRvAdapter, allFeaturedDealsRvAdapter;
 
     public static ListDealsFragment newInstance(String param1, String param2) {
         ListDealsFragment fragment = new ListDealsFragment();
@@ -155,8 +159,8 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
                 openAutocompleteActivity();
             }
         });
-
-
+        fragmentHomeNewBinding.rvNormalCoupons.setNestedScrollingEnabled(false);
+        fragmentHomeNewBinding.rvFeaturedCoupons.setNestedScrollingEnabled(false);
         return fragmentHomeNewBinding.getRoot();
 
     }
@@ -231,72 +235,48 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
     }
 
 
-    private void showUnFeaturedCoupons(@NonNull String categoryId, @NonNull LatLng latLng) {
-        Call<AllDeals> getAllFeaturedDealsCall = promoAnalyticsServices.getAllDeals(categoryId, latLng.latitude + "", latLng.longitude + "", AppConstants.UNFEATURED_DEALS, AppController.sharedPreferencesCompat.getString(AppConstants.USER_ID, "0"), "1");
-        getAllFeaturedDealsCall.enqueue(new Callback<AllDeals>() {
-            @Override
-            public void onResponse(Call<AllDeals> call, Response<AllDeals> response) {
+    private void showFeaturedCoupons(@NonNull final String categoryId, @NonNull final LatLng latLng) {
 
-
-                if (response.isSuccessful()) {
-                    if (response.body().getStatus()) {
-                        if (response.body().getData().getDetail().size() > 0) {
-
-                            fragmentHomeNewBinding.tvNoUnFeaturedCoupons.setVisibility(View.GONE);
-                            fragmentHomeNewBinding.rvNormalCoupons.setVisibility(View.VISIBLE);
-
-                            fragmentHomeNewBinding.rvNormalCoupons.setAdapter(new AllDealsRvAdapter(response.body().getData().getDetail()));
-                        } else {
-                            fragmentHomeNewBinding.tvNoUnFeaturedCoupons.setVisibility(View.VISIBLE);
-                            fragmentHomeNewBinding.rvNormalCoupons.setVisibility(View.GONE);
-
-                        }
-                    } else {
-                        fragmentHomeNewBinding.tvNoUnFeaturedCoupons.setVisibility(View.VISIBLE);
-                        fragmentHomeNewBinding.rvNormalCoupons.setVisibility(View.GONE);
-                    }
-
-
-                } else {
-                    //  showDialog(response.body().getMessage());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<AllDeals> call, Throwable t) {
-
-            }
-        });
-    }
-
-
-    private void showFeaturedCoupons(@NonNull String categoryId, @NonNull LatLng latLng) {
-
-        Call<AllDeals> getAllDealsCall = promoAnalyticsServices.getAllDeals(categoryId, latLng.latitude + "", latLng.longitude + "", AppConstants.FEATURED_DEALS, AppController.sharedPreferencesCompat.getString(AppConstants.USER_ID, "0"), "1");
+        Call<AllDeals> getAllDealsCall = promoAnalyticsServices.getAllDeals(categoryId, latLng.latitude + "", latLng.longitude + "", AppConstants.FEATURED_DEALS, AppController.sharedPreferencesCompat.getString(AppConstants.USER_ID, "0"), pageNumberFeatured + "");
         getAllDealsCall.enqueue(new Callback<AllDeals>() {
             @Override
             public void onResponse(Call<AllDeals> call, Response<AllDeals> response) {
 
-                if (response.isSuccessful()) {
-                    if (response.body().getStatus()) {
-                        if (response.body().getData().getDetail().size() > 0) {
+                try {
 
-                            fragmentHomeNewBinding.tvNoFeaturedCoupons.setVisibility(View.GONE);
-                            fragmentHomeNewBinding.rvFeaturedCoupons.setVisibility(View.VISIBLE);
-                            fragmentHomeNewBinding.rvFeaturedCoupons.setAdapter(new AllDealsRvAdapter(response.body().getData().getDetail()));
 
+                    if (response.isSuccessful()) {
+                        if (response.body().getStatus()) {
+                            if (response.body().getData().getDetail().size() > 0) {
+
+                                fragmentHomeNewBinding.tvNoFeaturedCoupons.setVisibility(View.GONE);
+                                fragmentHomeNewBinding.rvFeaturedCoupons.setVisibility(View.VISIBLE);
+
+                                if (allFeaturedDealsRvAdapter == null) {
+                                    allFeaturedDealsRvAdapter = new AllDealsRvAdapter(detailListFeaturedCoupons);
+                                    fragmentHomeNewBinding.rvFeaturedCoupons.setAdapter(allFeaturedDealsRvAdapter);
+
+                                }
+                                detailListFeaturedCoupons.addAll(response.body().getData().getDetail());
+                                allFeaturedDealsRvAdapter.notifyDataSetChanged();
+                                pageNumberFeatured = response.body().getData().getNextPage();
+                                if (pageNumberFeatured != 0) {
+                                    showFeaturedCoupons(categoryId, latLng);
+                                }
+
+
+                            }
                         } else {
                             fragmentHomeNewBinding.tvNoFeaturedCoupons.setVisibility(View.VISIBLE);
                             fragmentHomeNewBinding.rvFeaturedCoupons.setVisibility(View.GONE);
                         }
+
+
                     } else {
-                        fragmentHomeNewBinding.tvNoFeaturedCoupons.setVisibility(View.VISIBLE);
-                        fragmentHomeNewBinding.rvFeaturedCoupons.setVisibility(View.GONE);
+                        // showDialog(response.body().getMessage());
                     }
-
-
-                } else {
-                    // showDialog(response.body().getMessage());
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -305,6 +285,65 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
                 showMessageInSnackBar(t.getMessage());
             }
         });
+    }
+
+
+    private void showUnFeaturedCoupons(@NonNull final String categoryId, @NonNull final LatLng latLng) {
+
+        try {
+
+
+            Call<AllDeals> getAllFeaturedDealsCall = promoAnalyticsServices.getAllDeals(categoryId, latLng.latitude + "", latLng.longitude + "", AppConstants.UNFEATURED_DEALS, AppController.sharedPreferencesCompat.getString(AppConstants.USER_ID, "0"), pageNumberUnFeatured + "");
+            getAllFeaturedDealsCall.enqueue(new Callback<AllDeals>() {
+                @Override
+                public void onResponse(Call<AllDeals> call, Response<AllDeals> response) {
+
+                    try {
+
+
+                        if (response.isSuccessful()) {
+                            if (response.body().getStatus()) {
+
+                                if (response.body().getData().getDetail().size() > 0) {
+
+                                    fragmentHomeNewBinding.tvNoUnFeaturedCoupons.setVisibility(View.GONE);
+                                    fragmentHomeNewBinding.rvNormalCoupons.setVisibility(View.VISIBLE);
+                                    if (allUnFeaturedDealsRvAdapter == null) {
+                                        allUnFeaturedDealsRvAdapter = new AllDealsRvAdapter(detailListUnFeaturedCoupons);
+                                        fragmentHomeNewBinding.rvNormalCoupons.setAdapter(allUnFeaturedDealsRvAdapter);
+
+                                    }
+
+                                    detailListUnFeaturedCoupons.addAll(response.body().getData().getDetail());
+                                    allUnFeaturedDealsRvAdapter.notifyDataSetChanged();
+                                    pageNumberUnFeatured = response.body().getData().getNextPage();
+                                    if (pageNumberUnFeatured != 0) {
+                                        showUnFeaturedCoupons(categoryId, latLng);
+                                    }
+                                }
+                            } else {
+                                fragmentHomeNewBinding.tvNoUnFeaturedCoupons.setVisibility(View.VISIBLE);
+                                fragmentHomeNewBinding.rvNormalCoupons.setVisibility(View.GONE);
+                            }
+
+
+                        } else {
+                            //  showDialog(response.body().getMessage());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<AllDeals> call, Throwable t) {
+
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -348,6 +387,11 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
         super.onPause();
         BusProvider.getInstance().unregister(this);
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     @Override

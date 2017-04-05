@@ -1,4 +1,4 @@
-package com.promoanalytics.ui;
+package com.promoanalytics.ui.DealDetail;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import com.promoanalytics.R;
 import com.promoanalytics.databinding.FragmentCouponDetailsBinding;
 import com.promoanalytics.model.DealDetail.DetalDetail;
 import com.promoanalytics.model.SaveDealModel;
+import com.promoanalytics.ui.AddToFavFromDetail;
 import com.promoanalytics.utils.AppConstants;
 import com.promoanalytics.utils.AppController;
 import com.promoanalytics.utils.BaseAppCompatActivity;

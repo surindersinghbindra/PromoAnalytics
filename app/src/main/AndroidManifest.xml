@@ -64,12 +64,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing" />
         <activity
-            android:name=".ui.login.PhoneNumberActivity"
+            android:name=".ui.Login.PhoneNumberActivity"
             android:label="@string/title_activity_phone_number"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".ui.login.LoginActivity"
+            android:name=".ui.Login.LoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_splash"
             android:screenOrientation="portrait" />
@@ -79,7 +79,7 @@
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name=".ui.CouponDetailActivity"
+            android:name=".ui.DealDetail.CouponDetailActivity"
             android:label="@string/title_activity_forget_password"
             android:theme="@style/AppTheme" />
     </application>

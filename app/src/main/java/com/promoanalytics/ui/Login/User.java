@@ -1,4 +1,4 @@
-package com.promoanalytics.ui.login;
+package com.promoanalytics.ui.Login;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

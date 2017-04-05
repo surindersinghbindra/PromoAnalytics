@@ -1,4 +1,4 @@
-package com.promoanalytics.ui.login;
+package com.promoanalytics.ui.Login;
 
 import android.databinding.DataBindingUtil;
 import android.net.Uri;

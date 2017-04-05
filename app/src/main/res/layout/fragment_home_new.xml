@@ -6,7 +6,7 @@
 
         <variable
             name="title"
-            type="com.promoanalytics.ui.dealslist.ListDealsFragment.TitlesOnListPage" />
+            type="com.promoanalytics.ui.DealsList.ListDealsFragment.TitlesOnListPage" />
     </data>
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -119,10 +119,14 @@
                         android:text="No Coupon Available"
                         android:visibility="gone" />
 
+
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/rvNormalCoupons"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="15dp"
+
                         android:overScrollMode="never">
 
                     </android.support.v7.widget.RecyclerView>

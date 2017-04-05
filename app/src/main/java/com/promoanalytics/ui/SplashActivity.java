@@ -15,7 +15,7 @@ import android.view.View;
 
 import com.promoanalytics.R;
 import com.promoanalytics.databinding.ActivitySplashBinding;
-import com.promoanalytics.ui.login.LoginActivity;
+import com.promoanalytics.ui.Login.LoginActivity;
 import com.promoanalytics.utils.AppConstants;
 import com.promoanalytics.utils.AppController;
 
@@ -28,9 +28,8 @@ import net.hockeyapp.android.CrashManager;
 public class SplashActivity extends AppCompatActivity {
 
 
-    private static final int REQUEST_CAMERA = 0;
-
     public static final String TAG = SplashActivity.class.getSimpleName();
+    private static final int REQUEST_CAMERA = 0;
     private ActivitySplashBinding activitySplashBinding;
     private Handler handler;
 
@@ -60,7 +59,7 @@ public class SplashActivity extends AppCompatActivity {
             }
         };
         // check for permitions
-        if (ActivityCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             requestExternalStoragePermission();
         } else {
             new Handler().postDelayed(runnable, 3000);
@@ -73,7 +72,9 @@ public class SplashActivity extends AppCompatActivity {
         // BEGIN_INCLUDE(camera_permission_request)
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 android.Manifest.permission.ACCESS_COARSE_LOCATION) || ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)) {
+                Manifest.permission.ACCESS_FINE_LOCATION) || ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)) {
             // Provide an additional rationale to the user if the permission was not granted
             // and the user would benefit from additional context for the use of the permission.
             // For example if the user has previously denied the permission.
@@ -83,7 +84,7 @@ public class SplashActivity extends AppCompatActivity {
             Snackbar.make(activitySplashBinding.layoutMain, "Please allow all the permissions to proceed further in App", Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            ActivityCompat.requestPermissions(SplashActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                            ActivityCompat.requestPermissions(SplashActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
                                     REQUEST_CAMERA);
                         }
                     }).show();
@@ -104,7 +105,7 @@ public class SplashActivity extends AppCompatActivity {
             // Received permission result for camera permission.
             Log.i(TAG, "Received response for Camera permission request.");
             Log.e("JAMM", permissions[0] + permissions[1]);
-            if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length == 4 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED && grantResults[3] == PackageManager.PERMISSION_GRANTED) {
                 new Handler().postDelayed(runnable, 500);
             } else {
                 requestExternalStoragePermission();

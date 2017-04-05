@@ -14,8 +14,8 @@ import android.widget.Toast;
 
 import com.promoanalytics.R;
 import com.promoanalytics.databinding.EditProfileBinding;
-import com.promoanalytics.ui.login.RegisterUser;
-import com.promoanalytics.ui.login.User;
+import com.promoanalytics.ui.Login.RegisterUser;
+import com.promoanalytics.ui.Login.User;
 import com.promoanalytics.utils.AppConstants;
 import com.promoanalytics.utils.AppController;
 import com.promoanalytics.utils.FileUtils;
@@ -29,6 +29,7 @@ import com.vansuita.pickimage.listeners.IPickResult;
 
 import java.io.File;
 
+import id.zelory.compressor.Compressor;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -211,14 +212,16 @@ public class EditProfileFragment extends RootFragment {
     }
 
 
-    void savingProfile(String name, String password, Uri imagePath) {
+    void savingProfile(String name, String password2, Uri imagePath) {
+
 
         showProgressBarWithMessage("Saving your profile");
         PromoAnalyticsServices promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
         RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), AppController.sharedPreferencesCompat.getString(AppConstants.USER_ID, ""));
         RequestBody etName = RequestBody.create(MediaType.parse("text/plain"), name);
+        RequestBody password = RequestBody.create(MediaType.parse("text/plain"), "password2");
 
-        Call<User> call = promoAnalyticsServices.editUserProfile(createPartFromString(AppController.sharedPreferencesCompat.getString(AppConstants.USER_ID, "")), createPartFromString(name), password == null ? null : RequestBody.create(MediaType.parse("text/plain"), password), imagePath == null ? null : prepareFilePart("image", imagePath));
+        Call<User> call = promoAnalyticsServices.editUserProfile(userId, etName, password2 == null ? null : RequestBody.create(MediaType.parse("text/plain"), password2), imagePath == null ? null : prepareFilePart("image", imagePath));
 
         call.enqueue(new Callback<User>() {
             @Override
@@ -247,15 +250,17 @@ public class EditProfileFragment extends RootFragment {
         // use the FileUtils to get the actual file by uri
         File file = FileUtils.getFile(getActivity(), fileUri);
 
+        File compressedImageFile = Compressor.getDefault(getActivity()).compressToFile(file);
+
         // create RequestBody instance from file
         RequestBody requestFile =
                 RequestBody.create(
-                        MediaType.parse(getActivity().getContentResolver().getType(fileUri)),
-                        file
+                        MediaType.parse("multipart/form-data"),
+                        compressedImageFile
                 );
 
         // MultipartBody.Part is used to send also the actual file name
-        return MultipartBody.Part.createFormData(partName, file.getName(), requestFile);
+        return MultipartBody.Part.createFormData(partName, compressedImageFile.getName(), requestFile);
     }
 
     @NonNull

@@ -1,4 +1,4 @@
-package com.promoanalytics.ui.login.forgetpassword;
+package com.promoanalytics.ui.Login.forgetpassword;
 
 /**
  * Created by think360 on 31/03/17.

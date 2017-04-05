@@ -5,9 +5,9 @@ import com.promoanalytics.model.AllDeals.AllDeals;
 import com.promoanalytics.model.Category.CategoryModel;
 import com.promoanalytics.model.DealDetail.DetalDetail;
 import com.promoanalytics.model.SaveDealModel;
-import com.promoanalytics.ui.login.RegisterUser;
-import com.promoanalytics.ui.login.User;
-import com.promoanalytics.ui.login.forgetpassword.OtpModel;
+import com.promoanalytics.ui.Login.RegisterUser;
+import com.promoanalytics.ui.Login.User;
+import com.promoanalytics.ui.Login.forgetpassword.OtpModel;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;

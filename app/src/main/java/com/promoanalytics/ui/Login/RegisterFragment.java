@@ -1,4 +1,4 @@
-package com.promoanalytics.ui.login;
+package com.promoanalytics.ui.Login;
 
 import android.content.Context;
 import android.content.Intent;

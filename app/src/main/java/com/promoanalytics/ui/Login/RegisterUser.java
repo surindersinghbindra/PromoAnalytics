@@ -1,4 +1,4 @@
-package com.promoanalytics.ui.login;
+package com.promoanalytics.ui.Login;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -49,7 +49,18 @@ public class RegisterUser {
         @SerializedName("user_id")
         @Expose
         private Integer userId;
-
+        @SerializedName("name")
+        @Expose
+        private String name;
+        @SerializedName("email")
+        @Expose
+        private String email;
+        @SerializedName("pic")
+        @Expose
+        private String pic;
+        @SerializedName("phone")
+        @Expose
+        private String phone;
 
         public Integer getUserId() {
             return userId;
@@ -58,7 +69,6 @@ public class RegisterUser {
         public void setUserId(Integer userId) {
             this.userId = userId;
         }
-
 
         public String getName() {
             return name;
@@ -91,24 +101,6 @@ public class RegisterUser {
         public void setPhone(String phone) {
             this.phone = phone;
         }
-
-        @SerializedName("name")
-        @Expose
-        private String name;
-
-        @SerializedName("email")
-        @Expose
-        private String email;
-
-
-        @SerializedName("pic")
-        @Expose
-        private String pic;
-
-
-        @SerializedName("phone")
-        @Expose
-        private String phone;
 
 
     }

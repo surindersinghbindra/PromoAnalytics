@@ -1,4 +1,4 @@
-package com.promoanalytics.ui.login.forgetpassword;
+package com.promoanalytics.ui.Login.forgetpassword;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
