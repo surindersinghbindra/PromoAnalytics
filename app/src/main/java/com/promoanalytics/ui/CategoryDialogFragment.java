@@ -73,6 +73,8 @@ public class CategoryDialogFragment extends DialogFragment implements View.OnCli
                     recyclerBindingAdapter.setOnItemClickListener(CategoryDialogFragment.this);
 
                     // fragmentDealsOnMapBinding.searchLayout.autoCategorySearch.setAdapter(mCategoryAdapter);
+                } else {
+
                 }
             }
 

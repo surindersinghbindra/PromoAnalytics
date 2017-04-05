@@ -13,7 +13,7 @@ import com.promoanalytics.R;
 import com.promoanalytics.ui.DealsOnMap.DealsOnMapFragment;
 
 
-public class MainActivityAfterLogin extends AppCompatActivity implements DealsOnMapFragment.OnFragmentInteractionListener, CouponDetailFragment.OnFragmentInteractionListener {
+public class MainActivityAfterLogin extends AppCompatActivity implements DealsOnMapFragment.OnFragmentInteractionListener {
 
 
     //    private TextView mMessageView;

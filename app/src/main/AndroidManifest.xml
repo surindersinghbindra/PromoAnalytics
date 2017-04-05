@@ -42,6 +42,7 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+
         //your activity declarations and other stuff
         <meta-data
             android:name="net.hockeyapp.android.appIdentifier"
@@ -75,7 +76,12 @@
         <activity
             android:name=".ui.ForgetPasswordActivity"
             android:label="@string/title_activity_forget_password"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".ui.CouponDetailActivity"
+            android:label="@string/title_activity_forget_password"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

@@ -1,5 +1,6 @@
 package com.promoanalytics.ui.SavedCoupons;
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,7 +21,7 @@ import com.promoanalytics.model.AllDeals.Detail;
 import com.promoanalytics.model.SaveDealModel;
 import com.promoanalytics.ui.AddToFavFromDetail;
 import com.promoanalytics.ui.AddToFavFromList;
-import com.promoanalytics.ui.CouponDetailFragment;
+import com.promoanalytics.ui.CouponDetailActivity;
 import com.promoanalytics.ui.dealslist.ListDealsFragment;
 import com.promoanalytics.utils.AppConstants;
 import com.promoanalytics.utils.AppController;
@@ -174,7 +175,7 @@ public class SavedDealsFragment extends RootFragment implements LocationListener
     public void onAddtoChangeFomDetail(AddToFavFromDetail addToFavFromList) {
 
         if (!TextUtils.isEmpty(addToFavFromList.id)) {
-            CouponDetailFragment.id = "";
+            CouponDetailActivity.id = "";
             fetchSavedCoupons();
 
         }
@@ -198,7 +199,7 @@ public class SavedDealsFragment extends RootFragment implements LocationListener
         }
 
         @Override
-        public void onBindViewHolder(final DealViewHolder holder, final int position) {
+        public void onBindViewHolder(final DealViewHolder holder, int position) {
             final Detail singleDeal = arrayListDeals.get(position);
 
             if (singleDeal.getIsFav() != 0) {
@@ -223,8 +224,16 @@ public class SavedDealsFragment extends RootFragment implements LocationListener
                         public void onResponse(Call<SaveDealModel> call, Response<SaveDealModel> response) {
                             if (response.body().getStatus()) {
                                 UtilHelper.animateOverShoot(holder.ivHeart);
-                                arrayListDeals.remove(position);
-                                notifyDataSetChanged();
+                                if (arrayListDeals.size() > 0) {
+                                    arrayListDeals.remove(holder.getAdapterPosition());
+                                    notifyDataSetChanged();
+                                }
+                                if (arrayListDeals.size() == 0) {
+                                    mUnFeaturedDealsRecyclerView.setVisibility(View.GONE);
+                                    tvNoSavedCoupons.setVisibility(View.VISIBLE);
+                                }
+
+
                             } else {
                                 showMessageInSnackBar(response.body().getMessage());
                             }
@@ -241,7 +250,11 @@ public class SavedDealsFragment extends RootFragment implements LocationListener
             holder.cvLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    trasactFragment(R.id.container, CouponDetailFragment.newInstance(singleDeal.getId(), ""));
+
+                    Intent intent = new Intent(getActivity(), CouponDetailActivity.class);
+                    intent.putExtra(CouponDetailActivity.ARG_PARAM1, singleDeal.getId());
+                    startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.enter, R.anim.exit);
                 }
             });
         }

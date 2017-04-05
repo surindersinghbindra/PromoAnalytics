@@ -44,7 +44,7 @@ import com.promoanalytics.model.SaveDealModel;
 import com.promoanalytics.model.SearchLayoutModel;
 import com.promoanalytics.ui.AddToFavFromList;
 import com.promoanalytics.ui.CategoryDialogFragment;
-import com.promoanalytics.ui.CouponDetailFragment;
+import com.promoanalytics.ui.CouponDetailActivity;
 import com.promoanalytics.ui.DealsOnMap.CategoryChange;
 import com.promoanalytics.ui.DealsOnMap.DealsOnMapFragment;
 import com.promoanalytics.ui.TabChangedOtto;
@@ -246,7 +246,6 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
                             fragmentHomeNewBinding.rvNormalCoupons.setVisibility(View.VISIBLE);
 
                             fragmentHomeNewBinding.rvNormalCoupons.setAdapter(new AllDealsRvAdapter(response.body().getData().getDetail()));
-                            fragmentHomeNewBinding.svListDeals.smoothScrollTo(0, 0);
                         } else {
                             fragmentHomeNewBinding.tvNoUnFeaturedCoupons.setVisibility(View.VISIBLE);
                             fragmentHomeNewBinding.rvNormalCoupons.setVisibility(View.GONE);
@@ -285,7 +284,7 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
                             fragmentHomeNewBinding.tvNoFeaturedCoupons.setVisibility(View.GONE);
                             fragmentHomeNewBinding.rvFeaturedCoupons.setVisibility(View.VISIBLE);
                             fragmentHomeNewBinding.rvFeaturedCoupons.setAdapter(new AllDealsRvAdapter(response.body().getData().getDetail()));
-                            fragmentHomeNewBinding.svListDeals.smoothScrollTo(0, 0);
+
                         } else {
                             fragmentHomeNewBinding.tvNoFeaturedCoupons.setVisibility(View.VISIBLE);
                             fragmentHomeNewBinding.rvFeaturedCoupons.setVisibility(View.GONE);
@@ -458,7 +457,10 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
             holder.cvLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    trasactFragment(R.id.container, CouponDetailFragment.newInstance(singleDeal.getId(), ""));
+                    Intent intent = new Intent(getActivity(), CouponDetailActivity.class);
+                    intent.putExtra(CouponDetailActivity.ARG_PARAM1, singleDeal.getId());
+                    startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.enter, R.anim.exit);
                 }
             });
 
