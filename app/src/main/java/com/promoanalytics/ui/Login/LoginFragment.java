@@ -32,7 +32,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.promoanalytics.R;
 import com.promoanalytics.databinding.FragmentLoginBinding;
-import com.promoanalytics.ui.ForgetPasswordActivity;
+import com.promoanalytics.ui.Login.forgetpassword.ForgetPasswordActivity;
 import com.promoanalytics.ui.MainActivityAfterLogin;
 import com.promoanalytics.utils.AppConstants;
 import com.promoanalytics.utils.AppController;
@@ -243,9 +243,11 @@ public class LoginFragment extends RootFragment implements GoogleApiClient.OnCon
 
     }
 
+
     @Override
     public void onDestroy() {
         super.onDestroy();
+        pDialog.cancel();
         mGoogleApiClient.stopAutoManage(getActivity());
         mGoogleApiClient.disconnect();
     }

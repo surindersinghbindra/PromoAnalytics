@@ -4,14 +4,25 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import com.promoanalytics.R;
 import com.promoanalytics.databinding.FragmentChangePasswordBinding;
+import com.promoanalytics.ui.Login.User;
+import com.promoanalytics.utils.PromoAnalyticsServices;
 import com.promoanalytics.utils.RootFragment;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -73,6 +84,60 @@ public class ChangePasswordFragment extends RootFragment {
 
 
         fragmentChangePasswordBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_change_password, container, false);
+
+        fragmentChangePasswordBinding.btnSaveProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(fragmentChangePasswordBinding.editPassword.getText().toString()) || TextUtils.isEmpty(fragmentChangePasswordBinding.EditReEnterPassword.getText().toString()) || !fragmentChangePasswordBinding.EditReEnterPassword.getText().toString().equals(fragmentChangePasswordBinding.editPassword.getText().toString())) {
+                    if (TextUtils.isEmpty(fragmentChangePasswordBinding.editPassword.getText())) {
+                        showDialog("Please provide password");
+                    }
+                    if (TextUtils.isEmpty(fragmentChangePasswordBinding.EditReEnterPassword.getText().toString())) {
+                        showDialog("Please confirm password");
+                    } else {
+                        showDialog("Password doesn't match");
+                    }
+                } else {
+
+                    showProgressBarWithMessage("Please wait!");
+                    PromoAnalyticsServices promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
+                    RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), mParam1);
+                    RequestBody password = RequestBody.create(MediaType.parse("text/plain"), fragmentChangePasswordBinding.editPassword.getText().toString());
+                    Call<User> userCall = promoAnalyticsServices.editUserProfile(userId, null, password, null);
+
+                    userCall.enqueue(new Callback<User>() {
+                        @Override
+                        public void onResponse(Call<User> call, Response<User> response) {
+                            pDialog.hide();
+                            if (response.isSuccessful()) {
+                                if (response.body().getStatus()) {
+
+                                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                                    imm.hideSoftInputFromWindow(fragmentChangePasswordBinding.getRoot().getWindowToken(), 0);
+
+                                    showMessageInSnackBar("Password Successfully changed");
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            getActivity().finish();
+                                        }
+                                    }, 500);
+
+                                }
+                            } else {
+                                showMessageInSnackBar(response.body().getMessage());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<User> call, Throwable t) {
+
+                        }
+                    });
+                }
+            }
+        });
+
 
         return fragmentChangePasswordBinding.getRoot();
     }

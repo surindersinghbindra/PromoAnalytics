@@ -113,8 +113,13 @@ public interface PromoAnalyticsServices {
     Call<OtpModel> resendOtp(@Field("user_id") String user_id);
 
     @FormUrlEncoded
-    @POST("forget_password/")
+    @POST("verify_otp/")
     Call<OtpModel> verifyOtp(@Field("otp") String otp, @Field("user_id") String user_id);
+
+
+    @FormUrlEncoded
+    @POST("deal_share/")
+    Call<User> shareCoupon(@Field("user_id") String user_id, @Field("coupon_id") String coupon_id, @Field("email") String email);
 
 
 }

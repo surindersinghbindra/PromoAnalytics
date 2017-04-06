@@ -7,7 +7,10 @@
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:focusable="true"
+        android:touchscreenBlocksFocus="true">
 
 
         <LinearLayout
@@ -61,8 +64,11 @@
                         style="@style/EditTextRoboto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:digits="0123456789"
                         android:hint="@string/otp"
-                        android:inputType="phone" />
+                        android:inputType="number"
+                        android:maxEms="4"
+                        android:maxLength="4" />
 
                 </LinearLayout>
 
@@ -76,6 +82,19 @@
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:background="@drawable/rectanglefilled"
                     android:text="@string/verify_otp"
+                    android:textColor="#fff" />
+
+
+                <!-- Signup Button -->
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/btnResendOtp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="48dp"
+                    android:layout_margin="@dimen/activity_horizontal_margin"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:background="@drawable/rectanglefilled"
+                    android:text="@string/resend_otp"
                     android:textColor="#fff" />
 
             </LinearLayout>

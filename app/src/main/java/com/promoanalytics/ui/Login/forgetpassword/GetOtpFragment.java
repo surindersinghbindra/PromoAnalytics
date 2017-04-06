@@ -86,16 +86,18 @@ public class GetOtpFragment extends RootFragment {
 
                 if (TextUtils.isEmpty(fragmentGetOtpBinding.etMobileNumber.getText().toString())) {
 
-                    showMessageInSnackBar("Please provide your registred email id or  mobile number");
+                    showDialog("Please provide your registred email id or  mobile number");
 
                 } else {
+                    showProgressBarWithMessage("Please wait!\n while we are sending OTP");
                     PromoAnalyticsServices promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
                     Call<OtpModel> optModelCall = promoAnalyticsServices.getOtp(fragmentGetOtpBinding.etMobileNumber.getText().toString().trim());
                     optModelCall.enqueue(new Callback<OtpModel>() {
                         @Override
                         public void onResponse(Call<OtpModel> call, Response<OtpModel> response) {
+                            pDialog.hide();
                             if (response.body().getStatus()) {
-
+                                showMessageInSnackBar(response.body().getMessage());
                                 trasactFragment(R.id.container, VerifyOtpFragment.newInstance(response.body().getData().getUserId(), ""));
 
                             } else {
@@ -112,6 +114,7 @@ public class GetOtpFragment extends RootFragment {
                 }
             }
         });
+
 
         return fragmentGetOtpBinding.getRoot();
     }

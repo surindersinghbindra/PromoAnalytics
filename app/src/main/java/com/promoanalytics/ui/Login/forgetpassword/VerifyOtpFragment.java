@@ -79,20 +79,24 @@ public class VerifyOtpFragment extends RootFragment {
         // Inflate the layout for this fragment
 
         falseragmentVerifyOtpBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_verify_otp, container, false);
+        falseragmentVerifyOtpBinding.btnSendOtp.requestFocus();
         falseragmentVerifyOtpBinding.btnSendOtp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
 
-                if (!TextUtils.isEmpty(falseragmentVerifyOtpBinding.etMobileNumber.getText().toString())) {
-
+                if (TextUtils.isEmpty(falseragmentVerifyOtpBinding.etMobileNumber.getText().toString())) {
+                    showDialog("Please provide OTP");
                 } else {
+                    showProgressBarWithMessage("Please wait!\n while we are verifying your OTP");
                     PromoAnalyticsServices promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
                     Call<OtpModel> optModelCall = promoAnalyticsServices.verifyOtp(falseragmentVerifyOtpBinding.etMobileNumber.getText().toString().trim(), mParam1);
                     optModelCall.enqueue(new Callback<OtpModel>() {
                         @Override
                         public void onResponse(Call<OtpModel> call, Response<OtpModel> response) {
                             if (response.body().getStatus()) {
+                                pDialog.hide();
+                                showMessageInSnackBar(response.body().getMessage());
                                 trasactFragment(R.id.container, ChangePasswordFragment.newInstance(response.body().getData().getUserId(), ""));
 
                             } else {
@@ -102,7 +106,7 @@ public class VerifyOtpFragment extends RootFragment {
 
                         @Override
                         public void onFailure(Call<OtpModel> call, Throwable t) {
-
+                            t.printStackTrace();
                         }
                     });
 
@@ -110,7 +114,34 @@ public class VerifyOtpFragment extends RootFragment {
             }
         });
 
+        falseragmentVerifyOtpBinding.btnResendOtp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                showProgressBarWithMessage("Sending you the OTP");
+                PromoAnalyticsServices promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
+                Call<OtpModel> optModelCall = promoAnalyticsServices.resendOtp(mParam1);
+                optModelCall.enqueue(new Callback<OtpModel>() {
+                    @Override
+                    public void onResponse(Call<OtpModel> call, Response<OtpModel> response) {
+                        if (response.body().getStatus()) {
+                            pDialog.hide();
+                            showMessageInSnackBar(response.body().getMessage());
+
+                        } else {
+
+                            showDialog(response.body().getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<OtpModel> call, Throwable t) {
+                        t.printStackTrace();
+                    }
+                });
+
+            }
+        });
         return falseragmentVerifyOtpBinding.getRoot();
     }
 

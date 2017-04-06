@@ -206,12 +206,68 @@
                             android:layout_marginLeft="@dimen/activity_horizontal_margin"
                             android:layout_marginRight="@dimen/activity_horizontal_margin"
                             android:layout_marginTop="@dimen/activity_horizontal_margin"
-                            android:minHeight="230dp"
                             android:text="@{detail.detail}"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:textSize="14sp" />
 
+
+                        <LinearLayout
+
+                            style="@style/BorderLinearLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                style="@style/EditTextImage"
+                                android:src="@drawable/email" />
+
+                            <com.promoanalytics.utils.Fonts.RobotoLightEditText
+                                android:id="@+id/etEmail"
+                                style="@style/EditTextRoboto"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Email"
+
+                                android:imeOptions="actionDone"
+                                android:inputType="textEmailAddress|textFilter|textNoSuggestions"
+                                android:nextFocusForward="@+id/input_password" />
+                        </LinearLayout>
+
                     </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/btnShare"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:background="@drawable/rectanglefilled"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_share" />
+
+                        <com.promoanalytics.utils.Fonts.RobotoBoldTextView
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="48dp"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="SHARE "
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                    </LinearLayout>
+                    <!-- Signup Button -->
+
 
                 </LinearLayout>
             </android.support.v4.widget.NestedScrollView>

@@ -8,6 +8,7 @@
     <uses-permission-sdk-23 android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission-sdk-23 android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission-sdk-23 android:name="android.permission.CAMERA" />
+    <uses-permission-sdk-23 android:name="android.permission.READ_SMS" />
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -74,7 +75,7 @@
             android:label="@string/title_activity_splash"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.ForgetPasswordActivity"
+            android:name=".ui.Login.forgetpassword.ForgetPasswordActivity"
             android:label="@string/title_activity_forget_password"
             android:theme="@style/AppTheme" />
 
@@ -82,6 +83,15 @@
             android:name=".ui.DealDetail.CouponDetailActivity"
             android:label="@string/title_activity_forget_password"
             android:theme="@style/AppTheme" />
+
+        <!-- SMS Receiver -->
+        <receiver
+            android:name=".ui.SmsReceiver"
+            android:permission="android.permission.BROADCAST_SMS">
+            <intent-filter android:priority="99999">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

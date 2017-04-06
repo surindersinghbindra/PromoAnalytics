@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 
@@ -14,6 +15,7 @@ import com.promoanalytics.databinding.FragmentCouponDetailsBinding;
 import com.promoanalytics.model.DealDetail.DetalDetail;
 import com.promoanalytics.model.SaveDealModel;
 import com.promoanalytics.ui.AddToFavFromDetail;
+import com.promoanalytics.ui.Login.User;
 import com.promoanalytics.utils.AppConstants;
 import com.promoanalytics.utils.AppController;
 import com.promoanalytics.utils.BaseAppCompatActivity;
@@ -36,6 +38,7 @@ public class CouponDetailActivity extends BaseAppCompatActivity {
     private String mParam1;
     private String mParam2;
     private DetalDetail.Data data;
+    private PromoAnalyticsServices promoAnalyticsServices;
     private FragmentCouponDetailsBinding fragmentCouponDetailsBinding;
     private int isFavLocal = 0;
 
@@ -69,7 +72,7 @@ public class CouponDetailActivity extends BaseAppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);*/
 
         fragmentCouponDetailsBinding.progressbarDetail.setVisibility(View.VISIBLE);
-        PromoAnalyticsServices promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
+        promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
         Call<DetalDetail> detalDetailCall = promoAnalyticsServices.getDealDetail(mParam1, AppController.sharedPreferencesCompat.getString(AppConstants.USER_ID, ""));
         detalDetailCall.enqueue(new Callback<DetalDetail>() {
             @Override
@@ -89,7 +92,16 @@ public class CouponDetailActivity extends BaseAppCompatActivity {
                         styledString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(CouponDetailActivity.this, R.color.appOrange)), 11, styledString.length(), 0);
                         fragmentCouponDetailsBinding.validity.setText(styledString);
                     } else {
+                        fragmentCouponDetailsBinding.progressbarDetail.setVisibility(View.GONE);
                         showMessageInSnackBar(fragmentCouponDetailsBinding.flMain, response.body().getMessage());
+
+                        try {
+                            Thread.sleep(200);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        finish();
+
                     }
                 }
             }
@@ -105,6 +117,45 @@ public class CouponDetailActivity extends BaseAppCompatActivity {
             public void onClick(View v) {
 
                 changeFavStatus(isFavLocal);
+            }
+        });
+
+
+        fragmentCouponDetailsBinding.btnShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(fragmentCouponDetailsBinding.etEmail.getText().toString()) || !UtilHelper.isValidEmail(fragmentCouponDetailsBinding.etEmail.getText().toString().trim())) {
+                    if (TextUtils.isEmpty(fragmentCouponDetailsBinding.etEmail.getText().toString())) {
+
+                        showMessageInSnackBar(fragmentCouponDetailsBinding.flMain, "Provide Email");
+                    } else {
+                        showMessageInSnackBar(fragmentCouponDetailsBinding.flMain, "Provide Valid Email");
+                    }
+                } else {
+
+                    showProgressBar();
+
+                    Call<User> userCall = promoAnalyticsServices.shareCoupon(AppController.sharedPreferencesCompat.getString(AppConstants.USER_ID, ""), mParam1, fragmentCouponDetailsBinding.etEmail.getText().toString().trim());
+                    userCall.enqueue(new Callback<User>() {
+                        @Override
+                        public void onResponse(Call<User> call, Response<User> response) {
+                            pDialog.hide();
+                            if (response.isSuccessful() && response.body().getStatus()) {
+                                showMessageInSnackBar(fragmentCouponDetailsBinding.flMain, "THANK YOU! Coupon shared with " + fragmentCouponDetailsBinding.etEmail.getText().toString());
+
+                            } else {
+                                showMessageInSnackBar(fragmentCouponDetailsBinding.flMain, response.body().getMessage());
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<User> call, Throwable t) {
+
+                        }
+                    });
+                }
+
             }
         });
 

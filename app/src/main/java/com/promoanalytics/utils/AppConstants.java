@@ -33,5 +33,14 @@ public class AppConstants {
     public static final String RESULT_DATA_KEY = PACKAGE_NAME + ".RESULT_DATA_KEY";
     public static final String LOCATION_DATA_EXTRA = PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
 
+    // SMS provider identification
+    // It should match with your SMS gateway origin
+    // You can use  MSGIND, TESTER and ALERTS as sender ID
+    // If you want custom sender Id, approve MSG91 to get one
+    public static final String SMS_ORIGIN = "+18443361158";
+
+    // special character to prefix the otp. Make sure this character appears only once in the sms
+    public static final String OTP_DELIMITER = ":";
+
 
 }

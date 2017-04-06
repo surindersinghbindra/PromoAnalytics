@@ -310,21 +310,15 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
                 public void onResponse(Call<AllDeals> call, Response<AllDeals> response) {
 
                     try {
-
-
                         if (response.isSuccessful()) {
                             if (response.body().getStatus()) {
-
                                 if (response.body().getData().getDetail().size() > 0) {
-
                                     fragmentHomeNewBinding.tvNoUnFeaturedCoupons.setVisibility(View.GONE);
                                     fragmentHomeNewBinding.rvNormalCoupons.setVisibility(View.VISIBLE);
                                     if (allUnFeaturedDealsRvAdapter == null) {
                                         allUnFeaturedDealsRvAdapter = new AllDealsRvAdapter(detailListUnFeaturedCoupons);
                                         fragmentHomeNewBinding.rvNormalCoupons.setAdapter(allUnFeaturedDealsRvAdapter);
-
                                     }
-
                                     detailListUnFeaturedCoupons.addAll(response.body().getData().getDetail());
                                     allUnFeaturedDealsRvAdapter.notifyDataSetChanged();
                                     pageNumberUnFeatured = response.body().getData().getNextPage();
@@ -332,7 +326,6 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
                                         showUnFeaturedCoupons(categoryId, latLng);
                                     } else {
                                         pageNumberUnFeatured = 1;
-
                                     }
                                 }
                             } else {

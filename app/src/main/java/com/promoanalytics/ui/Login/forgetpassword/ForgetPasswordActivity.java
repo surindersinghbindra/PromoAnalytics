@@ -1,4 +1,4 @@
-package com.promoanalytics.ui;
+package com.promoanalytics.ui.Login.forgetpassword;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,9 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.promoanalytics.R;
-import com.promoanalytics.ui.Login.forgetpassword.GetOtpFragment;
 
-public class ForgetPasswordActivity extends AppCompatActivity implements GetOtpFragment.OnFragmentInteractionListener {
+public class ForgetPasswordActivity extends AppCompatActivity implements GetOtpFragment.OnFragmentInteractionListener, VerifyOtpFragment.OnFragmentInteractionListener, ChangePasswordFragment.OnFragmentInteractionListener {
 
     private GetOtpFragment getOtpFragment;
     private boolean doubleBackToExitPressedOnce = false;
