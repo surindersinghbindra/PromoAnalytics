@@ -40,12 +40,13 @@ import com.promoanalytics.adapter.DealViewHolder;
 import com.promoanalytics.databinding.FragmentHomeNewBinding;
 import com.promoanalytics.model.AllDeals.AllDeals;
 import com.promoanalytics.model.AllDeals.Detail;
+import com.promoanalytics.model.Category.Datum;
 import com.promoanalytics.model.SaveDealModel;
 import com.promoanalytics.model.SearchLayoutModel;
 import com.promoanalytics.ui.AddToFavFromList;
-import com.promoanalytics.ui.CategoryDialogFragment;
+import com.promoanalytics.ui.CategoryNameCallBack;
 import com.promoanalytics.ui.DealDetail.CouponDetailActivity;
-import com.promoanalytics.ui.DealsOnMap.CategoryChange;
+import com.promoanalytics.ui.DealsOnMap.CategoryDialogFragmentFromMaps;
 import com.promoanalytics.ui.DealsOnMap.DealsOnMapFragment;
 import com.promoanalytics.ui.TabChangedOtto;
 import com.promoanalytics.utils.AppConstants;
@@ -72,7 +73,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by think360user on 15/3/17.
  */
 
-public class ListDealsFragment extends RootFragment implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+public class ListDealsFragment extends RootFragment implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, CategoryNameCallBack {
 
 
     public static final String TAG = ListDealsFragment.class.getSimpleName();
@@ -95,7 +96,7 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
     private LatLng latLng = new LatLng(43.717899, -79.658251);
     private SearchLayoutModel searchLayoutModel = new SearchLayoutModel("Searching..", "Select Location", "Select Category", false);
     private TitlesOnListPage titlesOnListPage = new TitlesOnListPage("Featured Coupons", "Other Coupons");
-    private CategoryDialogFragment editNameDialogFragment;
+    private CategoryDialogFragmentFromMaps editNameDialogFragment;
     private List<Detail> detailListUnFeaturedCoupons = new ArrayList<>();
     private List<Detail> detailListFeaturedCoupons = new ArrayList<>();
     private Integer pageNumberUnFeatured = 1, pageNumberFeatured = 1;
@@ -147,8 +148,8 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
             @Override
             public void onClick(View v) {
 
-                editNameDialogFragment = CategoryDialogFragment.newInstance();
-                editNameDialogFragment.setWhoWillBetheListner(2);
+                editNameDialogFragment = CategoryDialogFragmentFromMaps.newInstance();
+                editNameDialogFragment.setCallBack(ListDealsFragment.this);
                 editNameDialogFragment.show(fm, "fragment_edit_name");
 
             }
@@ -400,7 +401,6 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
     public void onPause() {
         super.onPause();
         if (mGoogleApiClient.isConnected()) {
-
             mGoogleApiClient.disconnect();
         }
         BusProvider.getInstance().unregister(this);
@@ -440,7 +440,6 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
             this.categoryId = tabChangedOtto.getDetail().getCategoryId();
             searchLayoutModel.setOnAllCategory(true);
 
-
             latLng = new LatLng(Double.parseDouble(tabChangedOtto.getDetail().getLatitude()), Double.parseDouble(tabChangedOtto.getDetail().getLongitude()));
             clearLists();
             showFeaturedCoupons(tabChangedOtto.getDetail().getCategoryId(), latLng);
@@ -450,22 +449,6 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
         }
     }
 
-    @Subscribe
-    public void onCategoryChange(CategoryChange event) {
-
-        if (event != null && !TextUtils.isEmpty(event.datum.getName()) && event.whoWillBetheListner == 2) {
-            editNameDialogFragment.dismiss();
-            searchLayoutModel.setOnAllCategory(true);
-            searchLayoutModel.setCategorySearchTitle(event.datum.getName());
-            this.categoryId = event.datum.getId();
-            clearLists();
-            showFeaturedCoupons(event.datum.getId(), latLng);
-            showUnFeaturedCoupons(event.datum.getId(), latLng);
-
-            Log.i("CATEGORY_ID", event.datum.getName());
-        }
-
-    }
 
     @Override
     public void onClick(View v) {
@@ -487,6 +470,23 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
     public AddToFavFromList addToFav() {
 
         return new AddToFavFromList(id);
+    }
+
+    @Override
+    public void sendMeBackCategoryIdAndName(Datum datum) {
+
+        if (datum != null) {
+            editNameDialogFragment.dismiss();
+            searchLayoutModel.setOnAllCategory(true);
+            searchLayoutModel.setCategorySearchTitle(datum.getName());
+            this.categoryId = datum.getId();
+            clearLists();
+            showFeaturedCoupons(datum.getId(), latLng);
+            showUnFeaturedCoupons(datum.getId(), latLng);
+            Log.i("CATEGORY_ID", datum.getName());
+        }
+
+
     }
 
     private class AllDealsRvAdapter extends RecyclerView.Adapter<DealViewHolder> {

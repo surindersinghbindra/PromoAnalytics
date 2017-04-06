@@ -1,6 +1,5 @@
-package com.promoanalytics.ui;
+package com.promoanalytics.ui.DealsOnMap;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,10 +15,9 @@ import com.promoanalytics.R;
 import com.promoanalytics.adapter.RecyclerBindingAdapter;
 import com.promoanalytics.model.Category.CategoryModel;
 import com.promoanalytics.model.Category.Datum;
-import com.promoanalytics.ui.DealsOnMap.CategoryChange;
+import com.promoanalytics.ui.CategoryNameCallBack;
 import com.promoanalytics.utils.BusProvider;
 import com.promoanalytics.utils.PromoAnalyticsServices;
-import com.squareup.otto.Produce;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,20 +27,18 @@ import retrofit2.Response;
  * Created by surinder on 02-Apr-17.
  */
 
-public class CategoryDialogFragment extends DialogFragment implements View.OnClickListener, RecyclerBindingAdapter.OnItemClickListener {
+public class CategoryDialogFragmentFromMaps extends DialogFragment implements View.OnClickListener, RecyclerBindingAdapter.OnItemClickListener {
 
+    private static CategoryNameCallBack categoryNameCallBack;
 
-    private Datum datum = new Datum();
-    private int whoWillBetheListner;
-
-    public static CategoryDialogFragment newInstance() {
-
-        return new CategoryDialogFragment();
+    public static CategoryDialogFragmentFromMaps newInstance() {
+        return new CategoryDialogFragmentFromMaps();
     }
 
-    public void setWhoWillBetheListner(int whoWillBetheListner) {
-        this.whoWillBetheListner = whoWillBetheListner;
+    public void setCallBack(CategoryNameCallBack categoryNameCallBack) {
+        this.categoryNameCallBack = categoryNameCallBack;
     }
+
 
     @Nullable
     @Override
@@ -70,7 +66,7 @@ public class CategoryDialogFragment extends DialogFragment implements View.OnCli
                     RecyclerBindingAdapter recyclerBindingAdapter = new RecyclerBindingAdapter<Datum>(R.layout.single_item_category, BR.category, response.body().getData());
                     recyclerView.setAdapter(recyclerBindingAdapter);
 
-                    recyclerBindingAdapter.setOnItemClickListener(CategoryDialogFragment.this);
+                    recyclerBindingAdapter.setOnItemClickListener(CategoryDialogFragmentFromMaps.this);
 
                     // fragmentDealsOnMapBinding.searchLayout.autoCategorySearch.setAdapter(mCategoryAdapter);
                 } else {
@@ -107,11 +103,11 @@ public class CategoryDialogFragment extends DialogFragment implements View.OnCli
     }
 
 
-    @Produce
-    public CategoryChange produceCategoryChangeEvent() {
+   /* @Produce
+    public CategoryChangeFromMap produceCategoryChangeEvent() {
         // Provide an initial value for location based on the last known position.
-        return new CategoryChange(datum, whoWillBetheListner);
-    }
+        return new CategoryChangeFromMap(datum);
+    }*/
 
     @Override
     public void onClick(View v) {
@@ -119,17 +115,12 @@ public class CategoryDialogFragment extends DialogFragment implements View.OnCli
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-    }
-
-    @Override
     public void onItemClick(int position, Object item) {
 
-        this.datum = (Datum) item;
+        categoryNameCallBack.sendMeBackCategoryIdAndName((Datum) item);
 
-        BusProvider.getInstance().post(produceCategoryChangeEvent());
+
+        //BusProvider.getInstance().post(produceCategoryChangeEvent());
 
     }
 }

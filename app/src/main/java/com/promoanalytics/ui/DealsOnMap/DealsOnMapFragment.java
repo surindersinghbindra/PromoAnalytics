@@ -50,15 +50,15 @@ import com.promoanalytics.R;
 import com.promoanalytics.databinding.FragmentDealsOnMapBinding;
 import com.promoanalytics.model.AllDeals.AllDeals;
 import com.promoanalytics.model.AllDeals.Detail;
+import com.promoanalytics.model.Category.Datum;
 import com.promoanalytics.model.SearchLayoutModel;
-import com.promoanalytics.ui.CategoryDialogFragment;
+import com.promoanalytics.ui.CategoryNameCallBack;
 import com.promoanalytics.ui.TabChangedOtto;
 import com.promoanalytics.utils.AppConstants;
 import com.promoanalytics.utils.BusProvider;
 import com.promoanalytics.utils.PromoAnalyticsServices;
 import com.promoanalytics.utils.RootFragment;
 import com.squareup.otto.Produce;
-import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -80,7 +80,7 @@ import static android.app.Activity.RESULT_OK;
  * Use the {@link DealsOnMapFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, CategoryNameCallBack {
     public static final String TAG = DealsOnMapFragment.class.getSimpleName();
 
     protected static final String ADDRESS_REQUESTED_KEY = "address-request-pending";
@@ -107,7 +107,7 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
      * Receiver registered with this activity to get the response from FetchAddressIntentService.
      */
     private AddressResultReceiver mResultReceiver;
-    private CategoryDialogFragment editNameDialogFragment;
+    private CategoryDialogFragmentFromMaps editNameDialogFragment;
     private LatLng latLng = new LatLng(43.717899, -79.658251);
     private String categoryId = "";
     private String currentLocation = "";
@@ -211,8 +211,8 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
             @Override
             public void onClick(View v) {
 
-                editNameDialogFragment = CategoryDialogFragment.newInstance();
-                editNameDialogFragment.setWhoWillBetheListner(1);
+                editNameDialogFragment = CategoryDialogFragmentFromMaps.newInstance();
+                editNameDialogFragment.setCallBack(DealsOnMapFragment.this);
                 editNameDialogFragment.show(fm, "fragment_edit_name");
 
             }
@@ -323,7 +323,7 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (mLastLocation != null) {
             if (isMapReady && googleMap != null) {
-                LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
                 if (isAlreadyFetchedDataForCurrentLocation) {
                     CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, AppConstants.ZOOM_LEVEL_IN_APP);
                     googleMap.animateCamera(cameraUpdate);
@@ -543,20 +543,6 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
         }
     }
 
-    @Subscribe
-    public void onCategoryChange(CategoryChange event) {
-
-        if (event != null && !TextUtils.isEmpty(event.datum.getName()) && event.whoWillBetheListner == 1) {
-            editNameDialogFragment.dismiss();
-            searchLayoutModel.setOnAllCategory(true);
-            searchLayoutModel.setCategorySearchTitle(event.datum.getName());
-            this.categoryId = event.datum.getId();
-            fragmentDealsOnMapBinding.searchLayout.slectn.setVisibility(View.GONE);
-            fetchDataFromRemote(event.datum.getId(), latLng);
-            Log.i("CATEGORY_ID", event.datum.getName());
-        }
-
-    }
 
     @Override
     public void onClick(View v) {
@@ -584,6 +570,20 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
     public TabChangedOtto produceTabChange() {
         // Provide an initial value for location based on the last known position.
         return new TabChangedOtto(tabSelected, mDetail, currentLocation);
+    }
+
+    @Override
+    public void sendMeBackCategoryIdAndName(Datum datum) {
+
+        if (datum != null) {
+            editNameDialogFragment.dismiss();
+            searchLayoutModel.setOnAllCategory(true);
+            searchLayoutModel.setCategorySearchTitle(datum.getName());
+            this.categoryId = datum.getId();
+            fragmentDealsOnMapBinding.searchLayout.slectn.setVisibility(View.GONE);
+            fetchDataFromRemote(datum.getId(), latLng);
+            Log.i("CATEGORY_ID", datum.getName());
+        }
     }
 
     /**
