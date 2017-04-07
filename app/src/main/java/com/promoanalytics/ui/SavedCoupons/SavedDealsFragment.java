@@ -5,6 +5,8 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -62,6 +64,8 @@ public class SavedDealsFragment extends RootFragment implements LocationListener
     private View view;
     private RobotoLightTextView tvNoSavedCoupons;
 
+    private SwipeRefreshLayout swipeRefreshLayout;
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -98,18 +102,36 @@ public class SavedDealsFragment extends RootFragment implements LocationListener
 
         tvNoSavedCoupons = (RobotoLightTextView) view.findViewById(R.id.tvNoSavedCoupons);
 
-        mUnFeaturedDealsRecyclerView = (RecyclerView) view.findViewById(R.id.rvSavedCoupons);
 
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+
+
+        mUnFeaturedDealsRecyclerView = (RecyclerView) view.findViewById(R.id.rvSavedCoupons);
+        mUnFeaturedDealsRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mUnFeaturedDealsRecyclerView.setHasFixedSize(true);
         mUnFeaturedDealsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
         allSavedDealsRvAdapter = new AllSavedDealsRvAdapter(detailArrayList);
         fetchSavedCoupons();
+
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.appBlue,
+                R.color.appOrange);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchSavedCoupons();
+            }
+        });
+
 
         return view;
 
     }
 
     private void fetchSavedCoupons() {
+        swipeRefreshLayout.setRefreshing(true);
 
         PromoAnalyticsServices promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
 
@@ -118,8 +140,10 @@ public class SavedDealsFragment extends RootFragment implements LocationListener
             @Override
             public void onResponse(Call<AllDeals> call, Response<AllDeals> response) {
 
+                swipeRefreshLayout.setRefreshing(false);
                 if (response.isSuccessful()) {
                     if (response.body().getStatus()) {
+
                         allSavedDealsRvAdapter = new AllSavedDealsRvAdapter(response.body().getData().getDetail());
                         mUnFeaturedDealsRecyclerView.setAdapter(allSavedDealsRvAdapter);
                         allSavedDealsRvAdapter.notifyDataSetChanged();
@@ -231,7 +255,7 @@ public class SavedDealsFragment extends RootFragment implements LocationListener
                                 UtilHelper.animateOverShoot(holder.ivHeart);
                                 if (arrayListDeals.size() > 0) {
                                     arrayListDeals.remove(holder.getAdapterPosition());
-                                    notifyDataSetChanged();
+                                    notifyItemRemoved(holder.getAdapterPosition());
                                 }
                                 if (arrayListDeals.size() == 0) {
                                     mUnFeaturedDealsRecyclerView.setVisibility(View.GONE);
@@ -269,4 +293,5 @@ public class SavedDealsFragment extends RootFragment implements LocationListener
             return arrayListDeals.size();
         }
     }
+
 }

@@ -139,7 +139,8 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
 
         fragmentHomeNewBinding.rvFeaturedCoupons.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         fragmentHomeNewBinding.rvNormalCoupons.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-
+        fragmentHomeNewBinding.rvFeaturedCoupons.setHasFixedSize(true);
+        fragmentHomeNewBinding.rvNormalCoupons.setHasFixedSize(true);
         promoAnalyticsServices = PromoAnalyticsServices.retrofit.create(PromoAnalyticsServices.class);
 
 
@@ -163,6 +164,7 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
         });
         fragmentHomeNewBinding.rvNormalCoupons.setNestedScrollingEnabled(false);
         fragmentHomeNewBinding.rvFeaturedCoupons.setNestedScrollingEnabled(false);
+
         return fragmentHomeNewBinding.getRoot();
 
     }
