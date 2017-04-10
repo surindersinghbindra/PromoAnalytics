@@ -86,18 +86,19 @@
 
 
                 <RelativeLayout
-
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="left|center_vertical"
-                    android:gravity="left|center_vertical">
+                    android:gravity="left|center_vertical"
+                    android:visibility="gone">
 
                     <Switch
+
                         android:id="@+id/switch_gprs"
                         style="@style/CustomSwitchButton"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:checked="false"
+                        android:checked="true"
                         android:gravity="center_vertical"
                         app:buttonTint="@color/appOrange" />
 
