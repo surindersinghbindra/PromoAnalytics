@@ -1,6 +1,7 @@
 package com.promoanalytics.ui.DealsList;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -48,6 +49,7 @@ import com.promoanalytics.ui.CategoryNameCallBack;
 import com.promoanalytics.ui.DealDetail.CouponDetailActivity;
 import com.promoanalytics.ui.DealsOnMap.CategoryDialogFragmentFromMaps;
 import com.promoanalytics.ui.DealsOnMap.DealsOnMapFragment;
+import com.promoanalytics.ui.LocationSearchActivity;
 import com.promoanalytics.ui.TabChangedOtto;
 import com.promoanalytics.utils.AppConstants;
 import com.promoanalytics.utils.AppController;
@@ -159,7 +161,10 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
         fragmentHomeNewBinding.searchLayout.autoCompleteLocationSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openAutocompleteActivity();
+                //openAutocompleteActivity();
+                Intent intent = new Intent(getActivity(), LocationSearchActivity.class);
+                intent.putExtra(AppConstants.LATITUDE, latLng);
+                startActivityForResult(intent, 200);
             }
         });
         fragmentHomeNewBinding.rvNormalCoupons.setNestedScrollingEnabled(false);
@@ -214,6 +219,25 @@ public class ListDealsFragment extends RootFragment implements View.OnClickListe
                 // Indicates that the activity closed before a selection was made. For example if
                 // the user pressed the back button.
             }
+        }
+
+        if (resultCode == Activity.RESULT_OK && requestCode == 200 && data != null) {
+
+            String title = data.getExtras().getString(AppConstants.LOCATION_NAME);
+            LatLng LAT = data.getExtras().getParcelable(AppConstants.LATITUDE);
+
+            this.currentLocation = title;
+
+            // Format the place's details and display them in the TextView.
+            searchLayoutModel.setLocationSearchTitle(title);
+
+            latLng = LAT;
+
+
+            clearLists();
+            showFeaturedCoupons(categoryId, latLng);
+            showUnFeaturedCoupons(categoryId, latLng);
+
         }
     }
 

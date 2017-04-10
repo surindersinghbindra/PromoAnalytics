@@ -36,7 +36,7 @@ public class CategoryDialogFragmentFromMaps extends DialogFragment implements Vi
     }
 
     public void setCallBack(CategoryNameCallBack categoryNameCallBack) {
-        this.categoryNameCallBack = categoryNameCallBack;
+        CategoryDialogFragmentFromMaps.categoryNameCallBack = categoryNameCallBack;
     }
 
 

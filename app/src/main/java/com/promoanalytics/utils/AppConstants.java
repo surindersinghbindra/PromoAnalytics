@@ -43,4 +43,6 @@ public class AppConstants {
     public static final String OTP_DELIMITER = ":";
 
 
+    public static final String LATITUDE = "LATITUDE";
+    public static final String LOCATION_NAME = "LOCATION_NAME";
 }

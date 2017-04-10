@@ -19,5 +19,5 @@
     <color name="background_material_light">#e6ecf3</color>
 
     <color name="black_overlay">#66000000</color>
-
+    <color name="transparent">#EE000000</color>
 </resources>

@@ -1,6 +1,7 @@
 package com.promoanalytics.ui.DealsOnMap;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -53,6 +54,7 @@ import com.promoanalytics.model.AllDeals.Detail;
 import com.promoanalytics.model.Category.Datum;
 import com.promoanalytics.model.SearchLayoutModel;
 import com.promoanalytics.ui.CategoryNameCallBack;
+import com.promoanalytics.ui.LocationSearchActivity;
 import com.promoanalytics.ui.TabChangedOtto;
 import com.promoanalytics.utils.AppConstants;
 import com.promoanalytics.utils.BusProvider;
@@ -221,7 +223,10 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
         fragmentDealsOnMapBinding.searchLayout.autoCompleteLocationSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openAutocompleteActivity();
+                //openAutocompleteActivity();
+                Intent intent = new Intent(getActivity(), LocationSearchActivity.class);
+                intent.putExtra(AppConstants.LATITUDE, latLng);
+                startActivityForResult(intent, 200);
             }
         });
 
@@ -541,6 +546,24 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
                 // the user pressed the back button.
             }
         }
+
+        if (resultCode == Activity.RESULT_OK && requestCode == 200 && data != null) {
+
+            String title = data.getExtras().getString(AppConstants.LOCATION_NAME);
+            LatLng LAT = data.getExtras().getParcelable(AppConstants.LATITUDE);
+
+            tabSelected = 0;
+            this.currentLocation = title;
+            // Format the place's details and display them in the TextView.
+            fragmentDealsOnMapBinding.etSearchPlaceOrCategory.setText(title);
+            fragmentDealsOnMapBinding.searchLayout.autoCompleteLocationSearch.setText(title);
+
+            latLng = LAT;
+
+            fragmentDealsOnMapBinding.searchLayout.slectn.setVisibility(View.GONE);
+            fetchDataFromRemote(categoryId, latLng);
+
+        }
     }
 
 
@@ -604,8 +627,8 @@ public class DealsOnMapFragment extends RootFragment implements OnMapReadyCallba
     /**
      * Receiver for data sent from FetchAddressIntentService.
      */
-    class AddressResultReceiver extends ResultReceiver {
-        public AddressResultReceiver(Handler handler) {
+    private class AddressResultReceiver extends ResultReceiver {
+        AddressResultReceiver(Handler handler) {
             super(handler);
         }
 
